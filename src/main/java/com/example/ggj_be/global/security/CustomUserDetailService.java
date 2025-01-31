@@ -1,4 +1,4 @@
-package global.security;
+package com.example.ggj_be.global.security;
 
 import com.example.ggj_be.domain.member.Member;
 import com.example.ggj_be.domain.member.service.MemberQueryService;

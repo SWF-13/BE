@@ -1,4 +1,4 @@
-package global.response.code;
+package com.example.ggj_be.global.response.code;
 
 public interface BaseCode {
 

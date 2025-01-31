@@ -1,4 +1,4 @@
-package global.util;
+package com.example.ggj_be.global.util;
 
 public interface JwtProperties {
 

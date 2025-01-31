@@ -1,4 +1,4 @@
-package global.util;
+package com.example.ggj_be.global.util;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -47,6 +47,20 @@ public class RedisUtil {
         return Boolean.TRUE.equals(refreshTemplate.hasKey(key));
     }
 
+
+    // email
+    public String getEmailCode(String key) {
+        return emailTemplate.opsForValue().get(key);
+    }
+
+    public void setEmailCode(String key, String value) {
+        emailTemplate.opsForValue().set(key, value, 3, TimeUnit.MINUTES);
+    }
+
+    public boolean hasKeyEmail(String key) {
+        return Boolean.TRUE.equals(emailTemplate.hasKey(key));
+    }
+
     // 블랙 리스트 관련
     public void setBlackList(String key, String value, Long expiration) {
         blackListTemplate.opsForValue().set(key, value, expiration, TimeUnit.SECONDS);
@@ -64,22 +78,9 @@ public class RedisUtil {
         return Boolean.TRUE.equals(blackListTemplate.hasKey(key));
     }
 
-    // email
-    public String getEmailCode(String key) {
-        return emailTemplate.opsForValue().get(key);
-    }
-
-    public void setEmailCode(String key, String value) {
-        emailTemplate.opsForValue().set(key, value, 3, TimeUnit.MINUTES);
-    }
-
-    public boolean hasKeyEmail(String key) {
-        return Boolean.TRUE.equals(emailTemplate.hasKey(key));
-    }
 
 
-
-    // 직원 ID를 사용하여 Redis 키 생성
+    // 멤버 ID를 사용하여 Redis 키 생성
     private String getRedisKey(Long memberId) {
         return VIEWED_NOTICES_PREFIX + memberId;
     }
