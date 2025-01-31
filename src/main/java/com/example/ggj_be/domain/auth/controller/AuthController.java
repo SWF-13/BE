@@ -22,7 +22,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 public class AuthController {
 
     private final MemberQueryService memberQueryService;
-    private final MemberCommandService memberCommandService;
+    //private final MemberCommandService memberCommandService;
     private final AuthService authService;
 
     @Operation(summary = "사용자/관리자 로그인 API", description = "일반 직원인 경우 EMPLOYEE, 관리자인 경우 ADMIN을 반환합니다.")
