@@ -1,8 +1,8 @@
-package global.exception;
+package com.example.ggj_be.global.exception;
 
 
-import global.response.code.ErrorReasonDto;
-import global.response.code.status.ErrorStatus;
+import com.example.ggj_be.global.response.code.ErrorReasonDto;
+import com.example.ggj_be.global.response.code.status.ErrorStatus;
 
 public class ApiException extends RuntimeException{
 

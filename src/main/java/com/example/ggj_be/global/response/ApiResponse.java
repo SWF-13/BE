@@ -1,10 +1,10 @@
-package global.response;
+package com.example.ggj_be.global.response;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
-import global.response.code.BaseCode;
-import global.response.code.status.SuccessStatus;
+import com.example.ggj_be.global.response.code.BaseCode;
+import com.example.ggj_be.global.response.code.status.SuccessStatus;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 

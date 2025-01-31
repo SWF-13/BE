@@ -1,10 +1,14 @@
-package global.jwt;
+package com.example.ggj_be.global.jwt;
+
+import static com.example.ggj_be.global.util.JwtProperties.MEMBER_ID_KEY;
+import static com.example.ggj_be.global.util.JwtProperties.ROLE;
+
 
 import com.example.ggj_be.domain.enums.Role;
-import global.exception.ApiException;
-import global.response.code.status.ErrorStatus;
-import global.security.CustomUserDetailService;
-import global.util.RedisUtil;
+import com.example.ggj_be.global.exception.ApiException;
+import com.example.ggj_be.global.response.code.status.ErrorStatus;
+import com.example.ggj_be.global.security.CustomUserDetailService;
+import com.example.ggj_be.global.util.RedisUtil;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
@@ -16,7 +20,6 @@ import io.jsonwebtoken.security.SignatureException;
 import java.security.Key;
 import java.time.ZonedDateTime;
 import java.util.Date;
-import static global.util.JwtProperties.MEMBER_ID_KEY;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -25,7 +28,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
 
-import static global.util.JwtProperties.ROLE;
 
 @Component
 public class JwtProvider {
@@ -77,7 +79,7 @@ public class JwtProvider {
                 .compact();
     }
 
-    public Long getEmployeeId(String token) {
+    public Long getMemberId(String token) {
         return parseClaims(token)
                 .get(MEMBER_ID_KEY, Long.class);
     }

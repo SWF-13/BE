@@ -1,7 +1,7 @@
-package global.response.code.status;
+package com.example.ggj_be.global.response.code.status;
 
-import global.response.code.BaseCode;
-import global.response.code.ReasonDto;
+import com.example.ggj_be.global.response.code.BaseCode;
+import com.example.ggj_be.global.response.code.ReasonDto;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.springframework.http.HttpStatus;
