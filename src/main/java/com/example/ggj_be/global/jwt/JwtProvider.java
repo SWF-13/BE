@@ -54,7 +54,7 @@ public class JwtProvider {
      * JWT header "alg" : "HS512" payload "id" : "employeeId" payload "auth" : "EMPLOYEE/ADMIN"
      * payload "iat" : "123456789" payload "exp" : "123456789"
      */
-    public String generateAccessToken(Long memberId, Role role) {
+    public String generateAccessToken(String memberId, Role role) {
 
         Date expiredAt = new Date(System.currentTimeMillis() + ACCESS_TOKEN_EXPIRE_TIME);
 
@@ -67,11 +67,11 @@ public class JwtProvider {
                 .compact();
     }
 
-    public String generateRefreshToken(Long employeeId, Role role) {
+    public String generateRefreshToken(String memberId, Role role) {
 
         Date expiredAt = new Date(System.currentTimeMillis() + REFRESH_TOKEN_EXPIRE_TIME);
         return Jwts.builder()
-                .claim(MEMBER_ID_KEY, employeeId)
+                .claim(MEMBER_ID_KEY, memberId)
                 .claim(ROLE, role)
                 .setIssuedAt(Date.from(ZonedDateTime.now().toInstant()))
                 .setExpiration(expiredAt)

@@ -2,6 +2,7 @@ package com.example.ggj_be.domain.auth.controller;
 
 import com.example.ggj_be.domain.auth.AuthService;
 import com.example.ggj_be.domain.auth.dto.AuthRequest;
+import com.example.ggj_be.domain.auth.dto.SignUpRequest;
 import com.example.ggj_be.domain.auth.dto.TokenVo;
 import com.example.ggj_be.domain.member.Member;
 import com.example.ggj_be.domain.member.service.MemberCommandService;
@@ -44,5 +45,12 @@ public class AuthController {
         authService.logout(request);
 
         return ApiResponse.onSuccess("성공적으로 로그아웃되었습니다.");
+    }
+
+    @Operation(summary = "회원가입 API", description = "새로운 사용자를 등록합니다.")
+    @PostMapping("/signup")
+    public ApiResponse<Member> register(@RequestBody SignUpRequest request) {
+        Member registeredMember = memberCommandService.signUp(request);
+        return ApiResponse.onSuccess(registeredMember);
     }
 }

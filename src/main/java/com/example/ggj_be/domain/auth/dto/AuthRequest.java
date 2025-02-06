@@ -10,7 +10,7 @@ public class AuthRequest {
     @Schema(description = " 로그인 요청 DTO")
     @Getter
     public static class LoginRequest{
-        @Schema(description = "로그인 아이디", example = "gjgj1234")
+        @Schema(description = "로그인 아이디(이메일)", example = "example@mail.com")
         @NotBlank(message = "아이디가 입력되지 않았습니다.")
         private String accountId;
 

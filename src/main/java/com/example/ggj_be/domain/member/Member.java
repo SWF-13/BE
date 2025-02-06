@@ -25,7 +25,7 @@ public class Member {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "account_id")
-    private String  accountid;
+    private String  accountid;//이메일 형식으로 사용
 
     @Column(nullable = false, length = 20)
     private String nameKo;
@@ -34,7 +34,7 @@ public class Member {
     private String password;
 
     @Column(nullable = false, length = 20)
-    private String employeeNo;
+    private String memberNo;
 
     @Column(nullable = false)
     @JsonSerialize(using = LocalDateSerializer.class)

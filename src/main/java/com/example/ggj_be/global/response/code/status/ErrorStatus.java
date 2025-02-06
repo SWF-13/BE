@@ -36,7 +36,14 @@ public enum ErrorStatus implements BaseErrorCode {
     _JWT_EXPIRED(HttpStatus.UNAUTHORIZED, "JWT405", "만료된 AccessToken 입니다."),
 
     // AUTH 관련
-    _AUTH_INVALID_PASSWORD(HttpStatus.BAD_REQUEST, "AUTH400", "잘못된 비밀번호입니다. 다시 입력해주세요.");
+    _AUTH_INVALID_PASSWORD(HttpStatus.BAD_REQUEST, "AUTH400", "잘못된 비밀번호입니다. 다시 입력해주세요."),
+
+    // Mail 관련
+    _MAIL_CREATE_CODE_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "MAIL500",
+            "인증 코드 생성 중 서버 에러가 발생했습니다."),
+    _MAIL_WRONG_CODE(HttpStatus.BAD_REQUEST, "MAIL400", "올바른 인증코드가 아닙니다."),
+    _MAIL_LOTTERY_RESULT_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "MAIL501",
+            "추첨 결과 메일 전송 중 서버 에러가 발생했습니다.");
 
 
 

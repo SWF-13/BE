@@ -1,6 +1,7 @@
 package com.example.ggj_be.domain.member.service;
 
 import com.example.ggj_be.domain.auth.dto.AuthRequest;
+import com.example.ggj_be.domain.auth.dto.SignUpRequest;
 import com.example.ggj_be.domain.common.CustomResult;
 import com.example.ggj_be.domain.member.Member;
 import com.example.ggj_be.domain.member.dto.MemberRequest;
@@ -32,7 +33,7 @@ public class MemberCommandServiceImpl implements MemberCommandService {
     }
 
     @Override
-    public Member signUp(AuthRequest.LoginRequest request) {
+    public Member signUp(SignUpRequest request) {
 
         if (memberRepository.findByAccountid(request.getAccountId()).isPresent()) {
             throw new ApiException(ErrorStatus._MEMBER_DUPLICATED_ID);
