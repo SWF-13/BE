@@ -24,6 +24,9 @@ import java.time.LocalDate;
 public class Member {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column
+    private Long id;  // 고유 회원번호
+
     @Column(name = "account_id")
     private String  accountid;//이메일 형식으로 사용
 

@@ -25,8 +25,8 @@ public class AuthService {
     private final RedisUtil redisUtil;
 
     public TokenVo generateATAndRT(Member member) {
-        String accessToken = jwtProvider.generateAccessToken(member.getAccountid(), member.getRole());
-        String refreshToken = jwtProvider.generateRefreshToken(member.getAccountid(),
+        String accessToken = jwtProvider.generateAccessToken(member.getId(), member.getRole());
+        String refreshToken = jwtProvider.generateRefreshToken(member.getId(),
                 member.getRole());
         Long expiration = jwtProvider.getExpiration(refreshToken);
 
@@ -63,10 +63,10 @@ public class AuthService {
             throw new ApiException(ErrorStatus._JWT_DIFF_REFRESH_TOKEN_IN_REDIS);
         }
 
-        String newAccessToken = jwtProvider.generateAccessToken(String.valueOf(memberId), role);
+        String newAccessToken = jwtProvider.generateAccessToken(memberId, role);
         jwtProvider.getAuthentication(newAccessToken);
 
-        String newRefreshToken = jwtProvider.generateRefreshToken(String.valueOf(memberId), role);
+        String newRefreshToken = jwtProvider.generateRefreshToken(memberId, role);
         Long expiration = jwtProvider.getExpiration(newRefreshToken);
         log.info("===================== reAdd RefreshToken In Redis");
         redisUtil.set(memberId.toString(), newRefreshToken, expiration);
