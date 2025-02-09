@@ -48,6 +48,20 @@ public class Member {
     @Column(nullable = false)
     private Role role;
 
+    @Column(name = "user_img", nullable = true, length = 255)
+    private String userImg;  // 프로필 이미지 경로
+
+    @Column(name = "user_birth", nullable = false)
+    @JsonSerialize(using = LocalDateSerializer.class)
+    @JsonDeserialize(using = LocalDateDeserializer.class)
+    private LocalDate userBirth;
+
+    @Column(name = "agree_service", nullable = false)
+    private Boolean agreeService;  // 서비스 이용 약관 동의 여부
+
+    @Column(name = "agree_info", nullable = false)
+    private Boolean agreeInfo;  // 개인정보 처리방침 동의 여부
+
     //비밀번호 변경 시 이용
     public void changePassword(String newPassword) {
         this.password = newPassword;
