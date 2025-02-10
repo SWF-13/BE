@@ -24,8 +24,8 @@ public class SignUpRequest {
     @NotBlank(message = "이름을 입력해주세요.")
     private String nameKo;
 
-    @Schema(description = "회원번호", example = "12345")
-    @NotBlank(message = "회원번호를 입력해주세요.")
+    @Schema(description = "전화번호", example = "010-0000-0000")
+    @NotBlank(message = "전화번호를 입력해주세요.")
     private String memberNo;
 
     @Schema(description = "생년월일 (YYYY-MM-DD)", example = "2000-01-01")
@@ -43,7 +43,4 @@ public class SignUpRequest {
     @NotNull(message = "개인정보 처리방침 동의 여부를 입력해주세요.")
     private Boolean agreeInfo;
 
-    @Schema(description = "이메일 인증 코드", example = "123456")
-    @NotBlank(message = "이메일 인증 코드가 필요합니다.")
-    private String authCode;
 }

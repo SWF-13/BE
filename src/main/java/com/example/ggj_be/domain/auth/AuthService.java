@@ -82,42 +82,5 @@ public class AuthService {
         return new TokenVo(newAccessToken, newRefreshToken, role.toString());
     }
 
-    @Transactional
-    public String signUp(SignUpRequest request) {
-        // 이메일 중복 체크
-        if (memberRepository.existsByAccountid(request.getAccountId())) {
-            throw new ApiException(ErrorStatus._USER_DUPLICATE);
-        }
-
-        // 이메일 인증 코드 확인
-        String storedAuthCode = redisUtil.getEmailCode(request.getAccountId());
-        if (storedAuthCode == null || !storedAuthCode.equals(request.getAuthCode())) {
-            throw new ApiException(ErrorStatus._MAIL_WRONG_CODE);
-        }
-
-        // 비밀번호 암호화
-        String encodedPassword = passwordEncoder.encode(request.getPassword());
-
-        // 회원 저장
-        Member member = Member.builder()
-                .accountid(request.getAccountId())
-                .password(encodedPassword)
-                .nameKo(request.getNameKo())
-                .memberNo(request.getMemberNo())
-                .userBirth(request.getUserBirth())
-                .userImg(request.getUserImg())
-                .agreeService(request.getAgreeService())
-                .agreeInfo(request.getAgreeInfo())
-                .role(Role.MEMBER) // 기본 권한 설정
-                .joinDt(LocalDate.now())
-                .build();
-
-        memberRepository.save(member);
-
-        // 이메일 인증 코드 삭제
-        redisUtil.deleteEmailCode(request.getAccountId());
-
-        return "회원가입이 성공적으로 완료되었습니다.";
-    }
 }
 
