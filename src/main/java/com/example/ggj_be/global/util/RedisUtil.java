@@ -61,6 +61,8 @@ public class RedisUtil {
         return Boolean.TRUE.equals(emailTemplate.hasKey(key));
     }
 
+    public boolean deleteEmailCode(String key) { return Boolean.TRUE.equals(emailTemplate.delete(key)); }
+
     // 블랙 리스트 관련
     public void setBlackList(String key, String value, Long expiration) {
         blackListTemplate.opsForValue().set(key, value, expiration, TimeUnit.SECONDS);

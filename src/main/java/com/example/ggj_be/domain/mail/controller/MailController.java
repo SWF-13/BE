@@ -32,7 +32,7 @@ public class MailController {
         return ApiResponse.onSuccess("성공적으로 인증코드가 전송되었습니다.");
     }
 
-    @Operation(summary = "사내 이메일 인증 코드 검증", description = "전송받은 인증코드 6자리와 서버에서 관리하는 6자리를 비교합니다.")
+    @Operation(summary = "이메일 인증 코드 검증", description = "전송받은 인증코드 6자리와 서버에서 관리하는 6자리를 비교합니다.")
     @PostMapping("/verify")
     public ApiResponse<String> verifyCode(@RequestBody @Valid MemberRequest.VerifyCode request) {
 

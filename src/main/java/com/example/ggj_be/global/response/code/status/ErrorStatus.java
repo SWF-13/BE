@@ -43,7 +43,8 @@ public enum ErrorStatus implements BaseErrorCode {
             "인증 코드 생성 중 서버 에러가 발생했습니다."),
     _MAIL_WRONG_CODE(HttpStatus.BAD_REQUEST, "MAIL400", "올바른 인증코드가 아닙니다."),
     _MAIL_LOTTERY_RESULT_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "MAIL501",
-            "추첨 결과 메일 전송 중 서버 에러가 발생했습니다.");
+            "추첨 결과 메일 전송 중 서버 에러가 발생했습니다."),
+    _USER_DUPLICATE(HttpStatus.BAD_REQUEST, "MAIL401", "중복된 이메일 입니다.");
 
 
 
