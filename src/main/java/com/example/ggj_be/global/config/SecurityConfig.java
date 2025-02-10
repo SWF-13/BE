@@ -70,6 +70,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(authorize ->
                         authorize.requestMatchers(CorsUtils::isPreFlightRequest).permitAll()  // Preflight 요청 허용
                                 .requestMatchers("/api/admin/**").hasRole("ADMIN")
+                                .requestMatchers("/api/emails/**").permitAll()//이메일 인증 API에 대해서는 인증 없이 접근 허용
                                 .anyRequest()
                                 .authenticated())
                 .exceptionHandling(handler -> handler
@@ -85,8 +86,9 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(List.of("http://localhost:3000","http://210.109.52.95/",
-                "http://kidsincompany.shop", "http://api.kidsincompany.shop"));
+        configuration.setAllowedOrigins(List.of("http://localhost:3000","http://210.109.52.95/"
+//      수정 필요          "http://kidsincompany.shop", "http://api.kidsincompany.shop"
+        ));
         configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"));
         configuration.setAllowedHeaders(List.of("Authorization", "Content-Type"));
         configuration.setAllowCredentials(true);

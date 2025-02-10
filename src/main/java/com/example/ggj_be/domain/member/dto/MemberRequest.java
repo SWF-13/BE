@@ -15,25 +15,29 @@ public class MemberRequest {
     @Getter
     public static class ChangePassword {
 
-        @Schema(description = "사내 직원의 비밀번호", example = "clovider")
+
+        @Schema(description = "회원의 비밀번호", example = "123456")
         @NotBlank(message = "비밀번호가 입력되지 않았습니다.")
         private String password;
     }
 
-    @Schema(description = "사내 이메일 인증 요청 DTO")
+
+    @Schema(description = "이메일 인증 요청 DTO")
     @Getter
     public static class AuthAccountId {
 
-        @Schema(description = "사내 직원의 아이디", example = "clovider1")
+        @Schema(description = "회원의 아이디", example = "swfswf1")
         @NotBlank(message = "아이디가 입력되지 않았습니다.")
         private String accountId;
     }
 
-    @Schema(description = "사내 이메일 인증 코드 검증 DTO")
+
+    @Schema(description = "이메일 인증 코드 검증 DTO")
     @Getter
     public static class VerifyCode {
 
-        @Schema(description = "사내 직원의 아이디", example = "clovider1")
+        @Schema(description = "회원의 아이디", example = "swfswf1@example.com")
+
         @NotBlank(message = "아이디가 입력되지 않았습니다.")
         private String accountId;
 
@@ -45,12 +49,12 @@ public class MemberRequest {
     public static Member toEntity(String accountId, String password) {
 
         return Member.builder()
-                .nameKo("EMPLOYEE_1")
+                .nameKo("MEMBER_1")
                 .accountid(accountId)
                 .password(password)
-                .employeeNo("12345678")
+                .memberNo("12345678")
                 .joinDt(LocalDate.of(2024, 7, 1))
-                .role(Role.EMPLOYEE)
+                .role(Role.MEMBER)
                 .build();
     }
 }
