@@ -47,6 +47,7 @@ public class AuthController {
         return ApiResponse.onSuccess("성공적으로 로그아웃되었습니다.");
     }
 
+
     @Operation(summary = "회원가입 API", description = "새로운 사용자를 등록합니다.")
     @PostMapping("/signup")
     public ApiResponse<Member> register(@RequestBody SignUpRequest request) {

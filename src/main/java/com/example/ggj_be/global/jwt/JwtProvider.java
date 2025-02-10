@@ -67,6 +67,7 @@ public class JwtProvider {
                 .compact();
     }
 
+
     public String generateRefreshToken(Long memberId, Role role) {
 
         Date expiredAt = new Date(System.currentTimeMillis() + REFRESH_TOKEN_EXPIRE_TIME);

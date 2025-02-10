@@ -15,10 +15,12 @@ public class MemberRequest {
     @Getter
     public static class ChangePassword {
 
+
         @Schema(description = "회원의 비밀번호", example = "123456")
         @NotBlank(message = "비밀번호가 입력되지 않았습니다.")
         private String password;
     }
+
 
     @Schema(description = "이메일 인증 요청 DTO")
     @Getter
@@ -29,11 +31,13 @@ public class MemberRequest {
         private String accountId;
     }
 
+
     @Schema(description = "이메일 인증 코드 검증 DTO")
     @Getter
     public static class VerifyCode {
 
-        @Schema(description = "회의 아이디", example = "swfswf1")
+        @Schema(description = "회원의 아이디", example = "swfswf1@example.com")
+
         @NotBlank(message = "아이디가 입력되지 않았습니다.")
         private String accountId;
 

@@ -43,6 +43,7 @@ spring:
             required: true
       auth-code-expiration-millis: 180000
 
+
 jwt:
   secret_key: ecaca4cdf504d2c8932ab357e24fa96c35df490f57b313406a147de4cefb5f4d10511b2c60ddb21bdddc0eb8f0b1af175598a31ab9d4c834d9d24989c54c3147
   access_token_expire: 604800000 # 7?

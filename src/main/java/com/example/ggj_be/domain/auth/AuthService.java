@@ -17,8 +17,8 @@ import org.springframework.stereotype.Service;
 import com.example.ggj_be.domain.enums.Role;
 import org.springframework.util.StringUtils;
 
-import java.time.LocalDate;
 
+import java.time.LocalDate;
 import static com.example.ggj_be.global.util.JwtProperties.ACCESS_HEADER_STRING;
 import static com.example.ggj_be.global.util.JwtProperties.TOKEN_PREFIX;
 
