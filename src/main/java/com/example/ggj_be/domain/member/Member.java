@@ -28,8 +28,7 @@ public class Member {
     private Long id;  // 고유 회원번호
 
     @Column(name = "account_id")
-    private String  accountid;//이메일 형식으로 사용
-
+    private String  accountid;
     @Column(nullable = false, length = 20)
     private String nameKo;
 
@@ -37,7 +36,10 @@ public class Member {
     private String password;
 
     @Column(nullable = false, length = 20)
-    private String memberNo;
+    private String nickName;
+
+//    @Column(nullable = false, length = 20)
+//    private String memberNo;//전화번호
 
     @Column(nullable = false)
     @JsonSerialize(using = LocalDateSerializer.class)
@@ -51,7 +53,7 @@ public class Member {
     @Column(name = "user_img", nullable = true, length = 255)
     private String userImg;  // 프로필 이미지 경로
 
-    @Column(name = "user_birth", nullable = false)
+    @Column(name = "user_birth", nullable = true)
     @JsonSerialize(using = LocalDateSerializer.class)
     @JsonDeserialize(using = LocalDateDeserializer.class)
     private LocalDate userBirth;

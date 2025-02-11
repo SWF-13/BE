@@ -1,6 +1,6 @@
 package com.example.ggj_be.domain.auth;
 
-import com.example.ggj_be.domain.auth.dto.SignUpRequest;
+
 import com.example.ggj_be.domain.auth.dto.TokenVo;
 import com.example.ggj_be.domain.member.Member;
 import com.example.ggj_be.domain.member.repository.MemberRepository;
@@ -9,7 +9,6 @@ import com.example.ggj_be.global.jwt.JwtProvider;
 import com.example.ggj_be.global.response.code.status.ErrorStatus;
 import com.example.ggj_be.global.util.RedisUtil;
 import jakarta.servlet.http.HttpServletRequest;
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -17,8 +16,6 @@ import org.springframework.stereotype.Service;
 import com.example.ggj_be.domain.enums.Role;
 import org.springframework.util.StringUtils;
 
-
-import java.time.LocalDate;
 import static com.example.ggj_be.global.util.JwtProperties.ACCESS_HEADER_STRING;
 import static com.example.ggj_be.global.util.JwtProperties.TOKEN_PREFIX;
 
@@ -29,8 +26,6 @@ public class AuthService {
 
     private final JwtProvider jwtProvider;
     private final RedisUtil redisUtil;
-    private final MemberRepository memberRepository;
-    private final BCryptPasswordEncoder passwordEncoder;
 
     public TokenVo generateATAndRT(Member member) {
         String accessToken = jwtProvider.generateAccessToken(member.getId(), member.getRole());

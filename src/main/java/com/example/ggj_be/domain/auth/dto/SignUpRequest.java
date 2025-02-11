@@ -24,9 +24,13 @@ public class SignUpRequest {
     @NotBlank(message = "이름을 입력해주세요.")
     private String nameKo;
 
-    @Schema(description = "전화번호", example = "010-0000-0000")
-    @NotBlank(message = "전화번호를 입력해주세요.")
-    private String memberNo;
+//    @Schema(description = "전화번호", example = "010-0000-0000")
+//    @NotBlank(message = "전화번호를 입력해주세요.")
+//    private String memberNo;
+
+    @Schema(description = "사용자 닉네임", example = "길동아")
+    @NotBlank(message = "닉네임을 입력해주세요.")
+    private String nickName;
 
     @Schema(description = "생년월일 (YYYY-MM-DD)", example = "2000-01-01")
     @NotNull(message = "생년월일을 입력해주세요.")

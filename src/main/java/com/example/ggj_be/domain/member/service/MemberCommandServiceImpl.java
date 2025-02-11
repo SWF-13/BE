@@ -11,6 +11,7 @@ import com.example.ggj_be.global.exception.ApiException;
 import com.example.ggj_be.global.response.code.status.ErrorStatus;
 import com.example.ggj_be.global.util.RedisUtil;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -20,6 +21,7 @@ import java.time.LocalDate;
 @Service
 @Transactional
 @RequiredArgsConstructor
+@Slf4j
 public class MemberCommandServiceImpl implements MemberCommandService {
 
     private final BCryptPasswordEncoder bCryptEncoder;
@@ -52,11 +54,16 @@ public class MemberCommandServiceImpl implements MemberCommandService {
 //        return memberRepository.save(member);
 //    }
 
+
     @jakarta.transaction.Transactional
     public Member signUp(SignUpRequest request) {
         // 이메일 중복 체크
         if (memberRepository.existsByAccountid(request.getAccountId())) {
-            throw new ApiException(ErrorStatus._USER_DUPLICATE);
+            throw new ApiException(ErrorStatus._MEMBER_DUPLICATED_ID);
+        }
+        //닉네임 중복 체크
+        if (memberRepository.existsByNickName(request.getNickName())) {
+            throw new ApiException(ErrorStatus._MEMBER_DUPLICATED_NICKNAME);
         }
 
 //        // 이메일 인증 코드 확인
@@ -72,8 +79,9 @@ public class MemberCommandServiceImpl implements MemberCommandService {
         Member member = Member.builder()
                 .accountid(request.getAccountId())
                 .password(encodedPassword)
+                .nickName(request.getNickName())
                 .nameKo(request.getNameKo())
-                .memberNo(request.getMemberNo())
+//                .memberNo(request.getMemberNo())
                 .userBirth(request.getUserBirth())
                 .userImg(request.getUserImg())
                 .agreeService(request.getAgreeService())
@@ -85,6 +93,7 @@ public class MemberCommandServiceImpl implements MemberCommandService {
         // 이메일 인증 코드 삭제
         redisUtil.deleteEmailCode(request.getAccountId());
 
+        log.info("member: {}", member);
         return memberRepository.save(member);
 
 

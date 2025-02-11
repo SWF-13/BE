@@ -52,7 +52,7 @@ public class MemberRequest {
                 .nameKo("MEMBER_1")
                 .accountid(accountId)
                 .password(password)
-                .memberNo("12345678")
+//                .memberNo("12345678")
                 .joinDt(LocalDate.of(2024, 7, 1))
                 .role(Role.MEMBER)
                 .build();
