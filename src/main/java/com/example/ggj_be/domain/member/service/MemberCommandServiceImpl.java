@@ -80,6 +80,7 @@ public class MemberCommandServiceImpl implements MemberCommandService {
                 .accountid(request.getAccountId())
                 .password(encodedPassword)
                 .nickName(request.getNickName())
+                .email(request.getEmail())
                 .nameKo(request.getNameKo())
 //                .memberNo(request.getMemberNo())
                 .userBirth(request.getUserBirth())

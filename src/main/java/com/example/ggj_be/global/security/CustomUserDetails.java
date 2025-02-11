@@ -51,7 +51,4 @@ public class CustomUserDetails implements UserDetails {
         return true;
     }
 
-    public Member getEmployee() {
-        return member;
-    }
 }

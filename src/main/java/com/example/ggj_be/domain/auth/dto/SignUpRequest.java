@@ -36,6 +36,10 @@ public class SignUpRequest {
     @NotNull(message = "생년월일을 입력해주세요.")
     private LocalDate userBirth;
 
+    @Schema(description = "이메일", example = "example@example.com")
+    @NotNull(message = "이메일을 입력해주세요.")
+    private String email;
+
     @Schema(description = "프로필 이미지 URL", example = "https://example.com/profile.jpg")
     private String userImg;
 
@@ -46,5 +50,7 @@ public class SignUpRequest {
     @Schema(description = "개인정보 처리방침 동의 여부", example = "true")
     @NotNull(message = "개인정보 처리방침 동의 여부를 입력해주세요.")
     private Boolean agreeInfo;
+
+
 
 }
