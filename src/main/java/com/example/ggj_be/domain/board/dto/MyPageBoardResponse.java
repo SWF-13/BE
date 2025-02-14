@@ -10,6 +10,7 @@ public class MyPageBoardResponse {
     private Long boardId;
     private String category;
     private String title;
+    private String content;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
     private Long userId;
@@ -19,6 +20,7 @@ public class MyPageBoardResponse {
         this.boardId = board.getBoardId();
         this.category = board.getCategory();
         this.title = board.getTitle();
+        this.content = board.getContent();
         this.createdAt = board.getCreatedAt();
         this.updatedAt = board.getUpdatedAt();
         this.userId = board.getMember().getUserId();  // Member 엔티티에서 userId 가져오기

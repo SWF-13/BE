@@ -12,6 +12,7 @@ public class MyPageCommentResponse {
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
     private Long userId;
+    private String content;
 
     @Builder
     public MyPageCommentResponse(Comment comment){
@@ -19,5 +20,6 @@ public class MyPageCommentResponse {
         this.createdAt = comment.getCreatedAt();
         this.updatedAt = comment.getUpdatedAt();
         this.userId = comment.getMember().getUserId();
+        this.content = comment.getContent();
     }
 }
