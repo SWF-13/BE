@@ -1,6 +1,7 @@
 package com.example.ggj_be.domain.board;
 
 
+import com.example.ggj_be.domain.member.Member;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
@@ -21,7 +22,7 @@ public class Board {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "board_id")
-    private String  boardId;
+    private Long  boardId;
 
     @Column(nullable = false)
     private String category;
@@ -31,9 +32,6 @@ public class Board {
 
     @Column(nullable = false)
     private String content;
-
-    @Column(nullable = false)
-    private String author;
 
     @Column(nullable = false)
     @ColumnDefault("'0'")
@@ -49,6 +47,10 @@ public class Board {
     @Column(nullable = false)
     private LocalDateTime updatedAt;
 
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", nullable = false)
+    private Member member;
 
 
 }
