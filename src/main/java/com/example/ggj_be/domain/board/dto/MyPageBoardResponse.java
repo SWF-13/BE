@@ -12,7 +12,7 @@ public class MyPageBoardResponse {
     private String title;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
-    private Long userId;  // 작성자 ID
+    private Long userId;
 
     @Builder
     public MyPageBoardResponse(Board board) {
