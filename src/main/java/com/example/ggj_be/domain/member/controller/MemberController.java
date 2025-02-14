@@ -7,7 +7,6 @@ import com.example.ggj_be.domain.member.Member;
 import com.example.ggj_be.global.annotation.AuthMember;
 import com.example.ggj_be.global.response.ApiResponse;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;

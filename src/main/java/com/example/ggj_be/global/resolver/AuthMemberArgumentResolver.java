@@ -19,7 +19,6 @@ import org.springframework.security.core.Authentication;
 @RequiredArgsConstructor
 public class AuthMemberArgumentResolver implements HandlerMethodArgumentResolver {
 
-    private final MemberQueryService memberQueryService;
 
     @Override
     public boolean supportsParameter(MethodParameter parameter) {
