@@ -5,6 +5,7 @@ import com.example.ggj_be.domain.auth.dto.SignUpRequest;
 import com.example.ggj_be.domain.common.CustomResult;
 import com.example.ggj_be.domain.enums.Role;
 import com.example.ggj_be.domain.member.Member;
+import com.example.ggj_be.domain.member.dto.BankRequest;
 import com.example.ggj_be.domain.member.dto.MemberRequest;
 import com.example.ggj_be.domain.member.repository.MemberRepository;
 import com.example.ggj_be.global.exception.ApiException;
@@ -41,18 +42,6 @@ public class MemberCommandServiceImpl implements MemberCommandService {
         return CustomResult.toCustomResult(Long.valueOf(existMember.getAccountid()));
     }
 
-//    @Override
-//    public Member signUp(SignUpRequest request) {
-//
-//        if (memberRepository.findByAccountid(request.getAccountId()).isPresent()) {
-//            throw new ApiException(ErrorStatus._MEMBER_DUPLICATED_ID);
-//        }
-//
-//        Member member = MemberRequest.toEntity(request.getAccountId(),
-//                bCryptEncoder.encode(request.getPassword()));
-//
-//        return memberRepository.save(member);
-//    }
 
 
     @jakarta.transaction.Transactional
@@ -101,5 +90,18 @@ public class MemberCommandServiceImpl implements MemberCommandService {
 
 
     }
+
+    @Override
+    public Member addBankInfo(Long userId, BankRequest.BankRequestDto request) {
+        Member member = memberRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("Member not found"));
+
+        Member updatedmember = member.toBuilder()
+                .bankAccount(request.getBankAccount())
+                .bankName(request.getBankName())
+                .build();
+        return memberRepository.save(updatedmember);
+    }
+
 
 }

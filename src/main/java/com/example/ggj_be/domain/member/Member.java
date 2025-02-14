@@ -2,6 +2,7 @@ package com.example.ggj_be.domain.member;
 
 
 import com.example.ggj_be.domain.board.Board;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
@@ -14,7 +15,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 @Entity
-@Builder
+@Builder(toBuilder = true)
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -69,6 +70,13 @@ public class Member {
     @Column(name = "agree_info", nullable = false)
     private Boolean agreeInfo;  // 개인정보 처리방침 동의 여부
 
+    @Column(name = "bank_account", nullable = true, length = 20)
+    private String bankAccount;
+
+    @Column(name = "bank_name", nullable = true, length = 20)
+    private String bankName;
+
+    @JsonIgnore
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Board> boards;
 
@@ -76,4 +84,24 @@ public class Member {
     public void changePassword(String newPassword) {
         this.password = newPassword;
     }
+
+//    public Member toBuilder() {
+//        return Member.builder()
+//                .userId(this.userId)
+//                .accountid(this.accountid)
+//                .nameKo(this.nameKo)
+//                .password(this.password)
+//                .nickName(this.nickName)
+//                .email(this.email)
+//                .joinDt(this.joinDt)
+//                .role(this.role)
+//                .userImg(this.userImg)
+//                .userBirth(this.userBirth)
+//                .agreeService(this.agreeService)
+//                .agreeInfo(this.agreeInfo)
+//                .bankAccount(this.bankAccount)
+//                .bankName(this.bankName)
+//                .boards(this.boards)
+//                .build();
+//    }
 }
