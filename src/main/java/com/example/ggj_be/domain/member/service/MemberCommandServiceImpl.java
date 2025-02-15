@@ -1,6 +1,5 @@
 package com.example.ggj_be.domain.member.service;
 
-import com.example.ggj_be.domain.auth.dto.AuthRequest;
 import com.example.ggj_be.domain.auth.dto.SignUpRequest;
 import com.example.ggj_be.domain.common.CustomResult;
 import com.example.ggj_be.domain.enums.Role;
@@ -16,8 +15,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDate;
+import java.util.UUID;
 
 @Service
 @Transactional
@@ -42,6 +43,13 @@ public class MemberCommandServiceImpl implements MemberCommandService {
         return CustomResult.toCustomResult(Long.valueOf(existMember.getAccountid()));
     }
 
+    @Override
+    public MemberRequest.ChangeNickName changeNickName(Member member, MemberRequest.ChangeNickName request) {
+        member.changeNickName(request.getNickName());
+        memberRepository.save(member);
+        log.info("change nickname to " + request.getNickName());
+        return request;
+    }
 
 
     @jakarta.transaction.Transactional
@@ -55,11 +63,6 @@ public class MemberCommandServiceImpl implements MemberCommandService {
             throw new ApiException(ErrorStatus._MEMBER_DUPLICATED_NICKNAME);
         }
 
-//        // 이메일 인증 코드 확인
-//        String storedAuthCode = redisUtil.getEmailCode(request.getAccountId());
-//        if (storedAuthCode == null || !storedAuthCode.equals(request.getAuthCode())) {
-//            throw new ApiException(ErrorStatus._MAIL_WRONG_CODE);
-//        }
 
         // 비밀번호 암호화
         String encodedPassword = passwordEncoder.encode(request.getPassword());

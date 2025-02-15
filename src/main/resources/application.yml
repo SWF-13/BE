@@ -2,6 +2,12 @@ server:
   port: 8080
 
 spring:
+  ncp:
+    storage:
+      endpoint: kr.object.ncloudstorage.com
+      access-key: ncp_iam_BPAMKR2dR61euJgtiu8t
+      secret-key: ncp_iam_BPKMKR3p8VvwtfRpkH7B4ejaJc5sHOQuUa
+      bucket-name: profile-img
   datasource:
     url: jdbc:mysql://db-328qgi-kr.vpc-pub-cdb.ntruss.com/test
     username: test

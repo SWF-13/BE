@@ -36,7 +36,9 @@ dependencies {
     implementation 'mysql:mysql-connector-java:8.0.29'
     implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
     implementation 'org.springframework.boot:spring-boot-starter-security'
-
+    implementation 'com.amazonaws:aws-java-sdk-s3:1.11.238'
+    implementation 'javax.xml.bind:jaxb-api:2.3.1'
+    implementation 'org.glassfish.jaxb:jaxb-runtime:2.3.5'
     runtimeOnly 'com.mysql:mysql-connector-j'
 
     // Lombok

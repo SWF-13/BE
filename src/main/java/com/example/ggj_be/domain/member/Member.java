@@ -82,26 +82,23 @@ public class Member {
 
     //비밀번호 변경 시 이용
     public void changePassword(String newPassword) {
+        if(newPassword.length() <8){
+            throw new IllegalArgumentException("비밀번호는 8자 이상이어야 합니다.");
+        }
         this.password = newPassword;
     }
 
-//    public Member toBuilder() {
-//        return Member.builder()
-//                .userId(this.userId)
-//                .accountid(this.accountid)
-//                .nameKo(this.nameKo)
-//                .password(this.password)
-//                .nickName(this.nickName)
-//                .email(this.email)
-//                .joinDt(this.joinDt)
-//                .role(this.role)
-//                .userImg(this.userImg)
-//                .userBirth(this.userBirth)
-//                .agreeService(this.agreeService)
-//                .agreeInfo(this.agreeInfo)
-//                .bankAccount(this.bankAccount)
-//                .bankName(this.bankName)
-//                .boards(this.boards)
-//                .build();
-//    }
-}
+    //닉네임 변경
+    public void changeNickName(String newNickName) {
+        if(newNickName.length() >8){
+            throw new IllegalArgumentException("닉네임은 8자를 초과 할 수 없습니다.");
+        }
+        this.nickName = newNickName;
+    }
+
+    //프로필 사진 변경
+    public void updateProfileImage(String imageUrl) {
+        this.userImg = imageUrl;  // 프로필 이미지 필드에 새 URL 저장
+    }
+
+    }
