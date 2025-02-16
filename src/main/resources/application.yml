@@ -57,8 +57,8 @@ spring:
             client-secret: 8450266fd4d4c69a004d7b4f77e07c72106682d9
             scope: profile, email
           naver:
-            client-id: 3rVboUvxEZ7HwQuY30OB
-            client-secret: 4vVsarkBmq
+            client-id: 81vPZsOtd5LfziPCt08f
+            client-secret: X4YY0wPOCl
             client-authentication-method: client_secret_post
             authorization-grant-type: authorization_code
             redirect-uri: "{baseUrl}/{action}/oauth2/code/{registrationId}"
