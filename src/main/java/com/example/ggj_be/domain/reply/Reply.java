@@ -1,4 +1,4 @@
-package com.example.ggj_be.domain.board;
+package com.example.ggj_be.domain.reply;
 
 
 import jakarta.persistence.*;
@@ -11,28 +11,24 @@ import java.time.LocalDateTime;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Table(name = "board")
-public class Board {
+@Table(name = "reply")
+public class Reply {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column
-    private Long board_id;
-
-    @Column(nullable = false)
-    private long category_id;
+    private Long reply_id;
 
     @Column(nullable = false)
     private long user_seq;
-    
-    @Column(nullable = true, length = 100)
-    private String title;
-    
+
     @Column(nullable = false)
-    @Lob
+    private long board_id;
+    
+    @Column(nullable = false, length = 1000)
     private String content;
 
     @Column(nullable = true)
-    private int board_prize;
+    private LocalDateTime acc_at;
 
     @Column(nullable = false)
     private LocalDateTime created_at;
@@ -40,11 +36,7 @@ public class Board {
     @Column(nullable = false)
     private LocalDateTime updated_at;
 
-    @Column(nullable = false)
-    private LocalDateTime end_at;
 
-    @Column(nullable = true)
-    private LocalDateTime acc_at;
     
 
     //생성시 자동 now()설정
