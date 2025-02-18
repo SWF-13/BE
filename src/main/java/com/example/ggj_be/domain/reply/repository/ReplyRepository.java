@@ -1,11 +1,10 @@
-package com.example.ggj_be.domain.comment.repository;
+package com.example.ggj_be.domain.reply.repository;
 
-import com.example.ggj_be.domain.comment.Comment;
 import com.example.ggj_be.domain.reply.Reply;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
 
-public interface CommentRepository extends JpaRepository<Comment, Long> {
+public interface ReplyRepository extends JpaRepository<Reply, Long> {
     List<Reply> findByMember_UserSeq(Long userSeq);
 }

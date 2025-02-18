@@ -1,8 +1,7 @@
-package com.example.ggj_be.domain.comment.service;
+package com.example.ggj_be.domain.reply.service;
 
-import com.example.ggj_be.domain.comment.Comment;
-import com.example.ggj_be.domain.comment.dto.MyPageCommentResponse;
-import com.example.ggj_be.domain.comment.repository.CommentRepository;
+import com.example.ggj_be.domain.reply.dto.MyPageCommentResponse;
+import com.example.ggj_be.domain.reply.repository.ReplyRepository;
 import com.example.ggj_be.domain.member.Member;
 import com.example.ggj_be.domain.reply.Reply;
 import lombok.RequiredArgsConstructor;
@@ -16,13 +15,13 @@ import java.util.stream.Collectors;
 @Service
 @Transactional
 @RequiredArgsConstructor
-public class CommentCommandServiceImpl implements CommentCommandService{
-    private final CommentRepository commentRepository;
+public class ReplyCommandServiceImpl implements ReplyCommandService {
+    private final ReplyRepository replyRepository;
 
     @Override
     public List<MyPageCommentResponse> getMyComments(Member member) {
         Long userId = member.getUserSeq();
-        List<Reply> replies = commentRepository.findByMember_UserSeq(userId);
+        List<Reply> replies = replyRepository.findByMember_UserSeq(userId);
         return replies.stream()
                 .map(MyPageCommentResponse::new)
                 .collect(Collectors.toList());

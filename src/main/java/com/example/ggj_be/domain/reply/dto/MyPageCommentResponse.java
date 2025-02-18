@@ -1,4 +1,4 @@
-package com.example.ggj_be.domain.comment.dto;
+package com.example.ggj_be.domain.reply.dto;
 
 import com.example.ggj_be.domain.reply.Reply;
 import lombok.Builder;

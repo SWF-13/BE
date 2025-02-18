@@ -3,8 +3,8 @@ package com.example.ggj_be.domain.member.controller;
 
 import com.example.ggj_be.domain.board.dto.MyPageBoardResponse;
 import com.example.ggj_be.domain.board.service.BoardCommandService;
-import com.example.ggj_be.domain.comment.dto.MyPageCommentResponse;
-import com.example.ggj_be.domain.comment.service.CommentCommandService;
+import com.example.ggj_be.domain.reply.dto.MyPageCommentResponse;
+import com.example.ggj_be.domain.reply.service.ReplyCommandService;
 import com.example.ggj_be.domain.member.Member;
 import com.example.ggj_be.domain.member.dto.BankRequest;
 import com.example.ggj_be.domain.member.dto.MemberRequest;
@@ -18,7 +18,6 @@ import com.example.ggj_be.global.s3.FileStorageService;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -26,7 +25,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.List;
 import java.util.UUID;
@@ -37,7 +35,7 @@ import java.util.UUID;
 @Slf4j
 public class MemberController {
     private final BoardCommandService boardCommandService;
-    private final CommentCommandService commentCommandService;
+    private final ReplyCommandService replyCommandService;
     private final ScrapCommandService scrapCommandService;
     private final MemberCommandService memberCommandService;
     private final FileStorageService fileStorageService;
@@ -52,7 +50,7 @@ public class MemberController {
 
     @GetMapping("/mycommentlist")
     public ApiResponse<List<MyPageCommentResponse>> getMyComments(@AuthMember Member member) {
-        List<MyPageCommentResponse> commentList = commentCommandService.getMyComments(member);
+        List<MyPageCommentResponse> commentList = replyCommandService.getMyComments(member);
         return ApiResponse.onSuccess(commentList);
     }
     @GetMapping("/scraplist")
