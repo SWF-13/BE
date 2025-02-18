@@ -17,12 +17,12 @@ public class MyPageBoardResponse {
 
     @Builder
     public MyPageBoardResponse(Board board) {
-        this.boardId = board.getBoardId();
-        this.category = board.getCategory();
+        this.boardId = board.getBoard_id();
+        this.category = String.valueOf(board.getCategory_id());
         this.title = board.getTitle();
         this.content = board.getContent();
         this.createdAt = board.getCreated_at();
         this.updatedAt = board.getUpdated_at();
-        this.userId = board.getMember().getUserId();  // Member 엔티티에서 userId 가져오기
+        this.userId = board.getMember().getUserSeq();
     }
 }

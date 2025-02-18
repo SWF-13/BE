@@ -18,13 +18,13 @@ public class Board {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "board_id")
-    private Long  boardId;
+    private Long  board_id;
 
     @Column(nullable = false)
-    private String category;
+    private Long category_id;
 
-    @Column(nullable = false)
-    private long user_seq;
+//    @Column(nullable = false)
+//    private long user_seq;
 
     @Column(nullable = true, length = 100)
     private String title;
@@ -48,6 +48,10 @@ public class Board {
     @Column(nullable = true)
     private LocalDateTime acc_at;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_seq", nullable = false)
+    private Member member;
+
 
     //생성시 자동 now()설정
     @PrePersist
@@ -61,9 +65,6 @@ public class Board {
     protected void onUpdate() {
     this.updated_at = LocalDateTime.now();
     }
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id", nullable = false)
-    private Member member;
 
 
 }

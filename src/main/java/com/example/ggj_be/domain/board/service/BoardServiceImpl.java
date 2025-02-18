@@ -31,7 +31,7 @@ public class BoardServiceImpl implements BoardService {
             
             Board board = Board.builder()
             .category_id(request.getCategory_id())
-            .user_seq(request.getUser_seq())
+            .member(request.getMember())
             .title(request.getTitle())
             .content(request.getContent())
             .board_prize(request.getBoard_prize())

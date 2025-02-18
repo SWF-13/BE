@@ -29,7 +29,7 @@ public class Member {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column
-    private Long userId;  // 고유 회원번호
+    private Long userSeq;  // 고유 회원번호
 
     @Column(name = "account_id")
     private String  accountid;

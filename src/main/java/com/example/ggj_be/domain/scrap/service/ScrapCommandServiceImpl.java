@@ -20,8 +20,8 @@ public class ScrapCommandServiceImpl implements ScrapCommandService {
 
     @Override
     public List<ScrapDto> getScraps(Member member) {
-        Long userId = member.getUserId();
-        List<Scrap> scraps = scrapRepository.findByMember_UserId(userId);
+        Long userId = member.getUserSeq();
+        List<Scrap> scraps = scrapRepository.findByMember_UserSeq(userId);
         return scraps.stream()
                 .map(ScrapDto::new)
                 .collect(Collectors.toList());

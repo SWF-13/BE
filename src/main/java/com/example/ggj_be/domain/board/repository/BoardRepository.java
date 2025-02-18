@@ -10,7 +10,10 @@ import java.util.List;
 
 
 public interface BoardRepository extends JpaRepository<Board, Long> {
-    List<Board> findByMember_UserId(Long userId);
+//    List<Board> findByMember_User_seq(Long user_seq);
+List<Board> findByMember_UserSeq(Long userSeq);
+
+
 
     @Query(value = "SELECT " +
             "    a.category_name, "+

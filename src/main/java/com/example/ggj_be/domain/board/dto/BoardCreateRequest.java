@@ -1,5 +1,6 @@
 package com.example.ggj_be.domain.board.dto;
 
+import com.example.ggj_be.domain.member.Member;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -10,7 +11,7 @@ import java.time.LocalDateTime;
 public class BoardCreateRequest {
 
     private long category_id;
-    private long user_seq;
+    private Member member;
     private String title;
     private String content;
     private int board_prize;

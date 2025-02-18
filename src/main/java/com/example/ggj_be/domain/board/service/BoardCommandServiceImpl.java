@@ -22,8 +22,8 @@ public class BoardCommandServiceImpl implements BoardCommandService {
 
     @Override
     public List<MyPageBoardResponse> getMyBoards(Member member) {
-        Long userId = member.getUserId();// 현재 로그인한 유저 ID 가져오기
-        List<Board> boards = boardRepository.findByMember_UserId(userId);
+        Long userId = member.getUserSeq();// 현재 로그인한 유저 ID 가져오기
+        List<Board> boards = boardRepository.findByMember_UserSeq(userId);
         return boards.stream()
                 .map(MyPageBoardResponse::new)  // Board → BoardDto 변환
                 .collect(Collectors.toList());

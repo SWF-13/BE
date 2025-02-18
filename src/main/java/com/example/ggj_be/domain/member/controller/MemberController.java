@@ -63,7 +63,7 @@ public class MemberController {
     @Operation(summary = "은행 정보 등록")
     @PatchMapping("/bank-info")
     public ApiResponse<Member> bankInfo(@AuthMember Member member, @RequestBody BankRequest.BankRequestDto request) {
-        Member updatedMember = memberCommandService.addBankInfo(member.getUserId(), request);
+        Member updatedMember = memberCommandService.addBankInfo(member.getUserSeq(), request);
         return ApiResponse.onSuccess(updatedMember);
     }
 

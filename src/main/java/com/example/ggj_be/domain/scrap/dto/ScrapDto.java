@@ -19,10 +19,10 @@ public class ScrapDto {
     @Builder
     public ScrapDto(Scrap scrap) {
         this.id = scrap.getId();
-        this.boardId = scrap.getBoard().getBoardId();
-        this.userId = scrap.getMember().getUserId();
+        this.boardId = scrap.getBoard().getBoard_id();
+        this.userId = scrap.getMember().getUserSeq();
         this.scrap_createdAt = scrap.getCreatedAt();
         this.title = scrap.getBoard().getTitle();
-        this.board_created_at = scrap.getBoard().getCreatedAt();
+        this.board_created_at = scrap.getBoard().getCreated_at();
     }
 }
