@@ -24,10 +24,10 @@ public class MailController {
 
     @Operation(summary = "이메일 인증 코드 전송", description = "비밀번호 변경 시 이메일 인증 단계가 필요함 / 인증코드 숫자 6자리를 전송합니다.")
     @PostMapping
-    public ApiResponse<String> sendAuthCode(@RequestBody @Valid MemberRequest.AuthAccountId request)
+    public ApiResponse<String> sendAuthCode(@RequestBody @Valid MemberRequest.SendEmail request)
             throws MessagingException {
 
-        mailService.sendEmailMessage(request.getAccountId());
+        mailService.sendEmailMessage(request.getEmail());
 
         return ApiResponse.onSuccess("성공적으로 인증코드가 전송되었습니다.");
     }

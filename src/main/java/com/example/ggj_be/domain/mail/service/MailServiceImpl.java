@@ -1,6 +1,10 @@
 package com.example.ggj_be.domain.mail.service;
 
+import com.example.ggj_be.domain.member.Member;
 import com.example.ggj_be.domain.member.dto.MemberRequest;
+import com.example.ggj_be.domain.member.repository.MemberRepository;
+import com.example.ggj_be.domain.member.service.MemberCommandService;
+import com.example.ggj_be.domain.member.service.MemberQueryService;
 import com.example.ggj_be.global.exception.ApiException;
 import com.example.ggj_be.global.response.code.status.ErrorStatus;
 import com.example.ggj_be.global.util.RedisUtil;
@@ -26,21 +30,42 @@ public class MailServiceImpl implements MailService {
     private final JavaMailSender javaMailSender;
     private final SpringTemplateEngine templateEngine;
     private final RedisUtil redisUtil;
+    private final MemberRepository memberRepository;
+    private final MemberCommandService memberCommandService;
+    private final MemberQueryService memberQueryService;
 
     @Override
     @Async
-    public void sendEmailMessage(String accountId) throws MessagingException {
+    public void sendEmailMessage(String email) throws MessagingException {
 
         String authCode = createCode();
 
         MimeMessage message = javaMailSender.createMimeMessage();
-        String email = accountId;
         message.addRecipients(MimeMessage.RecipientType.TO, email);
         message.setSubject("[끄적끄적] 이메일 인증 - 인증 코드 전송");
         message.setText(setContext(authCode), "UTF-8", "html");
         javaMailSender.send(message);
 
-        redisUtil.setEmailCode(accountId, authCode);
+        redisUtil.setEmailCode(email, authCode);
+    }
+
+    @Override
+    @Async
+    public void sendPasswordMessage(String email) throws MessagingException {
+        //ToDo: 이메일 DTO를 유저로부터 받고 이를 기반으로 이메일 인증 이후 임시비밀번호를 해당 이메일로 발송
+
+//        String authCode = createCode();
+//
+//        Optional<Member> member = memberRepository.findByAccountid(accountId);
+//        MimeMessage message = javaMailSender.createMimeMessage();
+//        String email = member.get().getEmail();
+//        message.addRecipients(MimeMessage.RecipientType.TO, email);
+//        message.setSubject("[끄적끄적] 이메일 인증 - 임시 비밀번호 전송");
+//        message.setText(setContext(authCode), "UTF-8", "html");
+//        javaMailSender.send(message);
+//
+//
+//        redisUtil.setEmailCode(accountId, authCode);
     }
 
     @Override

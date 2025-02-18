@@ -20,6 +20,13 @@ public class MemberRequest {
         @NotBlank(message = "비밀번호가 입력되지 않았습니다.")
         private String password;
     }
+    @Schema(description = "이메일 DTO")
+    @Getter
+    public static class SendEmail {
+        @Schema(description = "회원의 이메일", example = "example@example.com")
+        @NotBlank(message = "이메일이 입력되지 않았습니다.")
+        private String email;
+    }
 
 
     @Schema(description = "이메일 인증 요청 DTO")

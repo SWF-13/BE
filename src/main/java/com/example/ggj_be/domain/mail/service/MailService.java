@@ -10,4 +10,6 @@ public interface MailService {
 
     String verifyAuthCode(MemberRequest.VerifyCode request);
 
+    void sendPasswordMessage(String accountId) throws MessagingException;
+
 }
