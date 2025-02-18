@@ -1,8 +1,10 @@
 package com.example.ggj_be.domain.board;
 
 
+import com.example.ggj_be.domain.member.Member;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.ColumnDefault;
 
 import java.time.LocalDateTime;
 
@@ -15,18 +17,18 @@ import java.time.LocalDateTime;
 public class Board {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column
-    private Long board_id;
+    @Column(name = "board_id")
+    private Long  boardId;
 
     @Column(nullable = false)
-    private long category_id;
+    private String category;
 
     @Column(nullable = false)
     private long user_seq;
-    
+
     @Column(nullable = true, length = 100)
     private String title;
-    
+
     @Column(nullable = false)
     @Lob
     private String content;
@@ -45,7 +47,7 @@ public class Board {
 
     @Column(nullable = true)
     private LocalDateTime acc_at;
-    
+
 
     //생성시 자동 now()설정
     @PrePersist
@@ -59,5 +61,9 @@ public class Board {
     protected void onUpdate() {
     this.updated_at = LocalDateTime.now();
     }
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", nullable = false)
+    private Member member;
+
 
 }

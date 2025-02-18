@@ -46,6 +46,15 @@ public class MemberRequest {
         private String authCode;
     }
 
+    @Schema(description = "닉네임 변경 DTO")
+    @Getter
+    public static class ChangeNickName {
+        @Schema(description = "회원이 변경하고자 하는닉네임", example = "updatedNick")
+        @NotBlank(message = "닉네임이 입력되지 않았습니다.")
+        private String nickName;
+
+    }
+
     public static Member toEntity(String accountId, String password) {
 
         return Member.builder()

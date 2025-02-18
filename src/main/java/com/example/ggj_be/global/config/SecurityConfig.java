@@ -1,6 +1,10 @@
 package com.example.ggj_be.global.config;
 
 import com.example.ggj_be.domain.auth.oauth2.CustomOAuth2User;
+import com.example.ggj_be.domain.auth.oauth2.HttpCookieOAuth2AuthorizationRequestRepository;
+import com.example.ggj_be.domain.auth.oauth2.handler.OAuth2AuthenticationFailureHandler;
+import com.example.ggj_be.domain.auth.oauth2.handler.OAuth2AuthenticationSuccessHandler;
+import com.example.ggj_be.domain.auth.oauth2.service.CustomOAuth2UserService;
 import com.example.ggj_be.global.jwt.*;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -39,8 +43,10 @@ public class SecurityConfig {
     private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
     private final JwtAccessDeniedHandler jwtAccessDeniedHandler;
     private final JwtExceptionFilter jwtExceptionFilter;
-    private final OAuth2UserService oAuth2UserService;
-    private final OAuth2SuccessHandler oAuth2SuccessHandler;
+    private final CustomOAuth2UserService customOAuth2UserService;
+    private final OAuth2AuthenticationSuccessHandler oAuth2AuthenticationSuccessHandler;
+    private final OAuth2AuthenticationFailureHandler oAuth2AuthenticationFailureHandler;
+    private final HttpCookieOAuth2AuthorizationRequestRepository httpCookieOAuth2AuthorizationRequestRepository;
 
     @Bean
     public static BCryptPasswordEncoder bCryptPasswordEncoder() {
@@ -81,9 +87,11 @@ public class SecurityConfig {
                                 .requestMatchers("/api/emails/**").permitAll()//이메일 인증 API에 대해서는 인증 없이 접근 허용
                                 .anyRequest()
                                 .authenticated())
-                .oauth2Login(oauth2 -> oauth2
-                        .userInfoEndpoint(userInfo -> userInfo.userService(oAuth2UserService))
-                        .successHandler(oAuth2SuccessHandler) // 생성자 주입된 OAuth2SuccessHandler 사용
+                .oauth2Login(configure ->
+                        configure.authorizationEndpoint(config -> config.authorizationRequestRepository(httpCookieOAuth2AuthorizationRequestRepository))
+                                .userInfoEndpoint(config -> config.userService(customOAuth2UserService))
+                                .successHandler(oAuth2AuthenticationSuccessHandler)
+                                .failureHandler(oAuth2AuthenticationFailureHandler)
                 )
                 .exceptionHandling(handler -> handler
                         .authenticationEntryPoint(jwtAuthenticationEntryPoint)
