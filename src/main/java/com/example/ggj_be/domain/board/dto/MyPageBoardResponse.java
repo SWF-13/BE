@@ -13,7 +13,7 @@ public class MyPageBoardResponse {
     private String content;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
-    private Long userId;
+    private Long userId;  // 작성자 ID
 
     @Builder
     public MyPageBoardResponse(Board board) {
@@ -21,8 +21,8 @@ public class MyPageBoardResponse {
         this.category = board.getCategory();
         this.title = board.getTitle();
         this.content = board.getContent();
-        this.createdAt = board.getCreatedAt();
-        this.updatedAt = board.getUpdatedAt();
+        this.createdAt = board.getCreated_at();
+        this.updatedAt = board.getUpdated_at();
         this.userId = board.getMember().getUserId();  // Member 엔티티에서 userId 가져오기
     }
 }
