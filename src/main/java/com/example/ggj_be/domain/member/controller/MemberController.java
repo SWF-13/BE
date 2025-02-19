@@ -16,6 +16,7 @@ import com.example.ggj_be.global.annotation.AuthMember;
 import com.example.ggj_be.global.response.ApiResponse;
 import com.example.ggj_be.global.s3.FileStorageService;
 import io.swagger.v3.oas.annotations.Operation;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -94,6 +95,16 @@ public class MemberController {
         } catch (IOException e) {
             return ResponseEntity.status(500).body("파일 업로드에 실패했습니다.");
         }
+    }
+
+    @Operation(summary = "(이메일 인증 코드 검증 후) 회원의 비밀번호를 변경합니다.", description = "JWT을 Header에 담아서 요청해야합니다.")
+    @PatchMapping("/changePassword")
+    public ApiResponse<String> changePassword(@AuthMember Member member,
+                                                    @RequestBody @Valid MemberRequest.ChangePassword request) {
+
+        return ApiResponse.onSuccess(
+                memberCommandService.changePassword(member, request.getPassword()));
+
     }
 
 

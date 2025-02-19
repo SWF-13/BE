@@ -8,7 +8,7 @@ import com.example.ggj_be.domain.member.dto.MemberRequest;
 import org.springframework.web.multipart.MultipartFile;
 
 public interface MemberCommandService {
-    CustomResult changePassword(Member member, String newPassword);
+    String changePassword(Member member, String newPassword);
 
     Member signUp(SignUpRequest request);
     Member addBankInfo(Long userId, BankRequest.BankRequestDto request);
