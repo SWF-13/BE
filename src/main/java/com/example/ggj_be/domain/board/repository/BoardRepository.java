@@ -1,26 +1,32 @@
 package com.example.ggj_be.domain.board.repository;
-
-import com.example.ggj_be.domain.board.Board;
-import com.example.ggj_be.domain.board.dto.BoardSelectEndRequest;
+import com.example.ggj_be.domain.board.dto.BoardSelecHomeListRequest;
 import org.springframework.data.jpa.repository.JpaRepository;
-
 import com.example.ggj_be.domain.board.Board;
 import org.springframework.data.jpa.repository.Query;
 import java.util.List;
+import org.springframework.stereotype.Repository;
+import org.springframework.data.repository.query.Param;
 
 
+@Repository
 public interface BoardRepository extends JpaRepository<Board, Long> {
-//    List<Board> findByMember_User_seq(Long user_seq);
-List<Board> findByMember_UserSeq(Long userSeq);
-
-
 
     @Query(value = "SELECT " +
+            "    b.board_id, "+
             "    a.category_name, "+
             "    b.title, "+
+            "    b.board_prize, "+
             "    IFNULL(c.good_count, 0) AS good_count, "+
             "    IFNULL(d.reply_count, 0) AS reply_count, "+
-            "    DATEDIFF(b.end_at, NOW()) AS end_count "+
+            "    DATEDIFF(b.end_at, NOW()) AS end_count, "+
+            "CASE WHEN EXISTS (SELECT 1 " +
+                              "FROM good e " +
+                              "WHERE type = 'board' " +
+                                "AND user_seq = :user_seq " +
+                                "AND b.board_id = e.object_id) " +
+                "THEN TRUE " +
+                "ELSE FALSE " +
+                "END good_chk " +
             "FROM board b "+
             "JOIN category a ON a.category_id = b.category_id "+
             "LEFT JOIN ( "+
@@ -39,7 +45,12 @@ List<Board> findByMember_UserSeq(Long userSeq);
             ") d ON b.board_id = d.board_id "+
             "WHERE b.acc_at IS NULL "+
             "	AND TIMESTAMPDIFF(SECOND, NOW(), b.end_at) > 0 "+
-            "ORDER BY b.end_at ASC "+
-            "LIMIT 5", nativeQuery = true)
-    List<BoardSelectEndRequest> findBoardSelectEndRequest();
+            "ORDER BY " +
+            "    CASE " +
+            "        WHEN :list_type = 1 THEN b.end_at " +
+            "        WHEN :list_type = 2 THEN IFNULL(c.good_count, 0) " +
+            "        WHEN :list_type = 3 THEN b.board_prize " +
+            "    END " +
+            "LIMIT 10", nativeQuery = true)
+    List<BoardSelecHomeListRequest> findBoardSelectEndRequest(@Param("user_seq") Long user_seq, @Param("list_type") int list_type);
 }
