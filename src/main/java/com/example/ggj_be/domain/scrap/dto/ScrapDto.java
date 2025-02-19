@@ -1,5 +1,6 @@
 package com.example.ggj_be.domain.scrap.dto;
 
+import com.example.ggj_be.domain.board.Board;
 import com.example.ggj_be.domain.member.Member;
 import com.example.ggj_be.domain.scrap.Scrap;
 import lombok.Builder;
@@ -10,7 +11,7 @@ import java.time.LocalDateTime;
 @Getter
 public class ScrapDto {
     private Long id;
-    private Long boardId;
+    private Board board;
     private Long userId;
     private LocalDateTime scrap_createdAt;
     private String title;
@@ -19,7 +20,7 @@ public class ScrapDto {
     @Builder
     public ScrapDto(Scrap scrap) {
         this.id = scrap.getId();
-        this.boardId = scrap.getBoard().getBoard_id();
+        this.board= scrap.getBoard();
         this.userId = scrap.getMember().getUserSeq();
         this.scrap_createdAt = scrap.getCreatedAt();
         this.title = scrap.getBoard().getTitle();
