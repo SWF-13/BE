@@ -20,6 +20,13 @@ public class MemberRequest {
         @NotBlank(message = "비밀번호가 입력되지 않았습니다.")
         private String password;
     }
+
+    @Schema(description = "비밀번호 변경 응답 DTO")
+    @Getter
+    public static class ChangedPassword{
+        private String newPassword;
+    }
+
     @Schema(description = "이메일 DTO")
     @Getter
     public static class SendEmail {
@@ -61,6 +68,8 @@ public class MemberRequest {
         private String nickName;
 
     }
+
+
 
     public static Member toEntity(String accountId, String password) {
 

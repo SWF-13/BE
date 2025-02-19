@@ -23,4 +23,5 @@ public class CustomResult {
                 .createdAt(LocalDateTime.now())
                 .build();
     }
+
 }

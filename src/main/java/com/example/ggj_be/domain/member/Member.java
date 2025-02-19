@@ -33,6 +33,7 @@ public class Member {
 
     @Column(name = "account_id")
     private String  accountid;
+
     @Column(nullable = false, length = 20)
     private String nameKo;
 

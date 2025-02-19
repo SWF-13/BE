@@ -33,14 +33,14 @@ public class MemberCommandServiceImpl implements MemberCommandService {
     private final RedisUtil redisUtil;
 
     @Override
-    public CustomResult changePassword(Member member, String newPassword) {
+    public String changePassword(Member member, String newPassword) {
 
         String encodePassword = bCryptEncoder.encode(newPassword);
         Member existMember = memberQueryService.findMember(member);
+
         existMember.changePassword(encodePassword);
 
-
-        return CustomResult.toCustomResult(Long.valueOf(existMember.getAccountid()));
+        return encodePassword;
     }
 
     @Override

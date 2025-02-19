@@ -5,6 +5,7 @@ import com.example.ggj_be.domain.member.Member;
 import com.example.ggj_be.domain.member.repository.MemberRepository;
 import com.example.ggj_be.global.exception.ApiException;
 import com.example.ggj_be.global.response.code.status.ErrorStatus;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.Cacheable;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -14,6 +15,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
+@Slf4j
 public class MemberQueryServiceImpl implements MemberQueryService {
 
     private final MemberRepository memberRepository;
@@ -29,7 +31,7 @@ public class MemberQueryServiceImpl implements MemberQueryService {
 
     @Override
     public Member findMember(Member member) {
-        return memberRepository.findById(Long.valueOf(member.getAccountid())).orElseThrow(
+        return memberRepository.findByAccountid(member.getAccountid()).orElseThrow(
                 () -> new ApiException(ErrorStatus._MEMBER_NOT_FOUND)
         );
     }
