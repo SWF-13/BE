@@ -14,6 +14,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.scheduling.annotation.Async;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.thymeleaf.spring6.SpringTemplateEngine;
 
@@ -33,6 +34,7 @@ public class MailServiceImpl implements MailService {
     private final MemberRepository memberRepository;
     private final MemberCommandService memberCommandService;
     private final MemberQueryService memberQueryService;
+    private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
     @Override
     @Async
@@ -51,21 +53,27 @@ public class MailServiceImpl implements MailService {
 
     @Override
     @Async
-    public void sendPasswordMessage(String email) throws MessagingException {
-        //ToDo: 이메일 DTO를 유저로부터 받고 이를 기반으로 이메일 인증 이후 임시비밀번호를 해당 이메일로 발송
+    public void sendTemporaryPassword(String email) throws MessagingException {
+        String tempPassword = createCode();
 
-//        String authCode = createCode();
-//
-//        Optional<Member> member = memberRepository.findByAccountid(accountId);
-//        MimeMessage message = javaMailSender.createMimeMessage();
-//        String email = member.get().getEmail();
-//        message.addRecipients(MimeMessage.RecipientType.TO, email);
-//        message.setSubject("[끄적끄적] 이메일 인증 - 임시 비밀번호 전송");
-//        message.setText(setContext(authCode), "UTF-8", "html");
-//        javaMailSender.send(message);
-//
-//
-//        redisUtil.setEmailCode(accountId, authCode);
+        Optional<Member> member = Optional.ofNullable(memberRepository.findByEmail(email)
+                .orElseThrow(() -> new ApiException(ErrorStatus._MEMBER_NOT_FOUND)));
+
+        memberCommandService.changePassword(member.get(), tempPassword);
+
+
+        MimeMessage message = javaMailSender.createMimeMessage();
+        message.addRecipients(MimeMessage.RecipientType.TO, email);
+        message.setSubject("[끄적끄적] 임시 비밀번호 안내");
+
+        String emailContent = "<h3>임시 비밀번호 발급</h3>" +
+                "<p>아래의 임시 비밀번호로 로그인 후 비밀번호를 변경해주세요.</p>" +
+                "<strong>" + tempPassword + "</strong>" +
+                "<p>문의사항이 있으시면 아래 메일로 연락주세요.</p>" +
+                "<p>david5451231@gmail.com</p>";
+
+        message.setContent(emailContent, "text/html; charset=utf-8");
+        javaMailSender.send(message);
     }
 
     @Override
