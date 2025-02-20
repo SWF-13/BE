@@ -11,7 +11,8 @@ import java.util.List;
 
 public interface BoardRepository extends JpaRepository<Board, Long> {
 //    List<Board> findByMember_User_seq(Long user_seq);
-List<Board> findByMember_UserSeq(Long userSeq);
+    List<Board> findByMember_UserId(Long userId);
+
 
 
 
