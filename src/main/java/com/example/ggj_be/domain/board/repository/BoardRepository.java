@@ -2,6 +2,7 @@ package com.example.ggj_be.domain.board.repository;
 
 import com.example.ggj_be.domain.board.Board;
 import com.example.ggj_be.domain.board.dto.BoardSelectEndRequest;
+import com.example.ggj_be.domain.member.Member;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import com.example.ggj_be.domain.board.Board;
@@ -10,8 +11,9 @@ import java.util.List;
 
 
 public interface BoardRepository extends JpaRepository<Board, Long> {
-//    List<Board> findByMember_User_seq(Long user_seq);
+
     List<Board> findByMember_UserId(Long userId);
+    List<Board> findByMember(Member member);
 
 
 

@@ -1,6 +1,7 @@
 package com.example.ggj_be.domain.re_reply;
 
 
+import com.example.ggj_be.domain.member.Member;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -18,8 +19,9 @@ public class Re_reply {
     @Column
     private Long re_reply_id;
 
-    @Column(nullable = false)
-    private long user_seq;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_seq", nullable = true, foreignKey = @ForeignKey(value = ConstraintMode.NO_CONSTRAINT))
+    private Member member;  // 회원 정보 (외래키)
 
     @Column(nullable = false)
     private long reply_id;
@@ -51,5 +53,12 @@ public class Re_reply {
     protected void onUpdate() {
     this.updated_at = LocalDateTime.now();
     }
+
+    //멤버 탈퇴시 사용
+    public void unlinkMember() {
+        this.member = null;
+    }
+
+
 
 }

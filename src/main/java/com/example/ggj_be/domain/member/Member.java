@@ -79,7 +79,7 @@ public class Member {
     private String bankName;
 
     @JsonIgnore
-    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "member", cascade = CascadeType.PERSIST, orphanRemoval = false)
     private List<Board> boards;
 
     //비밀번호 변경 시 이용

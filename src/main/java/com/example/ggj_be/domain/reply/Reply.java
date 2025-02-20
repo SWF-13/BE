@@ -22,10 +22,11 @@ public class Reply {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "board_seq", nullable = false)
+
     private Board board;  // 게시판 정보 (외래키)
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_seq", nullable = false)
+    @JoinColumn(name = "user_seq", nullable = true, foreignKey = @ForeignKey(value = ConstraintMode.NO_CONSTRAINT))
     private Member member;  // 회원 정보 (외래키)
     
     @Column(nullable = false, length = 1000)
@@ -54,6 +55,11 @@ public class Reply {
     @PreUpdate
     protected void onUpdate() {
     this.updated_at = LocalDateTime.now();
+    }
+
+    //멤버 탈퇴시 사용
+    public void unlinkMember() {
+        this.member = null;
     }
 
 }

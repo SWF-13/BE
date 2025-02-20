@@ -49,7 +49,7 @@ public class Board {
     private LocalDateTime acc_at;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_seq", nullable = false)
+    @JoinColumn(name = "user_seq", nullable = true, foreignKey = @ForeignKey(value = ConstraintMode.NO_CONSTRAINT))
     private Member member;
 
 
@@ -64,6 +64,11 @@ public class Board {
     @PreUpdate
     protected void onUpdate() {
     this.updated_at = LocalDateTime.now();
+    }
+
+    //멤버 탈퇴시 사용
+    public void unlinkMember() {
+        this.member = null;
     }
 
 

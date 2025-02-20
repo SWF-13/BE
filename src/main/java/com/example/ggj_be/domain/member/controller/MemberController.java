@@ -3,6 +3,7 @@ package com.example.ggj_be.domain.member.controller;
 
 import com.example.ggj_be.domain.board.dto.MyPageBoardResponse;
 import com.example.ggj_be.domain.board.service.BoardCommandService;
+import com.example.ggj_be.domain.member.service.MemberQueryService;
 import com.example.ggj_be.domain.reply.dto.MyPageCommentResponse;
 import com.example.ggj_be.domain.reply.service.ReplyCommandService;
 import com.example.ggj_be.domain.member.Member;
@@ -41,6 +42,7 @@ public class MemberController {
     private final MemberCommandService memberCommandService;
     private final FileStorageService fileStorageService;
     private final MemberRepository memberRepository;
+    private final MemberQueryService memberQueryService;
 
 
     @GetMapping("/myboardlist")
@@ -105,6 +107,13 @@ public class MemberController {
         return ApiResponse.onSuccess(
                 memberCommandService.changePassword(member, request.getPassword()));
 
+    }
+
+    @Operation(summary = "계정 탈퇴 api")
+    @DeleteMapping("/deleteMember")
+    public ApiResponse<String> deleteMember(@AuthMember Member member) {
+        memberQueryService.deleteMember(member);
+        return ApiResponse.onSuccess("성공적으로 계정이 탈퇴되었습니다.");
     }
 
 
