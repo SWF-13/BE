@@ -17,12 +17,12 @@ public class MyPageBoardResponse {
 
     @Builder
     public MyPageBoardResponse(Board board) {
-        this.boardId = board.getBoard_id();
-        this.category = String.valueOf(board.getCategory_id());
+        this.boardId = board.getBoardId();
+        this.category = String.valueOf(board.getCategoryId());
         this.title = board.getTitle();
         this.content = board.getContent();
-        this.createdAt = board.getCreated_at();
-        this.updatedAt = board.getUpdated_at();
+        this.createdAt = board.getCreatedAt();
+        this.updatedAt = board.getUpdatedAt();
         this.userId = board.getMember().getUserId();
     }
 }

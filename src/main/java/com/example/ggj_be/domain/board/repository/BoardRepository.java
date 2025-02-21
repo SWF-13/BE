@@ -1,7 +1,6 @@
 package com.example.ggj_be.domain.board.repository;
 
 import com.example.ggj_be.domain.board.Board;
-import com.example.ggj_be.domain.board.dto.BoardSelectEndRequest;
 import com.example.ggj_be.domain.member.Member;
 import com.example.ggj_be.domain.board.dto.BoardHomeList;
 import com.example.ggj_be.domain.board.dto.BoardDetail;
