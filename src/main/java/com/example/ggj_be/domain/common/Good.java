@@ -18,21 +18,21 @@ public class Good {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column
-    private Long good_id;
+    private Long goodId;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id", nullable = false, foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
+    @JoinColumn(name = "userId", nullable = false, foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
     private Member member;
 
     @Column(nullable = false)
-    private long object_id;
+    private long objectId;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private Type type;
 
     @Column(nullable = false)
-    private LocalDateTime created_at;
+    private LocalDateTime createdAt;
 
 
 
@@ -41,7 +41,7 @@ public class Good {
     //생성시 자동 now()설정
     @PrePersist
     protected void onCreate() {
-        this.created_at = LocalDateTime.now();
+        this.createdAt = LocalDateTime.now();
     }
 
 }

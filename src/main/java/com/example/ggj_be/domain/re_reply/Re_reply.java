@@ -20,24 +20,24 @@ public class Re_reply {
     private Long re_reply_id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id", nullable = false, foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
+    @JoinColumn(name = "userId", nullable = false, foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
     private Member member;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "reply_id", nullable = false, foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
+    @JoinColumn(name = "replyId", nullable = false, foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
     private Reply reply;
     
     @Column(nullable = false, length = 1000)
     private String content;
 
     @Column(nullable = true)
-    private LocalDateTime acc_at;
+    private LocalDateTime accAt;
 
     @Column(nullable = false)
-    private LocalDateTime created_at;
+    private LocalDateTime createdAt;
 
     @Column(nullable = false)
-    private LocalDateTime updated_at;
+    private LocalDateTime updatedAt;
 
 
     
@@ -45,14 +45,14 @@ public class Re_reply {
     //생성시 자동 now()설정
     @PrePersist
     protected void onCreate() {
-        this.created_at = LocalDateTime.now();
-        this.updated_at = LocalDateTime.now();
+        this.createdAt = LocalDateTime.now();
+        this.updatedAt = LocalDateTime.now();
     }
 
     ////수정정시 자동 now()설정
     @PreUpdate
     protected void onUpdate() {
-    this.updated_at = LocalDateTime.now();
+    this.updatedAt = LocalDateTime.now();
     }
 
 }
