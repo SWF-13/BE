@@ -4,7 +4,8 @@ package com.example.ggj_be.domain.re_reply;
 import com.example.ggj_be.domain.member.Member;
 import jakarta.persistence.*;
 import lombok.*;
-
+import com.example.ggj_be.domain.member.Member;
+import com.example.ggj_be.domain.reply.Reply;
 import java.time.LocalDateTime;
 
 @Entity
@@ -20,23 +21,25 @@ public class Re_reply {
     private Long re_reply_id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_seq", nullable = true, foreignKey = @ForeignKey(value = ConstraintMode.NO_CONSTRAINT))
-    private Member member;  // 회원 정보 (외래키)
 
-    @Column(nullable = false)
-    private long reply_id;
+    @JoinColumn(name = "userId", nullable = true, foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
+    private Member member;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "replyId", nullable = false, foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
+    private Reply reply;
     
     @Column(nullable = false, length = 1000)
     private String content;
 
     @Column(nullable = true)
-    private LocalDateTime acc_at;
+    private LocalDateTime accAt;
 
     @Column(nullable = false)
-    private LocalDateTime created_at;
+    private LocalDateTime createdAt;
 
     @Column(nullable = false)
-    private LocalDateTime updated_at;
+    private LocalDateTime updatedAt;
 
 
     
@@ -44,14 +47,14 @@ public class Re_reply {
     //생성시 자동 now()설정
     @PrePersist
     protected void onCreate() {
-        this.created_at = LocalDateTime.now();
-        this.updated_at = LocalDateTime.now();
+        this.createdAt = LocalDateTime.now();
+        this.updatedAt = LocalDateTime.now();
     }
 
     ////수정정시 자동 now()설정
     @PreUpdate
     protected void onUpdate() {
-    this.updated_at = LocalDateTime.now();
+    this.updatedAt = LocalDateTime.now();
     }
 
     //멤버 탈퇴시 사용

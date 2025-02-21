@@ -1,6 +1,7 @@
 package com.example.ggj_be.domain.common;
 
 
+import com.example.ggj_be.domain.member.Member;
 import com.example.ggj_be.domain.enums.Type;
 import jakarta.persistence.*;
 import lombok.*;
@@ -17,20 +18,21 @@ public class Good {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column
-    private Long good_id;
+    private Long goodId;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "userId", nullable = false, foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
+    private Member member;
 
     @Column(nullable = false)
-    private long user_seq;
-
-    @Column(nullable = false)
-    private long object_id;
+    private long objectId;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private Type type;
 
     @Column(nullable = false)
-    private LocalDateTime created_at;
+    private LocalDateTime createdAt;
 
 
 
@@ -39,7 +41,7 @@ public class Good {
     //생성시 자동 now()설정
     @PrePersist
     protected void onCreate() {
-        this.created_at = LocalDateTime.now();
+        this.createdAt = LocalDateTime.now();
     }
 
 }
