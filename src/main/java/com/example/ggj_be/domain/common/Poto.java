@@ -19,30 +19,29 @@ public class Poto {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column
-    private Long poto_id;
+    private Long potoId;
     
     @Column(nullable = false)
-    private long object_id;
+    private long objectId;
     
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private Type type;
 
     @Column(nullable = false)
-    private String poto_name;
+    private String potoName;
 
     @Column(nullable = false)
-    private String poto_origin;
+    private String potoOrigin;
 
     @Column(nullable = false)
-    private LocalDateTime created_at;
+    private LocalDateTime createdAt;
 
 
     //생성시 자동 now()설정
     @PrePersist
     protected void onCreate() {
-        this.created_at = LocalDateTime.now();
-        this.poto_name = UUID.randomUUID().toString() + "_" + this.poto_origin;
+        this.createdAt = LocalDateTime.now();
     }
     
 }

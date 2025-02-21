@@ -1,11 +1,11 @@
 package com.example.ggj_be.domain.reply;
 
 
-import com.example.ggj_be.domain.board.Board;
-import com.example.ggj_be.domain.member.Member;
 import jakarta.persistence.*;
 import lombok.*;
-
+import java.util.List;
+import com.example.ggj_be.domain.member.Member;
+import com.example.ggj_be.domain.re_reply.Re_reply;
 import java.time.LocalDateTime;
 
 @Entity
@@ -21,25 +21,28 @@ public class Reply {
     private Long reply_id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "board_seq", nullable = false)
-    private Board board;  // 게시판 정보 (외래키)
+    @JoinColumn(name = "user_id", nullable = false, foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
+    private Member member;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_seq", nullable = false)
-    private Member member;  // 회원 정보 (외래키)
+    @JoinColumn(name = "board_id", nullable = false, foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
+    private Member board;
     
     @Column(nullable = false, length = 1000)
     private String content;
 
-    @Column(name = "acc_at")
+    @Column(nullable = true)
     private LocalDateTime acc_at;
 
-    @Column(name = "created_at", nullable = false)
+    @Column(nullable = false)
     private LocalDateTime created_at;
 
-    @Column(name = "updated_at", nullable = false)
+    @Column(nullable = false)
     private LocalDateTime updated_at;
 
+
+//    @OneToMany(mappedBy = "reply", fetch = FetchType.LAZY)
+//    private List<Re_reply> reReplies;  // 대댓글 목록
 
     
 

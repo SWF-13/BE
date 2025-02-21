@@ -1,10 +1,8 @@
 package com.example.ggj_be.domain.board;
-
-
 import com.example.ggj_be.domain.member.Member;
+
 import jakarta.persistence.*;
 import lombok.*;
-import org.hibernate.annotations.ColumnDefault;
 
 import java.time.LocalDateTime;
 
@@ -17,54 +15,50 @@ import java.time.LocalDateTime;
 public class Board {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "board_id")
-    private Long  board_id;
+    @Column
+    private Long boardId;
 
     @Column(nullable = false)
-    private Long category_id;
+    private long categoryId;
 
-//    @Column(nullable = false)
-//    private long user_seq;
-
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "userId", nullable = false, foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
+    private Member member;
+    
     @Column(nullable = true, length = 100)
     private String title;
-
+    
     @Column(nullable = false)
     @Lob
     private String content;
 
     @Column(nullable = true)
-    private int board_prize;
+    private Long boardPrize;
 
     @Column(nullable = false)
-    private LocalDateTime created_at;
+    private LocalDateTime createdAt;
 
     @Column(nullable = false)
-    private LocalDateTime updated_at;
+    private LocalDateTime updatedAt;
 
     @Column(nullable = false)
-    private LocalDateTime end_at;
+    private LocalDateTime endAt;
 
     @Column(nullable = true)
-    private LocalDateTime acc_at;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_seq", nullable = false, foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
-    private Member member;
-
+    private LocalDateTime accAt;
+    
 
     //생성시 자동 now()설정
     @PrePersist
     protected void onCreate() {
-        this.created_at = LocalDateTime.now();
-        this.updated_at = LocalDateTime.now();
+        this.createdAt = LocalDateTime.now();
+        this.updatedAt = LocalDateTime.now();
     }
 
     ////수정정시 자동 now()설정
     @PreUpdate
     protected void onUpdate() {
-    this.updated_at = LocalDateTime.now();
+    this.updatedAt = LocalDateTime.now();
     }
-
 
 }

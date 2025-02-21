@@ -1,11 +1,9 @@
 package com.example.ggj_be.domain.scrap;
 
-
-import com.example.ggj_be.domain.board.Board;
-import com.example.ggj_be.domain.member.Member;
 import jakarta.persistence.*;
 import lombok.*;
-
+import com.example.ggj_be.domain.member.Member;
+import com.example.ggj_be.domain.board.Board;
 import java.time.LocalDateTime;
 
 @Entity
@@ -13,21 +11,32 @@ import java.time.LocalDateTime;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Table(name = "scrap_tb")
+@Table(name = "scrap")
 public class Scrap {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "seq")
-    private Long id; //스크랩 고유번호
+    @Column
+    private Long scrap_id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_seq", nullable = false)
-    private Member member;  // 회원 정보 (외래키)
+    @JoinColumn(name = "user_id", nullable = false, foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
+    private Member member;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "board_seq", nullable = false)
-    private Board board;  // 게시판 정보 (외래키)
+    @JoinColumn(name = "board_id", nullable = false, foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
+    private Board board;
 
-    @Column(name = "created_at", nullable = false)
-    private LocalDateTime createdAt;  // 댓글 생성 시간
+    @Column(nullable = false)
+    private LocalDateTime created_at;
+
+
+
+
+
+    //생성시 자동 now()설정
+    @PrePersist
+    protected void onCreate() {
+        this.created_at = LocalDateTime.now();
+    }
+
 }

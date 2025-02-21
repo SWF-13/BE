@@ -1,6 +1,7 @@
 package com.example.ggj_be.domain.common;
 
 
+import com.example.ggj_be.domain.member.Member;
 import com.example.ggj_be.domain.enums.Type;
 import jakarta.persistence.*;
 import lombok.*;
@@ -19,8 +20,9 @@ public class Good {
     @Column
     private Long good_id;
 
-    @Column(nullable = false)
-    private long user_seq;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", nullable = false, foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
+    private Member member;
 
     @Column(nullable = false)
     private long object_id;

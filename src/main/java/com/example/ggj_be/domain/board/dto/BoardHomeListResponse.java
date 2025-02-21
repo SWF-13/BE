@@ -7,6 +7,6 @@ import java.util.List;
 @Getter
 @AllArgsConstructor
 public class BoardHomeListResponse {
-    private List<BoardSelecHomeListRequest> homeList;
-    private List<BoardSelecHomeListRequest> competitionList;
+    private List<BoardHomeList> homeList;
+    private List<BoardHomeList> competitionList;
 }

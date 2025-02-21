@@ -10,11 +10,11 @@ import java.time.LocalDateTime;
 @Setter
 public class BoardCreateRequest {
 
-    private Long category_id;
-    private Long user_seq;
+    private Long categoryId;
+    private Long userId;
     private String title;
     private String content;
-    private Long board_prize;
-    private LocalDateTime end_at;
+    private Long boardPrize;
+    private LocalDateTime endAt;
 
 }

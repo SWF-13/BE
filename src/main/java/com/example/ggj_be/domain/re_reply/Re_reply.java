@@ -3,7 +3,8 @@ package com.example.ggj_be.domain.re_reply;
 
 import jakarta.persistence.*;
 import lombok.*;
-
+import com.example.ggj_be.domain.member.Member;
+import com.example.ggj_be.domain.reply.Reply;
 import java.time.LocalDateTime;
 
 @Entity
@@ -18,11 +19,13 @@ public class Re_reply {
     @Column
     private Long re_reply_id;
 
-    @Column(nullable = false)
-    private long user_seq;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", nullable = false, foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
+    private Member member;
 
-    @Column(nullable = false)
-    private long reply_id;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "reply_id", nullable = false, foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
+    private Reply reply;
     
     @Column(nullable = false, length = 1000)
     private String content;

@@ -1,5 +1,6 @@
 package com.example.ggj_be.domain.board.controller;
 
+import com.example.ggj_be.domain.board.dto.*;
 import com.example.ggj_be.domain.common.Poto;
 import com.example.ggj_be.domain.common.repository.PotoRepository;
 import com.example.ggj_be.domain.enums.Type;
@@ -8,10 +9,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import com.example.ggj_be.domain.board.service.BoardService;
-import com.example.ggj_be.domain.board.dto.BoardCreateRequest;
-import com.example.ggj_be.domain.board.dto.BoardSelecHomeListRequest;
-import com.example.ggj_be.domain.board.dto.BoardHomeListResponse;
-
 
 import com.example.ggj_be.global.response.ApiResponse;
 
@@ -70,10 +67,10 @@ public class BoardController {
                         savedFilePaths.add(filePath.toString());
 
                         Poto poto = Poto.builder()
-                                .object_id(result)
+                                .objectId(result)
                                 .type(Type.board)
-                                .poto_name(fileName)
-                                .poto_origin(file.getOriginalFilename())
+                                .potoName(fileName)
+                                .potoOrigin(file.getOriginalFilename())
                                 .build();
 
                         potoRepository.save(poto);
@@ -98,15 +95,28 @@ public class BoardController {
         return ApiResponse.onSuccess(true);
     }
 
-    
+
     @GetMapping("/home_list")                                               //@AuthMember Member member 변경해야함!!!!!!!!!!!!!!!!!!!!!!!!!
-    public ApiResponse<BoardHomeListResponse> getBoardSelectHomeListRequests(@RequestParam(value = "userSeq") Long userSeq,
+    public ApiResponse<BoardHomeListResponse> getBoardHomeListResponse(@RequestParam(value = "userId") Long userId,
                                                                                   @RequestParam(value = "listType") int listType) {
 
-        List<BoardSelecHomeListRequest> homeList = boardService.getBoardSelectHomeListRequests(userSeq, listType);
-        List<BoardSelecHomeListRequest> competitionList = boardService.getBoardSelectHomeListRequests(userSeq, 4);
+        List<BoardHomeList> homeList = boardService.getBoardHomeList(userId, listType);
+        List<BoardHomeList> competitionList = boardService.getBoardHomeList(userId, 4);
 
         BoardHomeListResponse response = new BoardHomeListResponse(homeList, competitionList);
         return ApiResponse.onSuccess(response);
     }
+
+    @GetMapping("/detail")                                                  //@AuthMember Member member 변경해야함!!!!!!!!!!!!!!!!!!!!!!!!!
+    public ApiResponse<BoardDetailResponse> getBoardDetailResponse(@RequestParam(value = "userId") Long userId,
+                                                                    @RequestParam(value = "boardId") Long boardId) {
+        BoardDetail boardDetail = boardService.getBoardDetail(userId, boardId);
+        List<Poto> boardImages = boardService.getImages(Type.board, boardId);
+        List<ReplyDetailResponse> replyList = boardService.getReplyList(userId, boardId);
+        BoardDetailResponse response = new BoardDetailResponse(boardDetail, boardImages, replyList);
+
+
+        return ApiResponse.onSuccess(response);
+    }
+
 }

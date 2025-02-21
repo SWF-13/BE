@@ -2,9 +2,16 @@ package com.example.ggj_be.domain.board.service;
 
 import com.example.ggj_be.domain.board.Board;
 import com.example.ggj_be.domain.board.repository.BoardRepository;
+import com.example.ggj_be.domain.common.Poto;
+import com.example.ggj_be.domain.enums.Type;
 import com.example.ggj_be.domain.member.repository.MemberRepository;
+import com.example.ggj_be.domain.common.repository.PotoRepository;
 import com.example.ggj_be.domain.board.dto.BoardCreateRequest;
-import com.example.ggj_be.domain.board.dto.BoardSelecHomeListRequest;
+import com.example.ggj_be.domain.board.dto.BoardHomeList;
+import com.example.ggj_be.domain.board.dto.BoardDetail;
+import com.example.ggj_be.domain.board.dto.ReplyDetailResponse;
+import com.example.ggj_be.domain.board.dto.ReplyDetail;
+import com.example.ggj_be.domain.board.dto.ReReplyDetail;
 import com.example.ggj_be.domain.member.Member;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import java.util.List;
+import java.util.ArrayList;
 import java.util.Comparator;
 
 
@@ -26,9 +34,10 @@ public class BoardServiceImpl implements BoardService {
     
     @Autowired
     private BoardRepository boardRepository;
-
     @Autowired
-    private MemberRepository memberRepository;  // Repository 주입
+    private MemberRepository memberRepository;
+    @Autowired
+    private PotoRepository potoRepository;
 
     @Override
     public Long createBoard(BoardCreateRequest request) {
@@ -36,21 +45,19 @@ public class BoardServiceImpl implements BoardService {
 
 
         try{
-            
-            Member member = memberRepository.findById(request.getUser_seq())
+            Member member = memberRepository.findById(request.getUserId())
                     .orElseThrow(() -> new RuntimeException("Member not found"));
-
             Board board = Board.builder()
-            .category_id(request.getCategory_id())
+            .categoryId(request.getCategoryId())
             .member(member)
             .title(request.getTitle())
             .content(request.getContent())
-            .board_prize(request.getBoard_prize())
-            .end_at(request.getEnd_at())
+            .boardPrize(request.getBoardPrize())
+            .endAt(request.getEndAt())
             .build();
     
             boardRepository.save(board);
-            return board.getBoard_id();
+            return board.getBoardId();
         }catch (Exception e){
             log.error(" Error creating board", e);
             throw new RuntimeException("게시글 생성 실패", e);
@@ -58,23 +65,102 @@ public class BoardServiceImpl implements BoardService {
     }
 
     @Override
-    public List<BoardSelecHomeListRequest> getBoardSelectHomeListRequests(Long user_seq, int list_type) {
-        List<BoardSelecHomeListRequest> boards = boardRepository.findBoardSelectEndRequest(user_seq, list_type);
-        Comparator<BoardSelecHomeListRequest> comparator;
-        if (list_type == 1) {
-            comparator = Comparator.comparingInt(BoardSelecHomeListRequest::getEndCount); // 마감일 오름차순
-        } else if (list_type == 2) {
-            comparator = Comparator.comparingInt(BoardSelecHomeListRequest::getGoodCount).reversed(); // 좋아요 내림차순
-        } else if (list_type == 3) {
-            comparator = Comparator.comparingLong(BoardSelecHomeListRequest::getBoardPrize).reversed(); // 상금 내림차순
+    public List<BoardHomeList> getBoardHomeList(Long userSeq, int listTpe) {
+        List<BoardHomeList> boards = boardRepository.findBoardHomeList(userSeq, listTpe);
+        Comparator<BoardHomeList> comparator;
+        if (listTpe == 1) {
+            comparator = Comparator.comparingInt(BoardHomeList::getEndCount); // 마감일 오름차순
+        } else if (listTpe == 2) {
+            comparator = Comparator.comparingInt(BoardHomeList::getGoodCount).reversed(); // 좋아요 내림차순
+        } else if (listTpe == 3) {
+            comparator = Comparator.comparingLong(BoardHomeList::getBoardPrize).reversed(); // 상금 내림차순
+        } else if (listTpe == 4) {
+            comparator = Comparator.comparingInt(BoardHomeList::getReplyCount).reversed(); // 댓글 내림차순
         } else {
-            comparator = Comparator.comparingInt(BoardSelecHomeListRequest::getReplyCount).reversed(); // 댓글 내림차순
+            comparator = Comparator.comparing(BoardHomeList::getCreatedAt).reversed(); // 최신 게시글 내림차순
         }
 
         boards.sort(comparator);
 
-        int limit = (list_type == 4) ? 10 : 5; // listType이 4이면 10개, 아니면 5개
+        // listTpe이 5일 경우 limit을 적용하지 않음
+        if (listTpe == 5) {
+            return boards; // limit 없이 전체 리스트 반환
+        }
+
+        int limit = (listTpe == 4) ? 10 : 5; // listType이 4이면 10개, 아니면 5개
         return boards.subList(0, Math.min(boards.size(), limit));
+    }
+
+    @Override
+    public BoardDetail getBoardDetail(Long userId, Long boardId) {
+        BoardDetail boardDetail = boardRepository.findBoardDetail(userId, boardId);
+        return boardDetail;
+    }
+
+    @Override
+    public List<Poto> getImages(Type type, Long objectId) {
+        List<Poto> boardImages = potoRepository.findByTypeAndObjectId(type, objectId);
+        return boardImages;
+    }
+
+    @Override
+    public List<ReplyDetailResponse> getReplyList(Long userId, Long boardId) {
+        List<ReplyDetail> replyList = boardRepository.findReplyDetail(userId, boardId);
+        List<ReplyDetailResponse> replyDetailResponse = new ArrayList<>();
+        for (ReplyDetail replyDetail : replyList) {
+            List<ReReplyDetail> reReplyList = boardRepository.findReReplyDetail(userId, replyDetail.getReplyId());
+            List<Poto> replyImages = potoRepository.findByTypeAndObjectId(Type.reply, replyDetail.getReplyId());
+            ReplyDetailResponse getReplyDetailResponse = new ReplyDetailResponse() {
+                @Override
+                public Long getReplyId() {
+                    return replyDetail.getReplyId();
+                }
+
+                @Override
+                public int getAccChk() {
+                    return replyDetail.getAccChk();
+                }
+
+                @Override
+                public String getContent() {
+                    return replyDetail.getContent();
+                }
+
+                @Override
+                public String getNickName() {
+                    return replyDetail.getNickName();
+                }
+
+                @Override
+                public String getUserImg() {
+                    return replyDetail.getUserImg();
+                }
+                @Override
+                public int getIsWriter() {
+                    return replyDetail.getIsWriter();
+                }
+                @Override
+                public int getGoodChk() {
+                    return replyDetail.getGoodChk();
+                }
+                @Override
+                public int getGoodCount() {
+                    return replyDetail.getGoodCount();
+                }
+
+                @Override
+                public List<ReReplyDetail> getReReplyList() {
+                    return reReplyList;
+                }
+
+                @Override
+                public List<Poto> getReplyImages() {
+                    return replyImages;
+                }
+            };
+            replyDetailResponse.add(getReplyDetailResponse);
+        }
+        return replyDetailResponse;
     }
     
 }
