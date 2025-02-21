@@ -19,7 +19,7 @@ public class MyPageCommentResponse {
         this.reply_id = reply.getReply_id();
         this.createdAt = reply.getCreated_at();
         this.updatedAt = reply.getUpdated_at();
-        this.userId = reply.getMember().getUserSeq();
+        this.userId = reply.getMember().getUserId();
         this.content = reply.getContent();
     }
 }

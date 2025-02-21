@@ -21,7 +21,7 @@ public class ScrapDto {
     public ScrapDto(Scrap scrap) {
         this.id = scrap.getId();
         this.board= scrap.getBoard();
-        this.userId = scrap.getMember().getUserSeq();
+        this.userId = scrap.getMember().getUserId();
         this.scrap_createdAt = scrap.getCreatedAt();
         this.title = scrap.getBoard().getTitle();
         this.board_created_at = scrap.getBoard().getCreated_at();

@@ -23,6 +23,6 @@ public class MyPageBoardResponse {
         this.content = board.getContent();
         this.createdAt = board.getCreated_at();
         this.updatedAt = board.getUpdated_at();
-        this.userId = board.getMember().getUserSeq();
+        this.userId = board.getMember().getUserId();
     }
 }

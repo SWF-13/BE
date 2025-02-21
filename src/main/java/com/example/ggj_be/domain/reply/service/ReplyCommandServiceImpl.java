@@ -20,8 +20,8 @@ public class ReplyCommandServiceImpl implements ReplyCommandService {
 
     @Override
     public List<MyPageCommentResponse> getMyComments(Member member) {
-        Long userId = member.getUserSeq();
-        List<Reply> replies = replyRepository.findByMember_UserSeq(userId);
+        Long userId = member.getUserId();
+        List<Reply> replies = replyRepository.findByMember_UserId(userId);
         return replies.stream()
                 .map(MyPageCommentResponse::new)
                 .collect(Collectors.toList());

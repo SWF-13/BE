@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import java.util.List;
 import com.example.ggj_be.domain.member.Member;
+import com.example.ggj_be.domain.board.Board;
 import com.example.ggj_be.domain.re_reply.Re_reply;
 import java.time.LocalDateTime;
 
@@ -21,12 +22,12 @@ public class Reply {
     private Long reply_id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "userId", nullable = false, foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
+    @JoinColumn(name = "userId", nullable = true, foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
     private Member member;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "boardId", nullable = false, foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
-    private Member board;
+    private Board board;
     
     @Column(nullable = false, length = 1000)
     private String content;
@@ -57,6 +58,11 @@ public class Reply {
     @PreUpdate
     protected void onUpdate() {
     this.updatedAt = LocalDateTime.now();
+    }
+
+    //멤버 탈퇴시 사용
+    public void unlinkMember() {
+        this.member = null;
     }
 
 }

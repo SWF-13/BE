@@ -10,4 +10,6 @@ public interface MemberQueryService {
 
     Member findMember(Member member);
 
+    void deleteMember(Member member);
+
 }

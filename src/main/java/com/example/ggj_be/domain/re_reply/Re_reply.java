@@ -1,6 +1,7 @@
 package com.example.ggj_be.domain.re_reply;
 
 
+import com.example.ggj_be.domain.member.Member;
 import jakarta.persistence.*;
 import lombok.*;
 import com.example.ggj_be.domain.member.Member;
@@ -20,7 +21,8 @@ public class Re_reply {
     private Long re_reply_id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "userId", nullable = false, foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
+
+    @JoinColumn(name = "userId", nullable = true, foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
     private Member member;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -54,5 +56,12 @@ public class Re_reply {
     protected void onUpdate() {
     this.updatedAt = LocalDateTime.now();
     }
+
+    //멤버 탈퇴시 사용
+    public void unlinkMember() {
+        this.member = null;
+    }
+
+
 
 }

@@ -29,7 +29,7 @@ public class Member {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column
-    private Long userSeq;  // 고유 회원번호
+    private Long userId;  // 고유 회원번호
 
     @Column(name = "account_id")
     private String  accountid;
@@ -79,7 +79,7 @@ public class Member {
     private String bankName;
 
     @JsonIgnore
-    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "member", cascade = CascadeType.PERSIST, orphanRemoval = false)
     private List<Board> boards;
 
     //비밀번호 변경 시 이용

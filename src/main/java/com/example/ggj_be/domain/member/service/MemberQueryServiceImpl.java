@@ -1,8 +1,14 @@
 package com.example.ggj_be.domain.member.service;
 
 import com.example.ggj_be.domain.auth.dto.AuthRequest;
+import com.example.ggj_be.domain.board.Board;
+import com.example.ggj_be.domain.board.repository.BoardRepository;
 import com.example.ggj_be.domain.member.Member;
 import com.example.ggj_be.domain.member.repository.MemberRepository;
+import com.example.ggj_be.domain.re_reply.Re_reply;
+import com.example.ggj_be.domain.re_reply.repository.Re_replyRepository;
+import com.example.ggj_be.domain.reply.Reply;
+import com.example.ggj_be.domain.reply.repository.ReplyRepository;
 import com.example.ggj_be.global.exception.ApiException;
 import com.example.ggj_be.global.response.code.status.ErrorStatus;
 import lombok.extern.slf4j.Slf4j;
@@ -12,6 +18,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
@@ -19,6 +27,9 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 public class MemberQueryServiceImpl implements MemberQueryService {
 
     private final MemberRepository memberRepository;
+    private final BoardRepository boardRepository;
+    private final ReplyRepository replyRepository;
+    private final Re_replyRepository re_replyRepository;
     private final BCryptPasswordEncoder bCryptEncoder;
 
     @Override
@@ -48,6 +59,28 @@ public class MemberQueryServiceImpl implements MemberQueryService {
         }
 
         return member;
+    }
+
+
+    @Transactional
+    public void deleteMember(Member member) {
+
+        List<Board> boards = boardRepository.findByMember(member);
+        for (Board board : boards) {
+            board.unlinkMember();
+        }
+
+        List<Reply> replies = replyRepository.findByMember(member);
+        for (Reply reply : replies) {
+            reply.unlinkMember();
+        }
+
+        List<Re_reply> re_replies = re_replyRepository.findByMember(member);
+        for (Reply reply : replies) {
+            reply.unlinkMember();
+        }
+
+        memberRepository.delete(member);
     }
 
 

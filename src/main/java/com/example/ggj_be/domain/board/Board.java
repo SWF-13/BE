@@ -22,7 +22,7 @@ public class Board {
     private long categoryId;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "userId", nullable = false, foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
+    @JoinColumn(name = "userId", nullable = true, foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
     private Member member;
     
     @Column(nullable = true, length = 100)
@@ -59,6 +59,11 @@ public class Board {
     @PreUpdate
     protected void onUpdate() {
     this.updatedAt = LocalDateTime.now();
+    }
+
+    //멤버 탈퇴시 사용
+    public void unlinkMember() {
+        this.member = null;
     }
 
 }
