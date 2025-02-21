@@ -1,5 +1,6 @@
 package com.example.ggj_be.domain.board.controller;
 
+import com.example.ggj_be.domain.board.dto.*;
 import com.example.ggj_be.domain.common.Poto;
 import com.example.ggj_be.domain.common.repository.PotoRepository;
 import com.example.ggj_be.domain.enums.Type;
@@ -8,12 +9,8 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import com.example.ggj_be.domain.board.service.BoardService;
-import com.example.ggj_be.domain.board.dto.BoardCreateRequest;
-import com.example.ggj_be.domain.board.dto.BoardSelectEndRequest;
-
 
 import com.example.ggj_be.global.response.ApiResponse;
-import org.springframework.http.ResponseEntity;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -62,7 +59,6 @@ public class BoardController {
                     String fileName = UUID.randomUUID().toString() + "_" + file.getOriginalFilename(); // 중복 방지
                     Path filePath = Paths.get(UPLOAD_DIR + fileName);
 
-                    log.info("파일 유유이름: " + fileName);
                     // 파일 저장 로직 구현
                     try {
                         File dir = new File(UPLOAD_DIR);
@@ -71,10 +67,10 @@ public class BoardController {
                         savedFilePaths.add(filePath.toString());
 
                         Poto poto = Poto.builder()
-                                .object_id(result)
+                                .objectId(result)
                                 .type(Type.board)
-                                .poto_name(fileName)
-                                .poto_origin(file.getOriginalFilename())
+                                .potoName(fileName)
+                                .potoOrigin(file.getOriginalFilename())
                                 .build();
 
                         potoRepository.save(poto);
@@ -99,14 +95,28 @@ public class BoardController {
         return ApiResponse.onSuccess(true);
     }
 
-    @GetMapping("/hello")
-    public String test() {
-        return "Hello, world!";
+
+    @GetMapping("/home_list")                                               //@AuthMember Member member 변경해야함!!!!!!!!!!!!!!!!!!!!!!!!!
+    public ApiResponse<BoardHomeListResponse> getBoardHomeListResponse(@RequestParam(value = "userId") Long userId,
+                                                                                  @RequestParam(value = "listType") int listType) {
+
+        List<BoardHomeList> homeList = boardService.getBoardHomeList(userId, listType);
+        List<BoardHomeList> competitionList = boardService.getBoardHomeList(userId, 4);
+
+        BoardHomeListResponse response = new BoardHomeListResponse(homeList, competitionList);
+        return ApiResponse.onSuccess(response);
     }
 
-    @GetMapping("/end_count")
-    public ApiResponse<List<BoardSelectEndRequest>> getBoardSelectEndRequests() {
-        List<BoardSelectEndRequest> result = boardService.getBoardSelectEndRequests();
-        return ApiResponse.onSuccess(result);
+    @GetMapping("/detail")                                                  //@AuthMember Member member 변경해야함!!!!!!!!!!!!!!!!!!!!!!!!!
+    public ApiResponse<BoardDetailResponse> getBoardDetailResponse(@RequestParam(value = "userId") Long userId,
+                                                                    @RequestParam(value = "boardId") Long boardId) {
+        BoardDetail boardDetail = boardService.getBoardDetail(userId, boardId);
+        List<Poto> boardImages = boardService.getImages(Type.board, boardId);
+        List<ReplyDetailResponse> replyList = boardService.getReplyList(userId, boardId);
+        BoardDetailResponse response = new BoardDetailResponse(boardDetail, boardImages, replyList);
+
+
+        return ApiResponse.onSuccess(response);
     }
+
 }
