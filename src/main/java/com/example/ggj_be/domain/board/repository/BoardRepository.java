@@ -1,10 +1,10 @@
 package com.example.ggj_be.domain.board.repository;
+
+import com.example.ggj_be.domain.board.Board;
+import com.example.ggj_be.domain.member.Member;
 import com.example.ggj_be.domain.board.dto.BoardHomeList;
 import com.example.ggj_be.domain.board.dto.BoardDetail;
-import com.example.ggj_be.domain.re_reply.dto.ReReplyDetail;
-import com.example.ggj_be.domain.reply.dto.ReplyDetail;
 import org.springframework.data.jpa.repository.JpaRepository;
-import com.example.ggj_be.domain.board.Board;
 import org.springframework.data.jpa.repository.Query;
 import java.util.List;
 import org.springframework.stereotype.Repository;
@@ -13,6 +13,9 @@ import org.springframework.data.repository.query.Param;
 
 @Repository
 public interface BoardRepository extends JpaRepository<Board, Long> {
+
+    List<Board> findByMember_UserId(Long userId);
+    List<Board> findByMember(Member member);
 
     @Query(value = "SELECT " +
             "    b.board_id, "+
