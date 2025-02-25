@@ -1,5 +1,6 @@
 package com.example.ggj_be.domain.scrap;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.*;
 import com.example.ggj_be.domain.member.Member;
@@ -20,10 +21,12 @@ public class Scrap {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "userId", nullable = false, foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
+    @JsonBackReference
     private Member member;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "boardId", nullable = false, foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
+    @JsonBackReference
     private Board board;
 
     @Column(nullable = false)

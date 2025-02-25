@@ -21,7 +21,6 @@ public class MyPageBoardResponse {
     private int goodsCount;
     private int replyCount;
     private long daysUntilEnd;
-    private Long boardPrize;
 
 
 
@@ -37,7 +36,6 @@ public class MyPageBoardResponse {
         this.goodsCount = board.getGoods().size();
         this.replyCount = board.getReplies().size();
         this.daysUntilEnd = calculateDaysUntilEnd(board.getEndAt());
-        this.boardPrize = board.getBoardPrize();
 
 
 

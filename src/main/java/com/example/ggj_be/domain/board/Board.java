@@ -3,6 +3,9 @@ import com.example.ggj_be.domain.common.Good;
 import com.example.ggj_be.domain.member.Member;
 
 import com.example.ggj_be.domain.reply.Reply;
+import com.example.ggj_be.domain.scrap.Scrap;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -14,6 +17,7 @@ import java.util.List;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 @Table(name = "board")
 public class Board {
     @Id
@@ -26,6 +30,7 @@ public class Board {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "userId", nullable = true, foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
+    @JsonBackReference
     private Member member;
     
     @Column(nullable = true, length = 100)
@@ -55,6 +60,9 @@ public class Board {
 
     @OneToMany(mappedBy = "board", cascade = CascadeType.PERSIST, orphanRemoval = false)
     private List<Reply> replies;
+
+    @OneToMany(mappedBy = "board", cascade = CascadeType.PERSIST, orphanRemoval = false)
+    private List<Scrap> scraps;
 
 
 

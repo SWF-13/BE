@@ -3,7 +3,6 @@ package com.example.ggj_be.domain.member.controller;
 
 import com.example.ggj_be.domain.board.dto.MyPageBoardResponse;
 import com.example.ggj_be.domain.board.service.BoardCommandService;
-import com.example.ggj_be.domain.enums.SortType;
 import com.example.ggj_be.domain.member.service.MemberQueryService;
 import com.example.ggj_be.domain.reply.dto.MyPageCommentResponse;
 import com.example.ggj_be.domain.reply.service.ReplyCommandService;
@@ -47,8 +46,8 @@ public class MemberController {
 
 
     @GetMapping("/myboardlist")
-    public ApiResponse<List<MyPageBoardResponse>> getMyBoards(@AuthMember Member member, @RequestParam(required = false, defaultValue = "DEADLINE") SortType sortType) {
-        List<MyPageBoardResponse> boardList = boardCommandService.getMyBoards(member, sortType);
+    public ApiResponse<List<MyPageBoardResponse>> getMyBoards(@AuthMember Member member) {
+        List<MyPageBoardResponse> boardList = boardCommandService.getMyBoards(member);
         return ApiResponse.onSuccess(boardList);
     }
 
