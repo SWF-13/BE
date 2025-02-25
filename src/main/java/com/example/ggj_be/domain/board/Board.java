@@ -1,10 +1,13 @@
 package com.example.ggj_be.domain.board;
+import com.example.ggj_be.domain.common.Good;
 import com.example.ggj_be.domain.member.Member;
 
+import com.example.ggj_be.domain.reply.Reply;
 import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Builder
@@ -46,6 +49,13 @@ public class Board {
 
     @Column(nullable = true)
     private LocalDateTime accAt;
+
+    @OneToMany(mappedBy = "board", cascade = CascadeType.PERSIST, orphanRemoval = false)
+    private List<Good> goods;
+
+    @OneToMany(mappedBy = "board", cascade = CascadeType.PERSIST, orphanRemoval = false)
+    private List<Reply> replies;
+
 
 
     // setter 메서드 추가

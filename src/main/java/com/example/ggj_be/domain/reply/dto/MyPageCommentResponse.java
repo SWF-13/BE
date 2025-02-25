@@ -16,7 +16,7 @@ public class MyPageCommentResponse {
 
     @Builder
     public MyPageCommentResponse(Reply reply){
-        this.reply_id = reply.getReply_id();
+        this.reply_id = reply.getReplyId();
         this.createdAt = reply.getCreatedAt();
         this.updatedAt = reply.getUpdatedAt();
         this.userId = reply.getMember().getUserId();
