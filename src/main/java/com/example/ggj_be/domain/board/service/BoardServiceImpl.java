@@ -1,7 +1,9 @@
 package com.example.ggj_be.domain.board.service;
 
 import com.example.ggj_be.domain.board.Board;
+import com.example.ggj_be.domain.reply.Reply;
 import com.example.ggj_be.domain.board.repository.BoardRepository;
+import com.example.ggj_be.domain.reply.repository.ReplyRepository;
 import com.example.ggj_be.domain.common.Poto;
 import com.example.ggj_be.domain.enums.Type;
 import com.example.ggj_be.domain.member.repository.MemberRepository;
@@ -9,11 +11,9 @@ import com.example.ggj_be.domain.common.repository.PotoRepository;
 import com.example.ggj_be.domain.board.dto.BoardCreateRequest;
 import com.example.ggj_be.domain.board.dto.BoardHomeList;
 import com.example.ggj_be.domain.board.dto.BoardDetail;
-import com.example.ggj_be.domain.board.dto.ReplyDetailResponse;
-import com.example.ggj_be.domain.board.dto.ReplyDetail;
-import com.example.ggj_be.domain.board.dto.ReReplyDetail;
 import com.example.ggj_be.domain.member.Member;
 
+import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,7 +22,7 @@ import lombok.extern.slf4j.Slf4j;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Comparator;
-
+import java.time.LocalDateTime;
 
 
 
@@ -34,6 +34,8 @@ public class BoardServiceImpl implements BoardService {
     
     @Autowired
     private BoardRepository boardRepository;
+    @Autowired
+    private ReplyRepository replyRepository;
     @Autowired
     private MemberRepository memberRepository;
     @Autowired
@@ -65,8 +67,8 @@ public class BoardServiceImpl implements BoardService {
     }
 
     @Override
-    public List<BoardHomeList> getBoardHomeList(Long userSeq, int listTpe) {
-        List<BoardHomeList> boards = boardRepository.findBoardHomeList(userSeq, listTpe);
+    public List<BoardHomeList> getBoardHomeList(Long userId, int listTpe) {
+        List<BoardHomeList> boards = boardRepository.findBoardHomeList(userId, listTpe);
         Comparator<BoardHomeList> comparator;
         if (listTpe == 1) {
             comparator = Comparator.comparingInt(BoardHomeList::getEndCount); // 마감일 오름차순
@@ -91,6 +93,27 @@ public class BoardServiceImpl implements BoardService {
         return boards.subList(0, Math.min(boards.size(), limit));
     }
 
+
+    @Override
+    public List<BoardHomeList> getSearchBoardList(Long userSeq, String search) {
+        List<BoardHomeList> boards = boardRepository.findSearchBoardList(userSeq, search);
+        Comparator<BoardHomeList> comparator;
+        comparator = Comparator.comparing(BoardHomeList::getCreatedAt).reversed(); // 최신 게시글 내림차순
+        boards.sort(comparator);
+
+        return boards;
+    }
+
+    @Override
+    public List<BoardHomeList> getCategoryBoardList(Long userSeq, int CategoryId) {
+        List<BoardHomeList> boards = boardRepository.findSearchBoardList(userSeq, CategoryId);
+        Comparator<BoardHomeList> comparator;
+        comparator = Comparator.comparing(BoardHomeList::getCreatedAt).reversed(); // 최신 게시글 내림차순
+        boards.sort(comparator);
+
+        return boards;
+    }
+
     @Override
     public BoardDetail getBoardDetail(Long userId, Long boardId) {
         BoardDetail boardDetail = boardRepository.findBoardDetail(userId, boardId);
@@ -104,63 +127,34 @@ public class BoardServiceImpl implements BoardService {
     }
 
     @Override
-    public List<ReplyDetailResponse> getReplyList(Long userId, Long boardId) {
-        List<ReplyDetail> replyList = boardRepository.findReplyDetail(userId, boardId);
-        List<ReplyDetailResponse> replyDetailResponse = new ArrayList<>();
-        for (ReplyDetail replyDetail : replyList) {
-            List<ReReplyDetail> reReplyList = boardRepository.findReReplyDetail(userId, replyDetail.getReplyId());
-            List<Poto> replyImages = potoRepository.findByTypeAndObjectId(Type.reply, replyDetail.getReplyId());
-            ReplyDetailResponse getReplyDetailResponse = new ReplyDetailResponse() {
-                @Override
-                public Long getReplyId() {
-                    return replyDetail.getReplyId();
-                }
-
-                @Override
-                public int getAccChk() {
-                    return replyDetail.getAccChk();
-                }
-
-                @Override
-                public String getContent() {
-                    return replyDetail.getContent();
-                }
-
-                @Override
-                public String getNickName() {
-                    return replyDetail.getNickName();
-                }
-
-                @Override
-                public String getUserImg() {
-                    return replyDetail.getUserImg();
-                }
-                @Override
-                public int getIsWriter() {
-                    return replyDetail.getIsWriter();
-                }
-                @Override
-                public int getGoodChk() {
-                    return replyDetail.getGoodChk();
-                }
-                @Override
-                public int getGoodCount() {
-                    return replyDetail.getGoodCount();
-                }
-
-                @Override
-                public List<ReReplyDetail> getReReplyList() {
-                    return reReplyList;
-                }
-
-                @Override
-                public List<Poto> getReplyImages() {
-                    return replyImages;
-                }
-            };
-            replyDetailResponse.add(getReplyDetailResponse);
+    public Boolean boardDelete(Long boardId) {
+        Optional<Board> boardOptional = boardRepository.findById(boardId);
+        if (boardOptional.isPresent()) {
+            boardRepository.deleteById(boardId);
+            return true;
+        } else {
+            return false;
         }
-        return replyDetailResponse;
     }
+
+    @Override
+    public Boolean boardAccAtUdate(Long boardId, Long replyId) {
+        Optional<Board> boardOptional = boardRepository.findById(boardId);
+        Optional<Reply> replyOptional = replyRepository.findById(replyId);
+        if (boardOptional.isPresent() && replyOptional.isPresent()) {
+            Board board = boardOptional.get();
+            board.setAccAt(LocalDateTime.now());
+            boardRepository.save(board);
+
+            Reply reply = replyOptional.get();
+            reply.setAccAt(LocalDateTime.now());
+            replyRepository.save(reply);
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+
     
 }

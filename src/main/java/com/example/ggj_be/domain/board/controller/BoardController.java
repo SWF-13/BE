@@ -4,11 +4,13 @@ import com.example.ggj_be.domain.board.dto.*;
 import com.example.ggj_be.domain.common.Poto;
 import com.example.ggj_be.domain.common.repository.PotoRepository;
 import com.example.ggj_be.domain.enums.Type;
+import com.example.ggj_be.domain.reply.dto.ReplyDetailResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import com.example.ggj_be.domain.board.service.BoardService;
+import com.example.ggj_be.domain.reply.service.ReplyService;
 
 import com.example.ggj_be.global.response.ApiResponse;
 
@@ -38,6 +40,7 @@ import java.util.UUID;
 public class BoardController {
 
     private final BoardService boardService;
+    private final ReplyService replyService;
     private static final String UPLOAD_DIR = Paths.get("").toAbsolutePath().toString()+File.separator+"src"+File.separator+"uploads"+File.separator; // 저장할 디렉토리
 
     @Autowired
@@ -82,13 +85,13 @@ public class BoardController {
                             log.error("파일 삭제 실패: {}", filePath, deleteException);
                         }
 
-                        throw new RuntimeException("게시판 작성 실패!", e);
+                        return ApiResponse.onFailure("게시판 이미지 저장 실패!","게시판 이미지 저장 실패!", false);
                     }
 
                 }
             }
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            return ApiResponse.onFailure("게시판 작성 실패!","게시판 작성 실패!", false);
         }
 
 
@@ -96,27 +99,82 @@ public class BoardController {
     }
 
 
+
     @GetMapping("/home_list")                                               //@AuthMember Member member 변경해야함!!!!!!!!!!!!!!!!!!!!!!!!!
-    public ApiResponse<BoardHomeListResponse> getBoardHomeListResponse(@RequestParam(value = "userId") Long userId,
+    public ApiResponse<BoardHomeListResponse> getBoardHomeListResponse(@RequestParam(value = "userId", required = false) Long userId,
                                                                                   @RequestParam(value = "listType") int listType) {
 
+
         List<BoardHomeList> homeList = boardService.getBoardHomeList(userId, listType);
+
+        if (listType == 5) {
+            return ApiResponse.onSuccess(new BoardHomeListResponse(homeList, null));
+        }
+
         List<BoardHomeList> competitionList = boardService.getBoardHomeList(userId, 4);
 
         BoardHomeListResponse response = new BoardHomeListResponse(homeList, competitionList);
         return ApiResponse.onSuccess(response);
     }
 
-    @GetMapping("/detail")                                                  //@AuthMember Member member 변경해야함!!!!!!!!!!!!!!!!!!!!!!!!!
-    public ApiResponse<BoardDetailResponse> getBoardDetailResponse(@RequestParam(value = "userId") Long userId,
-                                                                    @RequestParam(value = "boardId") Long boardId) {
-        BoardDetail boardDetail = boardService.getBoardDetail(userId, boardId);
-        List<Poto> boardImages = boardService.getImages(Type.board, boardId);
-        List<ReplyDetailResponse> replyList = boardService.getReplyList(userId, boardId);
-        BoardDetailResponse response = new BoardDetailResponse(boardDetail, boardImages, replyList);
+    @GetMapping("/searchBoardList")                                               //@AuthMember Member member 변경해야함!!!!!!!!!!!!!!!!!!!!!!!!!
+    public ApiResponse<List<BoardHomeList>> getSearchBoardListResponse(@RequestParam(value = "userId", required = false) Long userId,
+                                                                       @RequestParam(value = "search") String search) {
+
+        List<BoardHomeList> response = boardService.getSearchBoardList(userId, search);
 
 
         return ApiResponse.onSuccess(response);
+    }
+
+    @GetMapping("/categoryBoardList")                                               //@AuthMember Member member 변경해야함!!!!!!!!!!!!!!!!!!!!!!!!!
+    public ApiResponse<List<BoardHomeList>> getCategoryBoardListResponse(@RequestParam(value = "userId", required = false) Long userId,
+                                                                       @RequestParam(value = "categoryId") int categoryId) {
+
+        log.info("넘어오는 값 확인 : {}", categoryId);
+        List<BoardHomeList> response = boardService.getCategoryBoardList(userId, categoryId);
+
+
+        return ApiResponse.onSuccess(response);
+    }
+
+    @GetMapping("/detail")                                                  //@AuthMember Member member 변경해야함!!!!!!!!!!!!!!!!!!!!!!!!!
+    public ApiResponse<BoardDetailResponse> getBoardDetailResponse(@RequestParam(value = "userId", required = false) Long userId,
+                                                                    @RequestParam(value = "boardId") Long boardId) {
+        BoardDetail boardDetail = boardService.getBoardDetail(userId, boardId);
+        List<Poto> boardImages = boardService.getImages(Type.board, boardId);
+
+        List<ReplyDetailResponse> replyList = replyService.getReplyList(userId, boardId);
+
+        BoardDetailResponse response = new BoardDetailResponse(boardDetail, boardImages, replyList);
+
+        return ApiResponse.onSuccess(response);
+    }
+
+    @DeleteMapping
+    public ApiResponse<Boolean> boardDelete(@RequestParam(value = "boardId") Long boardId) {
+
+        Boolean response = boardService.boardDelete(boardId);
+
+        if (response) {
+            return ApiResponse.onSuccess(true);
+        } else {
+            return ApiResponse.onFailure("게시글 삭제 실패", "게시글 삭제 실패", false);
+        }
+    }
+
+    @PatchMapping
+    public ApiResponse<Boolean> boardAccAtUdate(@RequestParam(value = "boardId") Long boardId,
+                                                @RequestParam(value = "replyId") Long replyId) {
+        log.info("디테일 진입 : {} {}", boardId, replyId);
+
+        Boolean response = boardService.boardAccAtUdate(boardId, replyId);
+
+        if (response) {
+            return ApiResponse.onSuccess(true);
+        } else {
+            return ApiResponse.onFailure("채택하기 실패!", "채택하기 실패!", false);
+        }
     }
 
 }

@@ -1,6 +1,5 @@
 package com.example.ggj_be.domain.common;
 import java.time.LocalDateTime;
-import java.util.UUID;
 
 import com.example.ggj_be.domain.enums.Type;
 

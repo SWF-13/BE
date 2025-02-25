@@ -1,13 +1,8 @@
 package com.example.ggj_be.domain.board.repository;
-
-import com.example.ggj_be.domain.board.Board;
-import com.example.ggj_be.domain.member.Member;
 import com.example.ggj_be.domain.board.dto.BoardHomeList;
 import com.example.ggj_be.domain.board.dto.BoardDetail;
-import com.example.ggj_be.domain.board.dto.ReReplyDetail;
-import com.example.ggj_be.domain.board.dto.ReplyDetail;
-import com.example.ggj_be.domain.common.Poto;
-import com.example.ggj_be.domain.reply.Reply;
+import com.example.ggj_be.domain.re_reply.dto.ReReplyDetail;
+import com.example.ggj_be.domain.reply.dto.ReplyDetail;
 import org.springframework.data.jpa.repository.JpaRepository;
 import com.example.ggj_be.domain.board.Board;
 import org.springframework.data.jpa.repository.Query;
@@ -18,9 +13,6 @@ import org.springframework.data.repository.query.Param;
 
 @Repository
 public interface BoardRepository extends JpaRepository<Board, Long> {
-
-    List<Board> findByMember_UserId(Long userId);
-    List<Board> findByMember(Member member);
 
     @Query(value = "SELECT " +
             "    b.board_id, "+
@@ -50,12 +42,11 @@ public interface BoardRepository extends JpaRepository<Board, Long> {
             "    GROUP BY object_id "+
             ") c ON b.board_id = c.object_id "+
             "LEFT JOIN ( "+
-            "    SELECT  a.board_id, "+
-            "		COUNT(a.reply_id) + COUNT(b.reply_id) AS reply_count "+
-            "	FROM reply a "+
-            "		, re_reply b "+
-            "	WHERE a.reply_id = b.reply_id "+
-            "	GROUP BY a.board_id "+
+            "    SELECT a.board_id,  "+
+                    "COUNT(a.reply_id) + COALESCE(COUNT(b.reply_id), 0) AS reply_count "+
+                "FROM reply a "+
+                "LEFT JOIN re_reply b ON a.reply_id = b.reply_id "+
+                "GROUP BY a.board_id "+
             ") d ON b.board_id = d.board_id "+
             "WHERE b.acc_at IS NULL "+
             "	AND TIMESTAMPDIFF(SECOND, NOW(), b.end_at) > 0 "+
@@ -113,7 +104,15 @@ public interface BoardRepository extends JpaRepository<Board, Long> {
                 "( SELECT COALESCE((SELECT COUNT(*) "+
                     "FROM scrap i "+
                     "WHERE a.board_id = i.board_id "+
-                    "GROUP BY board_id),0)) as scrap_count "+
+                    "GROUP BY board_id),0)) as scrap_count, "+
+                "case when a.user_id = :userId " +
+                     "then case when (CONVERT((SELECT COUNT(*) FROM reply j WHERE j.board_id = :boardId), SIGNED) <= 2) " +
+                               "then 1 " +
+                               "else 0 " +
+                               "end " +
+                     "else 0 " +
+                     "end deleteChk,     " +
+                " CASE WHEN a.acc_at IS NULL THEN 0 ELSE 1 END acc_chk " +
             "from board a , "+
                 "(select user_id , nick_name, user_img from member_tb where user_id = :userId)b "+
                 ", category c "+
@@ -123,58 +122,88 @@ public interface BoardRepository extends JpaRepository<Board, Long> {
     BoardDetail findBoardDetail(@Param("userId") Long userId, @Param("boardId") Long boardId);
 
 
-    @Query(value =
-            "select "+
-                "a.reply_id, "+
-                "CASE WHEN a.acc_at IS NOT NULL THEN 1 ELSE 0 END AS acc_chk , "+
-                "a.content, "+
-                "b.nick_name, "+
-                "b.user_img,  "+
-                "CASE WHEN a.user_id = :userId THEN 1 ELSE 0 END is_writer , "+
-                "CASE WHEN EXISTS (SELECT 1 "+
-                                  "FROM good c "+
-                                  "WHERE type = 'reply' "+
-                                    "AND user_id = :userId "+
-                                    "AND a.reply_id = c.object_id) "+
-                    "THEN 1 "+
-                    "ELSE 0 "+
-                    "END good_chk,  "+
-                "( SELECT COALESCE(( SELECT COUNT(*) "+
-                                    "FROM good d "+
-                                    "WHERE type = 'reply' "+
-                                        "and a.reply_id = d.object_id "+
-                                    "GROUP BY object_id), 0)) as good_count "+
-            "from reply a "+
-                ", member_tb b "+
-            "where a.board_id = :boardId "+
-                "and a.user_id = b.user_id "
-            , nativeQuery = true)
-    List<ReplyDetail> findReplyDetail(@Param("userId") Long userId, @Param("boardId") Long boardId);
 
-    @Query(value =
-            "select "+
-                "a.re_reply_id, "+
-                "a.content, "+
-                "b.nick_name, "+
-                "b.user_img,  "+
-                "CASE WHEN a.user_id = :userId THEN 1 ELSE 0 END is_writer , "+
-                "CASE WHEN EXISTS (SELECT 1 "+
-                                  "FROM good c "+
-                                  "WHERE type = 'reReply' "+
-                                    "AND user_id = :userId "+
-                                    "AND a.re_reply_id = c.object_id) "+
-                    "THEN 1 "+
-                    "ELSE 0 "+
-                    "END good_chk,  "+
-                "( SELECT COALESCE(( SELECT COUNT(*) "+
-                  "FROM good d "+
-                  "WHERE type = 'reReply' "+
-                    "and a.re_reply_id = d.object_id "+
-                  "GROUP BY object_id), 0)) as good_count "+
-            "from re_reply a "+
-            ", member_tb b "+
-            "where a.reply_id = :replyId "+
-                "and a.user_id = b.user_id "
+    @Query(value = "SELECT " +
+            "    b.board_id, "+
+            "   b.created_at, "+
+            "    a.category_name, "+
+            "    b.title, "+
+            "    b.board_prize, "+
+            "    IFNULL(c.good_count, 0) AS good_count, "+
+            "    IFNULL(d.reply_count, 0) AS reply_count, "+
+            "    DATEDIFF(b.end_at, NOW()) AS end_count, "+
+            "    e.nick_name , " +
+            "CASE WHEN EXISTS (SELECT 1 " +
+            "FROM good e " +
+            "WHERE type = 'board' " +
+            "AND user_id = :userId " +
+            "AND b.board_id = e.object_id) " +
+            "THEN TRUE " +
+            "ELSE FALSE " +
+            "END good_chk " +
+            "FROM board b "+
+            "JOIN category a ON a.category_id = b.category_id "+
+            "JOIN member_tb e ON b.user_id = e.user_id " +
+            "LEFT JOIN ( "+
+            "    SELECT object_id, COUNT(*) AS good_count "+
+            "    FROM good "+
+            "    WHERE type = 'board' "+
+            "    GROUP BY object_id "+
+            ") c ON b.board_id = c.object_id "+
+            "LEFT JOIN ( "+
+            "    SELECT a.board_id,  "+
+            "COUNT(a.reply_id) + COALESCE(COUNT(b.reply_id), 0) AS reply_count "+
+            "FROM reply a "+
+            "LEFT JOIN re_reply b ON a.reply_id = b.reply_id "+
+            "GROUP BY a.board_id "+
+            ") d ON b.board_id = d.board_id "+
+            "WHERE b.acc_at IS NULL "+
+            "	AND TIMESTAMPDIFF(SECOND, NOW(), b.end_at) > 0 "+
+            "   AND (b.title LIKE CONCAT('%', :search, '%') OR a.category_name LIKE CONCAT('%', :search, '%')) " +
+            "ORDER BY created_at desc"
             , nativeQuery = true)
-    List<ReReplyDetail> findReReplyDetail(@Param("userId") Long userId, @Param("replyId") Long replyId);
+    List<BoardHomeList> findSearchBoardList(@Param("userId") Long userId, @Param("search") String search);
+
+
+
+    @Query(value = "SELECT " +
+            "    b.board_id, "+
+            "   b.created_at, "+
+            "    a.category_name, "+
+            "    b.title, "+
+            "    b.board_prize, "+
+            "    IFNULL(c.good_count, 0) AS good_count, "+
+            "    IFNULL(d.reply_count, 0) AS reply_count, "+
+            "    DATEDIFF(b.end_at, NOW()) AS end_count, "+
+            "    e.nick_name , " +
+            "CASE WHEN EXISTS (SELECT 1 " +
+            "FROM good e " +
+            "WHERE type = 'board' " +
+            "AND user_id = :userId " +
+            "AND b.board_id = e.object_id) " +
+            "THEN TRUE " +
+            "ELSE FALSE " +
+            "END good_chk " +
+            "FROM board b "+
+            "JOIN category a ON a.category_id = b.category_id "+
+            "JOIN member_tb e ON b.user_id = e.user_id " +
+            "LEFT JOIN ( "+
+            "    SELECT object_id, COUNT(*) AS good_count "+
+            "    FROM good "+
+            "    WHERE type = 'board' "+
+            "    GROUP BY object_id "+
+            ") c ON b.board_id = c.object_id "+
+            "LEFT JOIN ( "+
+            "    SELECT a.board_id,  "+
+            "COUNT(a.reply_id) + COALESCE(COUNT(b.reply_id), 0) AS reply_count "+
+            "FROM reply a "+
+            "LEFT JOIN re_reply b ON a.reply_id = b.reply_id "+
+            "GROUP BY a.board_id "+
+            ") d ON b.board_id = d.board_id "+
+            "WHERE b.acc_at IS NULL "+
+            "	AND TIMESTAMPDIFF(SECOND, NOW(), b.end_at) > 0 "+
+            "   AND a.category_id = :categoryId " +
+            "ORDER BY created_at desc"
+            , nativeQuery = true)
+    List<BoardHomeList> findSearchBoardList(@Param("userId") Long userId, @Param("categoryId") int categoryId);
 }
