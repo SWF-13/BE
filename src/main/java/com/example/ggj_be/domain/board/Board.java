@@ -46,7 +46,17 @@ public class Board {
 
     @Column(nullable = true)
     private LocalDateTime accAt;
-    
+
+
+    // setter 메서드 추가
+    public void setAccAt(LocalDateTime accAt) {
+        this.accAt = accAt;
+    }
+
+    // getter 메서드
+    public LocalDateTime getAccAt() {
+        return accAt;
+    }
 
     //생성시 자동 now()설정
     @PrePersist
@@ -61,8 +71,8 @@ public class Board {
     this.updatedAt = LocalDateTime.now();
     }
 
-    //멤버 탈퇴시 사용
-    public void unlinkMember() {
+     //멤버 탈퇴시 사용
+     public void unlinkMember() {
         this.member = null;
     }
 

@@ -1,11 +1,11 @@
-package com.example.ggj_be.domain.board.dto;
+package com.example.ggj_be.domain.reply.dto;
 
-
+import com.example.ggj_be.domain.re_reply.dto.ReReplyDetail;
 import com.example.ggj_be.domain.common.Poto;
 
 import java.util.List;
 
-public interface ReplyDetail {
+public interface ReplyDetailResponse {
     Long getReplyId();
     int getAccChk();
     String getContent();
@@ -14,5 +14,6 @@ public interface ReplyDetail {
     int getIsWriter();
     int getGoodChk();
     int getGoodCount();
-
+    List<ReReplyDetail> getReReplyList();
+    List<Poto> getReplyImages();  // 게시글 사진
 }

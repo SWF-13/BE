@@ -6,7 +6,6 @@ import lombok.*;
 import java.util.List;
 import com.example.ggj_be.domain.member.Member;
 import com.example.ggj_be.domain.board.Board;
-import com.example.ggj_be.domain.re_reply.Re_reply;
 import java.time.LocalDateTime;
 
 @Entity
@@ -19,14 +18,14 @@ public class Reply {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column
-    private Long reply_id;
+    private Long replyId;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "userId", nullable = true, foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
     private Member member;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "boardId", nullable = false, foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
+    @JoinColumn(name = "boardId", nullable = true, foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
     private Board board;
     
     @Column(nullable = false, length = 1000)
@@ -45,6 +44,15 @@ public class Reply {
 //    @OneToMany(mappedBy = "reply", fetch = FetchType.LAZY)
 //    private List<Re_reply> reReplies;  // 대댓글 목록
 
+    // setter 메서드 추가
+    public void setAccAt(LocalDateTime accAt) {
+        this.accAt = accAt;
+    }
+
+    // getter 메서드
+    public LocalDateTime getAccAt() {
+        return accAt;
+    }
     
 
     //생성시 자동 now()설정
@@ -59,7 +67,7 @@ public class Reply {
     protected void onUpdate() {
     this.updatedAt = LocalDateTime.now();
     }
-
+    
     //멤버 탈퇴시 사용
     public void unlinkMember() {
         this.member = null;
