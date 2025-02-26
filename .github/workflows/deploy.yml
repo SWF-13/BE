@@ -3,7 +3,7 @@ name: Build and Deploy
 on:
   push:
     branches:
-      - 배포  # main으로 수정 예정
+      - 배포  # main으로 수정예정
 
 jobs:
   build:
@@ -22,24 +22,20 @@ jobs:
       - name: Build with Gradle
         run: ./gradlew build
 
-      - name: Save private key
-        run: |
-          echo "$NCP_PRIVATE_KEY" > private_key.pem
-          chmod 600 private_key.pem
-
-      - name: Register server host key
-        run: |
-          mkdir -p ~/.ssh
-          # 서버 호스트 키를 known_hosts 파일에 추가
-          ssh-keyscan -H ${{ secrets.SERVER_IP }} >> ~/.ssh/known_hosts
-
       - name: Deploy to NCP
         env:
           SERVER_IP: ${{ secrets.SERVER_IP }}
           USERNAME: ${{ secrets.SERVER_USERNAME }}
+          PRIVATE_KEY: ${{ secrets.NCP_PRIVATE_KEY }}
         run: |
+          # SSH 에이전트 설정 및 프라이빗 키 추가
+          mkdir -p ~/.ssh
+          echo "$PRIVATE_KEY" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          ssh-keyscan -H $SERVER_IP >> ~/.ssh/known_hosts
+          
           # JAR 파일을 NCP 서버로 복사
-          scp -i private_key.pem build/libs/GGJ_BE-0.0.1-SNAPSHOT.jar $USERNAME@$SERVER_IP:/home/ubuntu/app/build/libs/
-
+          scp -i ~/.ssh/id_rsa /build/libs/GGJ_BE-0.0.1-SNAPSHOT.jar $USERNAME@$SERVER_IP:/home/ubuntu/app/build/libs/
+          
           # JAR 파일 실행
-          ssh -i private_key.pem $USERNAME@$SERVER_IP "java -jar /home/ubuntu/app/build/libs/GGJ_BE-0.0.1-SNAPSHOT.jar"
+          ssh -i ~/.ssh/id_rsa $USERNAME@$SERVER_IP "java -jar /home/ubuntu/app/build/libs/GGJ_BE-0.0.1-SNAPSHOT.jar"
