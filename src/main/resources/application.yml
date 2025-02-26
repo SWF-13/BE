@@ -1,6 +1,12 @@
 server:
   port: 8080
 
+logging:
+  level:
+    root: DEBUG
+    org.springframework: DEBUG
+    org.springframework.web: DEBUG
+
 spring:
   ncp:
     storage:
