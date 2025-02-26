@@ -3,7 +3,7 @@ name: Build and Deploy
 on:
   push:
     branches:
-      - 배포  # main으로 수정예정
+      - 배포  # main으로 수정 예정
 
 jobs:
   build:
@@ -22,14 +22,18 @@ jobs:
       - name: Build with Gradle
         run: ./gradlew build
 
+      - name: Save private key
+        run: |
+          echo "$NCP_PRIVATE_KEY" > private_key.pem
+          chmod 600 private_key.pem
+
       - name: Deploy to NCP
         env:
           SERVER_IP: ${{ secrets.SERVER_IP }}
           USERNAME: ${{ secrets.SERVER_USERNAME }}
-          PRIVATE_KEY: ${{ secrets.NCP_PRIVATE_KEY }}
         run: |
           # JAR 파일을 NCP 서버로 복사
-          scp -i $PRIVATE_KEY /build/libs/GGJ_BE-0.0.1-SNAPSHOT.jar $USERNAME@$SERVER_IP:/home/ubuntu/app/build/libs/
+          scp -i private_key.pem build/libs/GGJ_BE-0.0.1-SNAPSHOT.jar $USERNAME@$SERVER_IP:/home/ubuntu/app/build/libs/
           
           # JAR 파일 실행
-          ssh -i $PRIVATE_KEY $USERNAME@$SERVER_IP "java -jar /home/ubuntu/app/build/libs/GGJ_BE-0.0.1-SNAPSHOT.jar"
+          ssh -i private_key.pem $USERNAME@$SERVER_IP "java -jar /home/ubuntu/app/build/libs/GGJ_BE-0.0.1-SNAPSHOT.jar"
