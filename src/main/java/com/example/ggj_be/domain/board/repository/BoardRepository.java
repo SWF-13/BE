@@ -211,4 +211,5 @@ public interface BoardRepository extends JpaRepository<Board, Long> {
     List<BoardHomeList> findSearchBoardList(@Param("userId") Long userId, @Param("categoryId") int categoryId);
 
     
+    
 }
