@@ -106,7 +106,7 @@ public class BoardServiceImpl implements BoardService {
 
     @Override
     public List<BoardHomeList> getCategoryBoardList(Long userSeq, int CategoryId) {
-        List<BoardHomeList> boards = boardRepository.findSearchBoardList(userSeq, CategoryId);
+        List<BoardHomeList> boards = boardRepository.findCategoryBoardList(userSeq, CategoryId);
         Comparator<BoardHomeList> comparator;
         comparator = Comparator.comparing(BoardHomeList::getCreatedAt).reversed(); // 최신 게시글 내림차순
         boards.sort(comparator);
