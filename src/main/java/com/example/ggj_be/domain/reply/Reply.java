@@ -1,6 +1,9 @@
 package com.example.ggj_be.domain.reply;
 
 
+import com.example.ggj_be.domain.common.Good;
+import com.example.ggj_be.domain.re_reply.Re_reply;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.*;
 import java.util.List;
@@ -21,13 +24,21 @@ public class Reply {
     private Long replyId;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JsonBackReference
     @JoinColumn(name = "userId", nullable = true, foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
     private Member member;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JsonBackReference
     @JoinColumn(name = "boardId", nullable = true, foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
     private Board board;
-    
+
+    @OneToMany(mappedBy = "reply", cascade = CascadeType.PERSIST, orphanRemoval = false)
+    private List<Good> goods;
+
+    @OneToMany(mappedBy = "reply", cascade = CascadeType.PERSIST, orphanRemoval = false)
+    private List<Re_reply> re_replies;
+
     @Column(nullable = false, length = 1000)
     private String content;
 

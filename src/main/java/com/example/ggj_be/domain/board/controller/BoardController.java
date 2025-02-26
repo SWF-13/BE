@@ -57,6 +57,7 @@ public class BoardController {
             Long result = boardService.createBoard(request);
 
             if (boardFiles != null && !boardFiles.isEmpty()) {
+
                 for (MultipartFile file : boardFiles) {
                     String fileName = UUID.randomUUID().toString() + "_" + file.getOriginalFilename(); // 중복 방지
                     Path filePath = Paths.get(UPLOAD_DIR + fileName);
@@ -152,7 +153,6 @@ public class BoardController {
 
     @DeleteMapping
     public ApiResponse<Boolean> boardDelete(@RequestParam(value = "boardId") Long boardId) {
-        log.info("디테일 진입 boardId : {}", boardId);
 
         Boolean response = boardService.boardDelete(boardId);
 
