@@ -2,8 +2,12 @@ package com.example.ggj_be.domain.member;
 
 
 import com.example.ggj_be.domain.board.Board;
+import com.example.ggj_be.domain.reply.Reply;
+import com.example.ggj_be.domain.scrap.Scrap;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.example.ggj_be.domain.board.Board;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
@@ -20,6 +24,7 @@ import java.util.List;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 @Table(name = "member_tb",
         uniqueConstraints = {
                 @UniqueConstraint(name = "UniqueAccountId", columnNames = {"account_id"})
@@ -79,8 +84,17 @@ public class Member {
     private String bankName;
 
     @JsonIgnore
+    @JsonBackReference
     @OneToMany(mappedBy = "member", cascade = CascadeType.PERSIST, orphanRemoval = false)
     private List<Board> boards;
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "member", cascade = CascadeType.PERSIST, orphanRemoval = false)
+    private List<Scrap> scraps;
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "member", cascade = CascadeType.PERSIST, orphanRemoval = false)
+    private List<Reply> replies;
 
     //비밀번호 변경 시 이용
     public void changePassword(String newPassword) {
