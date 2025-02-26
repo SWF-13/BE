@@ -208,5 +208,5 @@ public interface BoardRepository extends JpaRepository<Board, Long> {
             "   AND a.category_id = :categoryId " +
             "ORDER BY created_at desc"
             , nativeQuery = true)
-    List<BoardHomeList> findSearchBoardList(@Param("userId") Long userId, @Param("categoryId") int categoryId);
-}
+    List<BoardHomeList> findSearchBoardList(@Param("userId") Long userId, @Param("categoryId") int categoryId);  
+
