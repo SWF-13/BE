@@ -32,8 +32,10 @@ public class AuthService {
         String refreshToken = jwtProvider.generateRefreshToken(member.getUserId(), member.getRole());
         Long expiration = jwtProvider.getExpiration(refreshToken);
 
-        log.info("===================== Add RefreshToken In Redis");
+
         redisUtil.set(String.valueOf(member.getAccountid()), refreshToken, expiration);
+
+        log.info("===================== Add RefreshToken In Redis");
 
         return new TokenVo(accessToken, refreshToken, member.getRole().toString());
     }
