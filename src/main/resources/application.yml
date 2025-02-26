@@ -9,7 +9,7 @@ spring:
       secret-key: ncp_iam_BPKMKR3p8VvwtfRpkH7B4ejaJc5sHOQuUa
       bucket-name: profile-img
   datasource:
-    url: jdbc:mysql://db-328qgi-kr.vpc-pub-cdb.ntruss.com/test
+    url: jdbc:mysql://db-328qgi-kr.vpc-pub-cdb.ntruss.com/test?useSSL=false&serverTimezone=Asia/Seoul
     username: test
     password: gjgj1234!
     driver-class-name: com.mysql.cj.jdbc.Driver
