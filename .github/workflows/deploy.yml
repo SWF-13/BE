@@ -27,6 +27,12 @@ jobs:
           echo "$NCP_PRIVATE_KEY" > private_key.pem
           chmod 600 private_key.pem
 
+      - name: Register server host key
+        run: |
+          mkdir -p ~/.ssh
+          # 서버 호스트 키를 known_hosts 파일에 추가
+          ssh-keyscan -H ${{ secrets.SERVER_IP }} >> ~/.ssh/known_hosts
+
       - name: Deploy to NCP
         env:
           SERVER_IP: ${{ secrets.SERVER_IP }}
@@ -34,6 +40,6 @@ jobs:
         run: |
           # JAR 파일을 NCP 서버로 복사
           scp -i private_key.pem build/libs/GGJ_BE-0.0.1-SNAPSHOT.jar $USERNAME@$SERVER_IP:/home/ubuntu/app/build/libs/
-          
+
           # JAR 파일 실행
           ssh -i private_key.pem $USERNAME@$SERVER_IP "java -jar /home/ubuntu/app/build/libs/GGJ_BE-0.0.1-SNAPSHOT.jar"
