@@ -6,6 +6,6 @@ import java.util.List;
 
 
 public interface ReReplyService {
-    Boolean createReReply(Long userId, ReReplyCreateRequest request);
+    Boolean createReReply(ReReplyCreateRequest request);
 
 }

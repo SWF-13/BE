@@ -8,7 +8,7 @@ import java.util.List;
 
 
 public interface BoardService {
-    Long createBoard(Long userId, BoardCreateRequest request);
+    Long createBoard(BoardCreateRequest request);
     List<BoardHomeList> getBoardHomeList(Long userId, int listType);
     List<BoardHomeList> getSearchBoardList(Long userId, String search);
     List<BoardHomeList> getCategoryBoardList(Long userId, int categoryId);

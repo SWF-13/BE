@@ -32,10 +32,10 @@ public class ScrapServiceImpl implements ScrapService {
 
 
     @Override
-    public Boolean scrapChange(Long userId, ScrapChangeRequest request) {
+    public Boolean scrapChange(ScrapChangeRequest request) {
         try{
             Member member = memberRepository.findById
-                            (userId)
+                            (request.getUserId())
                     .orElseThrow(() -> new RuntimeException("Member not found"));
 
             Board board = boardRepository.findById

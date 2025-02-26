@@ -4,7 +4,6 @@ import com.example.ggj_be.domain.reply.dto.ReplyDetailResponse;
 import com.example.ggj_be.domain.common.Poto;
 import com.example.ggj_be.domain.common.repository.PotoRepository;
 import com.example.ggj_be.domain.enums.Type;
-import com.example.ggj_be.domain.member.Member;
 import com.example.ggj_be.domain.reply.dto.ReplyCreateRequest;
 import com.example.ggj_be.domain.reply.service.ReplyService;
 import com.example.ggj_be.global.response.ApiResponse;
@@ -15,7 +14,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import com.example.ggj_be.global.annotation.AuthMember;
 
 import java.io.File;
 import java.io.IOException;
@@ -41,16 +39,13 @@ public class ReplyController {
 
     @PostMapping
     @Transactional
-
-    public ApiResponse<Boolean>  replyCreate(@AuthMember Member member,
-                                             @ModelAttribute ReplyCreateRequest request,
+                                            //@AuthMember Member member 변경해야함!!!!!!!!!!!!!!!!!!!!!!!!!
+    public ApiResponse<Boolean>  replyCreate(@ModelAttribute ReplyCreateRequest request,
                                              @RequestParam(value = "reply_files", required = false) List<MultipartFile> replyFiles) {
-
-        Long userId = member.getUserId();     
 
         try {
             List<String> savedFilePaths = new ArrayList<>();
-            Long result = replyService.createReply(userId, request);
+            Long result = replyService.createReply(request);
 
             if (replyFiles != null && !replyFiles.isEmpty()) {
                 for (MultipartFile file : replyFiles) {
@@ -93,14 +88,9 @@ public class ReplyController {
         return ApiResponse.onSuccess(true);
     }
 
-    @GetMapping
-    public ApiResponse<List<ReplyDetailResponse>> getBoardHomeListResponse(@AuthMember Member member,
+    @GetMapping                                              //@AuthMember Member member 변경해야함!!!!!!!!!!!!!!!!!!!!!!!!!
+    public ApiResponse<List<ReplyDetailResponse>> getBoardHomeListResponse(@RequestParam(value = "userId", required = false) Long userId,
                                                                        @RequestParam(value = "boardId") Long boardId) {
-        Long userId = null;
-
-        if (member != null) {
-            userId = member.getUserId();
-        }
 
         List<ReplyDetailResponse> response = replyService.getReplyList(userId, boardId);
 

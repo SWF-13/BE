@@ -7,7 +7,7 @@ import java.util.List;
 
 
 public interface ReplyService {
-    Long createReply(Long userId, ReplyCreateRequest request);
+    Long createReply(ReplyCreateRequest request);
     List<ReplyDetailResponse> getReplyList(Long userId, Long boardId);
 
 }

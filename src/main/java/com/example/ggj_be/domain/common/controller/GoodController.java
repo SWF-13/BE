@@ -2,8 +2,6 @@ package com.example.ggj_be.domain.common.controller;
 
 import com.example.ggj_be.domain.common.dto.GoodChangeRequest;
 import com.example.ggj_be.domain.common.service.GoodService;
-import com.example.ggj_be.domain.member.Member;
-import com.example.ggj_be.global.annotation.AuthMember;
 import com.example.ggj_be.global.response.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -20,12 +18,11 @@ public class GoodController {
     private final GoodService goodService;
     @PostMapping
     @Transactional
-    
-    public ApiResponse<Boolean>  goodChange(@AuthMember Member member,
-                                            @RequestBody GoodChangeRequest request) {
+                                            //@AuthMember Member member 변경해야함!!!!!!!!!!!!!!!!!!!!!!!!!
+    public ApiResponse<Boolean>  goodChange(@RequestBody GoodChangeRequest request) {
 
-        Long userId = member.getUserId();
-        Boolean result = goodService.goodChange(userId, request);
+        log.info("파람확인 {}, {}, {}, {}", request.getUserId(), request.getObjectId(), request.getType(), request.getGoodChk());
+        Boolean result = goodService.goodChange(request);
         return ApiResponse.onSuccess(result);
     }
 }

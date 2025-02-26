@@ -1,9 +1,7 @@
 package com.example.ggj_be.domain.scrap.controller;
 
-import com.example.ggj_be.domain.member.Member;
 import com.example.ggj_be.domain.scrap.dto.ScrapChangeRequest;
 import com.example.ggj_be.domain.scrap.service.ScrapService;
-import com.example.ggj_be.global.annotation.AuthMember;
 import com.example.ggj_be.global.response.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -23,13 +21,11 @@ public class ScrapController {
     private final ScrapService scrapService;
     @PostMapping
     @Transactional
-    
-    public ApiResponse<Boolean>  scrapChange(@AuthMember Member member,
-                                             @RequestBody ScrapChangeRequest request) {
+                                            //@AuthMember Member member 변경해야함!!!!!!!!!!!!!!!!!!!!!!!!!
+    public ApiResponse<Boolean>  scrapChange(@RequestBody ScrapChangeRequest request) {
 
-        Long userId = member.getUserId();
-
-        Boolean result = scrapService.scrapChange(userId, request);
+        log.info("파람확인 {}, {}, {}", request.getUserId(), request.getBoardId(), request.getScrapChk());
+        Boolean result = scrapService.scrapChange(request);
         return ApiResponse.onSuccess(result);
     }
 }

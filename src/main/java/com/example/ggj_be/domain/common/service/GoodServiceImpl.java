@@ -29,9 +29,9 @@ public class GoodServiceImpl implements GoodService {
 
 
     @Override
-    public Boolean goodChange(Long userId, GoodChangeRequest request) {
+    public Boolean goodChange(GoodChangeRequest request) {
         try{
-            Member member = memberRepository.findById(userId)
+            Member member = memberRepository.findById(request.getUserId())
                     .orElseThrow(() -> new RuntimeException("Member not found"));
             if (request.getGoodChk() == 0) {
                 Good good = Good.builder()

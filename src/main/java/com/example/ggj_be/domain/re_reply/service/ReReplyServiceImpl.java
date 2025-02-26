@@ -29,10 +29,10 @@ public class ReReplyServiceImpl implements ReReplyService {
 
 
     @Override
-    public Boolean createReReply(Long userId, ReReplyCreateRequest request) {
+    public Boolean createReReply(ReReplyCreateRequest request) {
 
         try{
-            Member member = memberRepository.findById(userId)
+            Member member = memberRepository.findById(request.getUserId())
                     .orElseThrow(() -> new RuntimeException("Member not found"));
 
             Reply reply = replyRepository.findById(request.getReplyId())
