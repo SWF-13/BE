@@ -1,8 +1,10 @@
 package com.example.ggj_be.domain.common;
 
 
+import com.example.ggj_be.domain.board.Board;
 import com.example.ggj_be.domain.member.Member;
 import com.example.ggj_be.domain.enums.Type;
+import com.example.ggj_be.domain.reply.Reply;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -23,6 +25,14 @@ public class Good {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "userId", nullable = false, foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
     private Member member;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "boardId", nullable = true, foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
+    private Board board;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "replyId", nullable = true, foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
+    private Reply reply;
 
     @Column(nullable = false)
     private long objectId;
