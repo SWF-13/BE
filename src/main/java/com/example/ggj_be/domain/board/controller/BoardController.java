@@ -2,6 +2,7 @@ package com.example.ggj_be.domain.board.controller;
 
 import com.example.ggj_be.domain.board.dto.*;
 import com.example.ggj_be.domain.common.Poto;
+import com.example.ggj_be.domain.member.Member;
 import com.example.ggj_be.domain.common.repository.PotoRepository;
 import com.example.ggj_be.domain.enums.Type;
 import com.example.ggj_be.domain.reply.dto.ReplyDetailResponse;
@@ -13,7 +14,7 @@ import com.example.ggj_be.domain.board.service.BoardService;
 import com.example.ggj_be.domain.reply.service.ReplyService;
 
 import com.example.ggj_be.global.response.ApiResponse;
-
+import com.example.ggj_be.global.annotation.AuthMember;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -50,11 +51,14 @@ public class BoardController {
     @Operation(summary = "게시글 작성 API", description = "게시글 작성 시 사진도 함께 업로드 됩니다.")
     @PostMapping
     @Transactional
-    public ApiResponse<Boolean> createBoard(@ModelAttribute BoardCreateRequest request,
+    public ApiResponse<Boolean> createBoard(@AuthMember Member member,
+                                            @ModelAttribute BoardCreateRequest request,
                                             @RequestParam(value = "board_files", required = false) List<MultipartFile> boardFiles) {
+        Long userId = member.getUserId();
+
         try {
             List<String> savedFilePaths = new ArrayList<>();
-            Long result = boardService.createBoard(request);
+            Long result = boardService.createBoard(userId, request);
 
             if (boardFiles != null && !boardFiles.isEmpty()) {
 
@@ -100,10 +104,15 @@ public class BoardController {
 
 
 
-    @GetMapping("/home_list")                                               //@AuthMember Member member 변경해야함!!!!!!!!!!!!!!!!!!!!!!!!!
-    public ApiResponse<BoardHomeListResponse> getBoardHomeListResponse(@RequestParam(value = "userId", required = false) Long userId,
+    @GetMapping("/home_list")                                               
+    public ApiResponse<BoardHomeListResponse> getBoardHomeListResponse(@AuthMember Member member,
                                                                                   @RequestParam(value = "listType") int listType) {
 
+        Long userId = null;
+
+        if (member != null) {
+            userId = member.getUserId();
+        }
 
         List<BoardHomeList> homeList = boardService.getBoardHomeList(userId, listType);
 
@@ -117,9 +126,15 @@ public class BoardController {
         return ApiResponse.onSuccess(response);
     }
 
-    @GetMapping("/searchBoardList")                                               //@AuthMember Member member 변경해야함!!!!!!!!!!!!!!!!!!!!!!!!!
-    public ApiResponse<List<BoardHomeList>> getSearchBoardListResponse(@RequestParam(value = "userId", required = false) Long userId,
+    @GetMapping("/searchBoardList")
+    public ApiResponse<List<BoardHomeList>> getSearchBoardListResponse(@AuthMember Member member,
                                                                        @RequestParam(value = "search") String search) {
+        
+        Long userId = null;
+
+        if (member != null) {
+            userId = member.getUserId();
+        }
 
         List<BoardHomeList> response = boardService.getSearchBoardList(userId, search);
 
@@ -127,20 +142,32 @@ public class BoardController {
         return ApiResponse.onSuccess(response);
     }
 
-    @GetMapping("/categoryBoardList")                                               //@AuthMember Member member 변경해야함!!!!!!!!!!!!!!!!!!!!!!!!!
-    public ApiResponse<List<BoardHomeList>> getCategoryBoardListResponse(@RequestParam(value = "userId", required = false) Long userId,
+    @GetMapping("/categoryBoardList")
+    public ApiResponse<List<BoardHomeList>> getCategoryBoardListResponse(@AuthMember Member member,
                                                                        @RequestParam(value = "categoryId") int categoryId) {
 
-        log.info("넘어오는 값 확인 : {}", categoryId);
+        Long userId = null;
+
+        if (member != null) {
+            userId = member.getUserId();
+        }
+
         List<BoardHomeList> response = boardService.getCategoryBoardList(userId, categoryId);
 
 
         return ApiResponse.onSuccess(response);
     }
 
-    @GetMapping("/detail")                                                  //@AuthMember Member member 변경해야함!!!!!!!!!!!!!!!!!!!!!!!!!
-    public ApiResponse<BoardDetailResponse> getBoardDetailResponse(@RequestParam(value = "userId", required = false) Long userId,
+    @GetMapping("/detail")                                                 
+    public ApiResponse<BoardDetailResponse> getBoardDetailResponse(@AuthMember Member member,
                                                                     @RequestParam(value = "boardId") Long boardId) {
+
+        Long userId = null;
+
+        if (member != null) {
+            userId = member.getUserId();
+        }                                       
+
         BoardDetail boardDetail = boardService.getBoardDetail(userId, boardId);
         List<Poto> boardImages = boardService.getImages(Type.board, boardId);
 
@@ -166,7 +193,6 @@ public class BoardController {
     @PatchMapping
     public ApiResponse<Boolean> boardAccAtUdate(@RequestParam(value = "boardId") Long boardId,
                                                 @RequestParam(value = "replyId") Long replyId) {
-        log.info("디테일 진입 : {} {}", boardId, replyId);
 
         Boolean response = boardService.boardAccAtUdate(boardId, replyId);
 

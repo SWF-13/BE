@@ -42,12 +42,12 @@ public class BoardServiceImpl implements BoardService {
     private PotoRepository potoRepository;
 
     @Override
-    public Long createBoard(BoardCreateRequest request) {
+    public Long createBoard(Long userId, BoardCreateRequest request) {
 
 
 
         try{
-            Member member = memberRepository.findById(request.getUserId())
+            Member member = memberRepository.findById(userId)
                     .orElseThrow(() -> new RuntimeException("Member not found"));
             Board board = Board.builder()
             .categoryId(request.getCategoryId())
