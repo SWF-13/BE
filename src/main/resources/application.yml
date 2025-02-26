@@ -66,6 +66,7 @@ spring:
               - name
               - email
               - profile_image
+              - nickname
             client-name: Naver
           kakao:
             client-id: 0d07280765931398b208f0ebc7226a1c #실제 배포시 테스트 앱용이 아닌 실제 앱 키 사용해야함 시크릿 키도 동일
