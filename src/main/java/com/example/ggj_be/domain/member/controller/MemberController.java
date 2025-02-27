@@ -28,6 +28,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
@@ -98,6 +99,32 @@ public class MemberController {
             return ResponseEntity.status(500).body("파일 업로드에 실패했습니다.");
         }
     }
+
+    @Operation(summary = "기본 프로필 이미지 선택")
+    @PatchMapping("/upload-default-img")
+    public ResponseEntity<String> updateProfileImageWithDefault(@AuthMember Member member, @RequestParam("imageUrl") String imageUrl) {
+        try {
+            List<String> defaultImageUrls = Arrays.asList(
+                    "https://kr.object.ncloudstorage.com/profile-img/basic/6C7CC82D-CA70-4894-968B-44A344A85C94.png",
+                    "https://kr.object.ncloudstorage.com/profile-img/basic/9957A943-220E-4BF1-B319-F3BA8D122599.png",
+                    "https://kr.object.ncloudstorage.com/profile-img/basic/B9CBB4D7-18A0-49BC-84A1-E0D5EC1F8112.png",
+                    "https://kr.object.ncloudstorage.com/profile-img/basic/EEA39F71-0CA1-4FCA-A0DE-090EB3956767.png"
+            );
+
+            if (!defaultImageUrls.contains(imageUrl)) {
+                return ResponseEntity.status(400).body("잘못된 이미지 URL입니다.");
+            }
+
+            member.updateProfileImage(imageUrl);
+            memberRepository.save(member);
+
+            return ResponseEntity.ok(imageUrl);
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body("프로필 이미지 변경에 실패했습니다.");
+        }
+    }
+
+
 
     @Operation(summary = "(이메일 인증 코드 검증 후) 회원의 비밀번호를 변경합니다.", description = "JWT을 Header에 담아서 요청해야합니다.")
     @PatchMapping("/changePassword")
