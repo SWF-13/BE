@@ -75,7 +75,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 requestUrl.startsWith("/swagger-ui/**") ||
                 requestUrl.startsWith("/swagger-resources/**") ||
                 requestUrl.startsWith("/v3/api-docs/**") ||
-                requestUrl.startsWith("/favicon.ico");
+                requestUrl.startsWith("/favicon.ico")||
+                requestUrl.startsWith("/api/emails/**");
     }
 
     private boolean isBearer(String authorizationHeader) {

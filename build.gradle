@@ -67,6 +67,9 @@ dependencies {
     testImplementation 'org.springframework.security:spring-security-test'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 
+    implementation 'jakarta.validation:jakarta.validation-api:3.0.0'
+    implementation 'org.hibernate.validator:hibernate-validator:6.1.6.Final'
+
     // QueryDSL (필요 시 주석 해제)
     // implementation 'com.querydsl:querydsl-jpa:5.0.0:jakarta'
     // annotationProcessor "com.querydsl:querydsl-apt:5.0.0:jakarta"

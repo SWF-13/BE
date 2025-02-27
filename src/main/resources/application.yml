@@ -1,6 +1,10 @@
 server:
   port: 8080
 
+logging:
+  file:
+    name: /home/ubuntu/app/logs/app.log
+
 spring:
   ncp:
     storage:
@@ -9,7 +13,7 @@ spring:
       secret-key: ncp_iam_BPKMKR3p8VvwtfRpkH7B4ejaJc5sHOQuUa
       bucket-name: profile-img
   datasource:
-    url: jdbc:mysql://db-328qgi-kr.vpc-pub-cdb.ntruss.com/test
+    url: jdbc:mysql://223.130.152.205:3306/test
     username: test
     password: gjgj1234!
     driver-class-name: com.mysql.cj.jdbc.Driver

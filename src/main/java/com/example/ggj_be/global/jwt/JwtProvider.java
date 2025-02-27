@@ -143,6 +143,7 @@ public class JwtProvider {
         return redisUtil.hasKeyBlackList(accessToken);
     }
 
+
     public Role getRoleByToken(String token) {
         return parseClaims(token)
                 .get(ROLE, Role.class);

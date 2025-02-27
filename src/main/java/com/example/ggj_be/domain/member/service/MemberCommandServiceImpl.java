@@ -2,6 +2,7 @@ package com.example.ggj_be.domain.member.service;
 
 import com.example.ggj_be.domain.auth.dto.SignUpRequest;
 import com.example.ggj_be.domain.common.CustomResult;
+import com.example.ggj_be.domain.enums.Bank;
 import com.example.ggj_be.domain.enums.Role;
 import com.example.ggj_be.domain.member.Member;
 import com.example.ggj_be.domain.member.dto.BankRequest;
@@ -99,11 +100,16 @@ public class MemberCommandServiceImpl implements MemberCommandService {
         Member member = memberRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException("Member not found"));
 
-        Member updatedmember = member.toBuilder()
+        // 은행 코드로부터 enum을 찾습니다.
+        Bank bank = Bank.fromCode(request.getBankCode());
+
+        // Bank enum을 사용하여 업데이트
+        Member updatedMember = member.toBuilder()
                 .bankAccount(request.getBankAccount())
-                .bankName(request.getBankName())
+                .bankName(bank)  // Enum으로 저장
                 .build();
-        return memberRepository.save(updatedmember);
+
+        return memberRepository.save(updatedMember);
     }
 
 
