@@ -2,8 +2,10 @@ package com.example.ggj_be.domain.re_reply.controller;
 
 import com.example.ggj_be.domain.common.Poto;
 import com.example.ggj_be.domain.enums.Type;
+import com.example.ggj_be.domain.member.Member;
 import com.example.ggj_be.domain.re_reply.dto.ReReplyCreateRequest;
 import com.example.ggj_be.domain.re_reply.service.ReReplyService;
+import com.example.ggj_be.global.annotation.AuthMember;
 import com.example.ggj_be.global.response.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -33,10 +35,11 @@ public class ReReplyController {
 
     @PostMapping
     @Transactional
-                                            //@AuthMember Member member 변경해야함!!!!!!!!!!!!!!!!!!!!!!!!!
-    public ApiResponse<Boolean>  replyCreate(@ModelAttribute ReReplyCreateRequest request) {
+    public ApiResponse<Boolean>  replyCreate(@AuthMember Member member,
+                                             @ModelAttribute ReReplyCreateRequest request) {
 
-        Boolean result = reReplyService.createReReply(request);
+        Long userId = member.getUserId();
+        Boolean result = reReplyService.createReReply(userId, request);
 
         return ApiResponse.onSuccess(result);
     }

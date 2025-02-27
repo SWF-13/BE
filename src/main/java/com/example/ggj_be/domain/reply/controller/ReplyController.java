@@ -1,11 +1,13 @@
 package com.example.ggj_be.domain.reply.controller;
 
+import com.example.ggj_be.domain.member.Member;
 import com.example.ggj_be.domain.reply.dto.ReplyDetailResponse;
 import com.example.ggj_be.domain.common.Poto;
 import com.example.ggj_be.domain.common.repository.PotoRepository;
 import com.example.ggj_be.domain.enums.Type;
 import com.example.ggj_be.domain.reply.dto.ReplyCreateRequest;
 import com.example.ggj_be.domain.reply.service.ReplyService;
+import com.example.ggj_be.global.annotation.AuthMember;
 import com.example.ggj_be.global.response.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -39,13 +41,15 @@ public class ReplyController {
 
     @PostMapping
     @Transactional
-                                            //@AuthMember Member member 변경해야함!!!!!!!!!!!!!!!!!!!!!!!!!
-    public ApiResponse<Boolean>  replyCreate(@ModelAttribute ReplyCreateRequest request,
+    public ApiResponse<Boolean>  replyCreate(@AuthMember Member member,
+                                             @ModelAttribute ReplyCreateRequest request,
                                              @RequestParam(value = "reply_files", required = false) List<MultipartFile> replyFiles) {
+
+        Long userId = member.getUserId();
 
         try {
             List<String> savedFilePaths = new ArrayList<>();
-            Long result = replyService.createReply(request);
+            Long result = replyService.createReply(userId, request);
 
             if (replyFiles != null && !replyFiles.isEmpty()) {
                 for (MultipartFile file : replyFiles) {
@@ -88,9 +92,15 @@ public class ReplyController {
         return ApiResponse.onSuccess(true);
     }
 
-    @GetMapping                                              //@AuthMember Member member 변경해야함!!!!!!!!!!!!!!!!!!!!!!!!!
-    public ApiResponse<List<ReplyDetailResponse>> getBoardHomeListResponse(@RequestParam(value = "userId", required = false) Long userId,
-                                                                       @RequestParam(value = "boardId") Long boardId) {
+    @GetMapping
+    public ApiResponse<List<ReplyDetailResponse>> getBoardHomeListResponse(@AuthMember Member member,
+                                                                           @RequestParam(value = "boardId") Long boardId) {
+
+        Long userId = null;
+
+        if (member != null) {
+            userId = member.getUserId();
+        }
 
         List<ReplyDetailResponse> response = replyService.getReplyList(userId, boardId);
 
