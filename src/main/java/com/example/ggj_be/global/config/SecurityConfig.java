@@ -106,7 +106,7 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(List.of("http://localhost:3000","http://210.109.52.95/"
+        configuration.setAllowedOrigins(List.of("http://localhost:3000","http://210.109.52.95/","http://211.188.52.119/"
 //      수정 필요          "http://kidsincompany.shop"
         ));
         configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"));
