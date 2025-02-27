@@ -3,7 +3,7 @@ name: Build and Deploy
 on:
   push:
     branches:
-      - 배포  # main으로 수정예정
+      - main
 
 jobs:
   build:
