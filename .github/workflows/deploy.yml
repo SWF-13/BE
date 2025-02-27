@@ -33,22 +33,9 @@ jobs:
           echo "$PRIVATE_KEY" > ~/.ssh/id_rsa
           chmod 600 ~/.ssh/id_rsa
           ssh-keyscan -H $SERVER_IP >> ~/.ssh/known_hosts
-
+          
           # JAR 파일을 NCP 서버로 복사
           scp -i ~/.ssh/id_rsa build/libs/GGJ_BE-0.0.1-SNAPSHOT.jar $USERNAME@$SERVER_IP:/home/ubuntu/app/build/libs/
-
+          
           # JAR 파일 실행
           ssh -i ~/.ssh/id_rsa $USERNAME@$SERVER_IP "nohup java -jar /home/ubuntu/app/build/libs/GGJ_BE-0.0.1-SNAPSHOT.jar > /home/ubuntu/app/logs/app.log 2>&1 &"
-
-      - name: Check and restart Redis if needed
-        run: |
-          ssh -i ~/.ssh/id_rsa $USERNAME@$SERVER_IP << 'EOF'
-            # Redis 서비스 상태 확인 및 재시작
-            SERVICE_STATUS=$(systemctl is-active redis)
-            if [ "$SERVICE_STATUS" != "active" ]; then
-              echo "Redis 서비스가 실행되지 않고 있습니다. Redis를 재시작합니다."
-              sudo systemctl start redis
-            else
-              echo "Redis 서비스가 정상적으로 실행 중입니다."
-            fi
-          EOF
