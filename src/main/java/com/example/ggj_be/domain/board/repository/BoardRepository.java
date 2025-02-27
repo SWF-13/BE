@@ -126,6 +126,7 @@ public interface BoardRepository extends JpaRepository<Board, Long> {
     BoardDetail findBoardDetail(@Param("userId") Long userId, @Param("boardId") Long boardId);
 
 
+
     @Query(value = "SELECT " +
             "    b.board_id, " +
             "   b.created_at, " +
