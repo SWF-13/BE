@@ -42,12 +42,12 @@ public class BoardServiceImpl implements BoardService {
     private PotoRepository potoRepository;
 
     @Override
-    public Long createBoard(BoardCreateRequest request) {
+    public Long createBoard(Long userId, BoardCreateRequest request) {
 
 
 
         try{
-            Member member = memberRepository.findById(request.getUserId())
+            Member member = memberRepository.findById(userId)
                     .orElseThrow(() -> new RuntimeException("Member not found"));
             Board board = Board.builder()
             .categoryId(request.getCategoryId())
@@ -106,7 +106,7 @@ public class BoardServiceImpl implements BoardService {
 
     @Override
     public List<BoardHomeList> getCategoryBoardList(Long userSeq, int CategoryId) {
-        List<BoardHomeList> boards = boardRepository.findSearchBoardList(userSeq, CategoryId);
+        List<BoardHomeList> boards = boardRepository.findCategoryBoardList(userSeq, CategoryId);
         Comparator<BoardHomeList> comparator;
         comparator = Comparator.comparing(BoardHomeList::getCreatedAt).reversed(); // 최신 게시글 내림차순
         boards.sort(comparator);

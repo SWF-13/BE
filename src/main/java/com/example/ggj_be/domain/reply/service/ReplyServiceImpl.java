@@ -44,10 +44,10 @@ public class ReplyServiceImpl implements ReplyService {
 
 
     @Override
-    public Long createReply(ReplyCreateRequest request) {
+    public Long createReply(Long userId, ReplyCreateRequest request) {
 
         try{
-            Member member = memberRepository.findById(request.getUserId())
+            Member member = memberRepository.findById(userId)
                     .orElseThrow(() -> new RuntimeException("Member not found"));
 
             Board board = boardRepository.findById(request.getBoardId())

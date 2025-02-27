@@ -4,6 +4,6 @@ import com.example.ggj_be.domain.common.dto.GoodChangeRequest;
 
 
 public interface GoodService {
-    Boolean goodChange(GoodChangeRequest request);
+    Boolean goodChange(Long userId, GoodChangeRequest request);
 
 }
