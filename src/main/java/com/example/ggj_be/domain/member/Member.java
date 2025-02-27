@@ -2,6 +2,7 @@ package com.example.ggj_be.domain.member;
 
 
 import com.example.ggj_be.domain.board.Board;
+import com.example.ggj_be.domain.enums.Bank;
 import com.example.ggj_be.domain.reply.Reply;
 import com.example.ggj_be.domain.scrap.Scrap;
 import com.fasterxml.jackson.annotation.JsonBackReference;
@@ -80,8 +81,9 @@ public class Member {
     @Column(name = "bank_account", nullable = true, length = 20)
     private String bankAccount;
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "bank_name", nullable = true, length = 20)
-    private String bankName;
+    private Bank bankName;
 
     @JsonIgnore
     @JsonBackReference
