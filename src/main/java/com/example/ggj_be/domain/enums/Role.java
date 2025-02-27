@@ -1,7 +1,7 @@
 package com.example.ggj_be.domain.enums;
 
 public enum Role {
-    EMPLOYEE, // 일반 직원
+    MEMBER, // 일반 회원
     ADMIN,     // 관리자
     BUS        // 사업체
 }
