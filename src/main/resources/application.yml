@@ -2,10 +2,8 @@ server:
   port: 8080
 
 logging:
-  level:
-    root: DEBUG
-    org.springframework: DEBUG
-    org.springframework.web: DEBUG
+  file:
+    name: /home/ubuntu/app/logs/app.log
 
 spring:
   ncp:
