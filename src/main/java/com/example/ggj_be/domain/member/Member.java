@@ -3,7 +3,6 @@ package com.example.ggj_be.domain.member;
 
 import com.example.ggj_be.domain.board.Board;
 import com.example.ggj_be.domain.enums.Bank;
-import com.example.ggj_be.domain.enums.PointType;
 import com.example.ggj_be.domain.reply.Reply;
 import com.example.ggj_be.domain.scrap.Scrap;
 import com.fasterxml.jackson.annotation.JsonBackReference;
@@ -27,6 +26,8 @@ import com.example.ggj_be.domain.enums.Role;
 
 import java.time.LocalDate;
 import java.util.List;
+
+import com.example.ggj_be.domain.enums.PointType;
 
 @Entity
 @Builder(toBuilder = true)
