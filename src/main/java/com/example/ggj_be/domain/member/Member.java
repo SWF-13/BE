@@ -147,6 +147,7 @@ public class Member {
 
 public void setUserComment(String comment) {
         this.comment = comment;
+
     }
 
     @PrePersist
