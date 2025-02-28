@@ -85,6 +85,7 @@ public class SecurityConfig {
                         authorize.requestMatchers(CorsUtils::isPreFlightRequest).permitAll()  // Preflight 요청 허용
                                 .requestMatchers("/api/admin/**").hasRole("ADMIN")
                                 .requestMatchers("/api/emails/**").permitAll()//이메일 인증 API에 대해서는 인증 없이 접근 허용
+                                .requestMatchers(WHITE_LIST_URL).permitAll()
                                 .anyRequest()
                                 .authenticated())
                 .oauth2Login(configure ->
@@ -107,7 +108,6 @@ public class SecurityConfig {
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
         configuration.setAllowedOrigins(List.of("http://localhost:3000","http://210.109.52.95/","http://211.188.52.119/"
-//      수정 필요          "http://kidsincompany.shop"
         ));
         configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"));
         configuration.setAllowedHeaders(List.of("Authorization", "Content-Type"));

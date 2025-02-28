@@ -27,7 +27,7 @@ jobs:
           SERVER_IP: ${{ secrets.SERVER_IP }}
           USERNAME: ${{ secrets.SERVER_USERNAME }}
           PRIVATE_KEY: ${{ secrets.NCP_PRIVATE_KEY }}
-        run: |
+                run: |
           # SSH 에이전트 설정 및 프라이빗 키 추가
           mkdir -p ~/.ssh
           echo "$PRIVATE_KEY" > ~/.ssh/id_rsa
