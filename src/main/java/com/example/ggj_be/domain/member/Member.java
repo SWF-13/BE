@@ -144,10 +144,15 @@ public class Member {
             this.point -= changePoint;
         }
 
+public void setUserComment(String comment) {
+        this.comment = comment;
     }
 
-    public void setUserComment(String comment) {
-        this.comment = comment;
+    @PrePersist
+    public void prePersist() {
+        if (this.point == null) {
+            this.point = 0L;
+        }
     }
 
     }
