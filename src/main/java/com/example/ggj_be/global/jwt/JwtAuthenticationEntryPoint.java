@@ -24,11 +24,6 @@ public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint {
         ErrorStatus exception = (ErrorStatus) request.getAttribute("exception");
         log.info("===================== EntryPoint - Exception Control : " + request.getAttribute(
                 "exception"));
-        if (exception == null) {
-            log.error("JWT 관련 오류 정보가 없습니다.");
-            response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "JWT 관련 오류 정보가 없습니다.");
-            return;
-        }
 
         if (exception.equals(ErrorStatus._JWT_NOT_FOUND)) {
             exceptionHandler(response, ErrorStatus._JWT_NOT_FOUND,
