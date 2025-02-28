@@ -16,11 +16,11 @@ public interface Re_replyRepository extends JpaRepository<Re_reply, Long>{
 
     @Query(value =
             "select "+
-                    "a.re_reply_id, "+
+                    "a.re_reply_id as reReplyId, "+
                     "a.content, "+
-                    "b.nick_name, "+
-                    "b.user_img,  "+
-                    "CASE WHEN a.user_id = :userId THEN 1 ELSE 0 END is_writer , "+
+                    "b.nick_name as nickName, "+
+                    "b.user_img as userImg,  "+
+                    "CASE WHEN a.user_id = :userId THEN 1 ELSE 0 END isWriter , "+
                     "CASE WHEN EXISTS (SELECT 1 "+
                     "FROM good c "+
                     "WHERE type = 'reReply' "+
@@ -28,12 +28,12 @@ public interface Re_replyRepository extends JpaRepository<Re_reply, Long>{
                     "AND a.re_reply_id = c.object_id) "+
                     "THEN 1 "+
                     "ELSE 0 "+
-                    "END good_chk,  "+
+                    "END goodChk,  "+
                     "( SELECT COALESCE(( SELECT COUNT(*) "+
                     "FROM good d "+
                     "WHERE type = 'reReply' "+
                     "and a.re_reply_id = d.object_id "+
-                    "GROUP BY object_id), 0)) as good_count "+
+                    "GROUP BY object_id), 0)) as goodCount "+
                     "from re_reply a "+
                     ", member_tb b "+
                     "where a.reply_id = :replyId "+
