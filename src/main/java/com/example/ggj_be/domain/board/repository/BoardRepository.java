@@ -19,6 +19,7 @@ public interface BoardRepository extends JpaRepository<Board, Long> {
     List<Board> findByMember(Member member);
 
     @Query(value = "SELECT " +
+
             "    b.board_id as boardId, " +
             "   b.created_at as createdAt, " +
             "    a.category_name as categoryName, " +
