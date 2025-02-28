@@ -27,6 +27,8 @@ import com.example.ggj_be.domain.enums.Role;
 import java.time.LocalDate;
 import java.util.List;
 
+import com.example.ggj_be.domain.enums.PointType;
+
 @Entity
 @Builder(toBuilder = true)
 @Getter
@@ -105,6 +107,15 @@ public class Member {
     @OneToMany(mappedBy = "member", cascade = CascadeType.PERSIST, orphanRemoval = false)
     private List<Reply> replies;
 
+
+    @Column(nullable = false)
+    private Long point = 0L;
+
+    @Column(nullable = true)
+    @Lob
+    private String comment;
+
+
     //비밀번호 변경 시 이용
     public void changePassword(String newPassword) {
         if(newPassword.length() <8){
@@ -124,6 +135,19 @@ public class Member {
     //프로필 사진 변경
     public void updateProfileImage(String imageUrl) {
         this.userImg = imageUrl;  // 프로필 이미지 필드에 새 URL 저장
+    }
+
+    public void setPoint(Long changePoint, PointType PointType) {
+        if (PointType == PointType.add){
+            this.point += changePoint;
+        }else if (PointType == PointType.remove){
+            this.point -= changePoint;
+        }
+
+    }
+
+    public void setUserComment(String comment) {
+        this.comment = comment;
     }
 
     }

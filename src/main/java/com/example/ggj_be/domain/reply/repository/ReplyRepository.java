@@ -16,12 +16,12 @@ public interface ReplyRepository extends JpaRepository<Reply, Long>{
 
     @Query(value =
             "select "+
-                    "a.reply_id, "+
-                    "CASE WHEN a.acc_at IS NOT NULL THEN 1 ELSE 0 END AS acc_chk , "+
+                    "a.reply_id as replyId, "+
+                    "CASE WHEN a.acc_at IS NOT NULL THEN 1 ELSE 0 END AS accChk , "+
                     "a.content, "+
-                    "b.nick_name, "+
-                    "b.user_img,  "+
-                    "CASE WHEN a.user_id = :userId THEN 1 ELSE 0 END is_writer , "+
+                    "b.nick_name as nickName, "+
+                    "b.user_img as userImg,  "+
+                    "CASE WHEN a.user_id = :userId THEN 1 ELSE 0 END isWriter , "+
                     "CASE WHEN EXISTS (SELECT 1 "+
                     "FROM good c "+
                     "WHERE type = 'reply' "+
@@ -29,12 +29,12 @@ public interface ReplyRepository extends JpaRepository<Reply, Long>{
                     "AND a.reply_id = c.object_id) "+
                     "THEN 1 "+
                     "ELSE 0 "+
-                    "END good_chk,  "+
+                    "END goodChk,  "+
                     "( SELECT COALESCE(( SELECT COUNT(*) "+
                     "FROM good d "+
                     "WHERE type = 'reply' "+
                     "and a.reply_id = d.object_id "+
-                    "GROUP BY object_id), 0)) as good_count "+
+                    "GROUP BY object_id), 0)) as goodCount "+
                     "from reply a "+
                     ", member_tb b "+
                     "where a.board_id = :boardId "+
