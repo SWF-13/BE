@@ -150,4 +150,11 @@ public class Member {
         this.comment = comment;
     }
 
+    @PrePersist
+    public void prePersist() {
+        if (this.point == null) {
+            this.point = 0L;
+        }
+    }
+
     }

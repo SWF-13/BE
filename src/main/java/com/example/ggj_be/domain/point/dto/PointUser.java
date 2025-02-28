@@ -1,5 +1,6 @@
 package com.example.ggj_be.domain.point.dto;
 
+import com.example.ggj_be.domain.enums.Bank;
 import com.example.ggj_be.domain.enums.PointType;
 import com.example.ggj_be.domain.point.Point;
 import lombok.Builder;
@@ -15,7 +16,7 @@ public class PointUser {
     private String comment;
     private LocalDateTime createdAt;
     private String accountid;  // Member 정보 추가
-    private String bankName;
+    private Bank bank;
     private String bankAccount;
     private Long point;
 
@@ -27,7 +28,7 @@ public class PointUser {
         this.pointType = point.getPointType();
         this.createdAt = point.getCreatedAt();
         this.accountid = point.getMember().getAccountid();
-        this.bankName = point.getMember().getBankName();
+        this.bank = point.getMember().getBankName();
         this.bankAccount = point.getMember().getBankAccount();
         this.point = point.getMember().getPoint();
     }
