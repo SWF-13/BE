@@ -2,6 +2,8 @@ package com.example.ggj_be.domain.member;
 
 
 import com.example.ggj_be.domain.board.Board;
+import com.example.ggj_be.domain.enums.PointType;
+import com.example.ggj_be.domain.enums.Role;
 import com.example.ggj_be.domain.reply.Reply;
 import com.example.ggj_be.domain.scrap.Scrap;
 import com.fasterxml.jackson.annotation.JsonBackReference;
@@ -83,6 +85,13 @@ public class Member {
     @Column(name = "bank_name", nullable = true, length = 20)
     private String bankName;
 
+    @Column(nullable = false)
+    private Long point = 0L;
+
+    @Column(nullable = true)
+    @Lob
+    private String comment;
+
     @JsonIgnore
     @JsonBackReference
     @OneToMany(mappedBy = "member", cascade = CascadeType.PERSIST, orphanRemoval = false)
@@ -117,4 +126,25 @@ public class Member {
         this.userImg = imageUrl;  // 프로필 이미지 필드에 새 URL 저장
     }
 
+    @PrePersist
+    public void prePersist() {
+        if (this.point == null) {
+            this.point = 0L;
+        }
     }
+
+    public void setPoint(Long changePoint, PointType PointType) {
+        if (PointType == PointType.add){
+            this.point += changePoint;
+        }else if (PointType == PointType.remove){
+            this.point -= changePoint;
+        }
+
+    }
+
+    public void setUserComment(String comment) {
+        this.comment = comment;
+    }
+
+
+}

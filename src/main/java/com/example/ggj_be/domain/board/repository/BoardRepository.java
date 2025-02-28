@@ -19,15 +19,15 @@ public interface BoardRepository extends JpaRepository<Board, Long> {
     List<Board> findByMember(Member member);
 
     @Query(value = "SELECT " +
-            "    b.board_id, " +
-            "   b.created_at, " +
-            "    a.category_name, " +
+            "    b.board_id as boardId, " +
+            "   b.created_at as createdAt, " +
+            "    a.category_name as categoryName, " +
             "    b.title, " +
-            "    b.board_prize, " +
-            "    IFNULL(c.good_count, 0) AS good_count, " +
-            "    IFNULL(d.reply_count, 0) AS reply_count, " +
-            "    DATEDIFF(b.end_at, NOW()) AS end_count, " +
-            "    e.nick_name , " +
+            "    b.board_prize as boardPrize, " +
+            "    IFNULL(c.good_count, 0) AS goodCount, " +
+            "    IFNULL(d.reply_count, 0) AS replyCount, " +
+            "    DATEDIFF(b.end_at, NOW()) AS endCount, " +
+            "    e.nick_name as nickName, " +
             "CASE WHEN EXISTS (SELECT 1 " +
             "FROM good e " +
             "WHERE type = 'board' " +
@@ -35,7 +35,7 @@ public interface BoardRepository extends JpaRepository<Board, Long> {
             "AND b.board_id = e.object_id) " +
             "THEN TRUE " +
             "ELSE FALSE " +
-            "END good_chk " +
+            "END goodChk " +
             "FROM board b " +
             "JOIN category a ON a.category_id = b.category_id " +
             "JOIN member_tb e ON b.user_id = e.user_id " +
@@ -65,77 +65,59 @@ public interface BoardRepository extends JpaRepository<Board, Long> {
 
     @Query(value =
             "select " +
-                    "a.board_id, " +
-                    "b.nick_name, " +
-                    "b.user_img, " +
-                    "DATEDIFF(a.end_at, NOW()) AS end_count, " +
-                    "a.title, " +
-                    "c.category_name, " +
-                    "CASE WHEN TIMESTAMPDIFF(DAY, a.created_at, NOW()) >= 1 " +
-                    "THEN CONCAT(TIMESTAMPDIFF(DAY, a.created_at, NOW()), '일 전') " +
-                    "WHEN TIMESTAMPDIFF(HOUR, a.created_at, NOW()) >= 1 " +
-                    "THEN CONCAT(TIMESTAMPDIFF(HOUR, a.created_at, NOW()), '시간 전') " +
-                    "ELSE CONCAT(TIMESTAMPDIFF(MINUTE, a.created_at, NOW()), '분 전') " +
-                    "END AS created_elapsed , " +
-                    "a.board_prize , " +
-                    "a.content , " +
-                    "CASE WHEN a.user_id = :userId THEN 1 ELSE 0 END is_writer, " +
-                    "CASE WHEN EXISTS (SELECT 1 " +
-                    "FROM good d " +
-                    "WHERE type = 'board' " +
-                    "AND user_id = :userId " +
-                    "AND a.board_id = d.object_id) " +
-                    "THEN TRUE " +
-                    "ELSE FALSE " +
-                    "END good_chk, " +
-                    "CASE WHEN EXISTS (SELECT 1 " +
-                    "FROM scrap e " +
-                    "WHERE user_id = :userId " +
-                    "AND a.board_id = :boardId) " +
-                    "THEN TRUE " +
-                    "ELSE FALSE " +
-                    "END scrap_chk , " +
-                    "( SELECT COALESCE(( SELECT COUNT(*) " +
-                    "FROM good f " +
-                    "WHERE type = 'board' " +
-                    "and a.board_id = f.object_id " +
-                    "GROUP BY object_id), 0)) as good_count, " +
-                    "(SELECT  COUNT(g.reply_id) + COUNT(h.reply_id) " +
-                    "FROM reply g  " +
-                    ", re_reply h " +
-                    "WHERE g.reply_id = h.reply_id " +
-                    "AND a.board_id = g.board_id) reply_count , " +
-                    "( SELECT COALESCE((SELECT COUNT(*) " +
-                    "FROM scrap i " +
-                    "WHERE a.board_id = i.board_id " +
-                    "GROUP BY board_id),0)) as scrap_count, " +
-                    "case when a.user_id = :userId " +
-                    "then case when (CONVERT((SELECT COUNT(*) FROM reply j WHERE j.board_id = :boardId), SIGNED) <= 2) " +
-                    "then 1 " +
-                    "else 0 " +
-                    "end " +
-                    "else 0 " +
-                    "end deleteChk,     " +
-                    " CASE WHEN a.acc_at IS NULL THEN 0 ELSE 1 END acc_chk " +
-                    "from board a , " +
-                    "(select user_id , nick_name, user_img from member_tb where user_id = :userId)b " +
-                    ", category c " +
-                    "where a.board_id = :boardId " +
-                    "and a.category_id = c.category_id "
+                "a.board_id as boardId, " +
+                "b.nick_name as nickName, " +
+                "b.user_img as userImg, " +
+                "DATEDIFF(a.end_at, NOW()) AS endCount, " +
+                "a.title, " +
+                "c.category_name as categoryName, " +
+                "CASE WHEN TIMESTAMPDIFF(DAY, a.created_at, NOW()) >= 1 " +
+                "THEN CONCAT(TIMESTAMPDIFF(DAY, a.created_at, NOW()), '일 전') " +
+                "WHEN TIMESTAMPDIFF(HOUR, a.created_at, NOW()) >= 1 " +
+                "THEN CONCAT(TIMESTAMPDIFF(HOUR, a.created_at, NOW()), '시간 전') " +
+                "ELSE CONCAT(TIMESTAMPDIFF(MINUTE, a.created_at, NOW()), '분 전') " +
+                "END AS createdElapsed , " +
+                "a.board_prize as boardPrize, " +
+                "a.content , " +
+                "CASE WHEN a.user_id = :userId THEN 1 ELSE 0 END isWriter, " +
+                "CASE WHEN EXISTS (SELECT 1 FROM good d WHERE type = 'board' AND user_id = :userId AND a.board_id = d.object_id) " +
+                     "THEN TRUE " +
+                     "ELSE FALSE " +
+                     "END goodChk, " +
+                "CASE WHEN EXISTS (SELECT 1 FROM scrap e WHERE user_id = :userId AND a.board_id = :boardId) " +
+                     "THEN TRUE " +
+                     "ELSE FALSE " +
+                     "END scrapChk , " +
+                "( SELECT COALESCE(( SELECT COUNT(*) FROM good f WHERE type = 'board' and a.board_id = f.object_id GROUP BY object_id), 0)) as goodCount, " +
+                "(SELECT  COUNT(g.reply_id) + COUNT(h.reply_id) FROM reply g, re_reply h WHERE g.reply_id = h.reply_id AND a.board_id = g.board_id) replyCount , " +
+                "( SELECT COALESCE((SELECT COUNT(*) FROM scrap i WHERE a.board_id = i.board_id GROUP BY board_id),0)) as scrapCount, " +
+                "case when a.user_id = :userId " +
+                     "then case when (CONVERT((SELECT COUNT(*) FROM reply j WHERE j.board_id = :boardId), SIGNED) <= 2) " +
+                               "then 1 " +
+                               "else 0 " +
+                               "end " +
+                               "else 0 " +
+                     "end deleteChk,     " +
+                " CASE WHEN a.acc_at IS NULL THEN 0 ELSE 1 END accChk " +
+            "from board a , " +
+                "(select user_id , nick_name, user_img from member_tb where user_id = :userId)b " +
+                ", category c " +
+            "where a.board_id = :boardId " +
+                "and a.category_id = c.category_id "
             , nativeQuery = true)
     BoardDetail findBoardDetail(@Param("userId") Long userId, @Param("boardId") Long boardId);
 
 
     @Query(value = "SELECT " +
-            "    b.board_id, " +
-            "   b.created_at, " +
-            "    a.category_name, " +
+            "    b.board_id as boardId, " +
+            "   b.created_at as createdAt, " +
+            "    a.category_name as categoryName, " +
             "    b.title, " +
-            "    b.board_prize, " +
-            "    IFNULL(c.good_count, 0) AS good_count, " +
-            "    IFNULL(d.reply_count, 0) AS reply_count, " +
-            "    DATEDIFF(b.end_at, NOW()) AS end_count, " +
-            "    e.nick_name , " +
+            "    b.board_prize as boardPrize, " +
+            "    IFNULL(c.good_count, 0) AS goodCount, " +
+            "    IFNULL(d.reply_count, 0) AS replyCount, " +
+            "    DATEDIFF(b.end_at, NOW()) AS endCount, " +
+            "    e.nick_name as nickName , " +
             "CASE WHEN EXISTS (SELECT 1 " +
             "FROM good e " +
             "WHERE type = 'board' " +
@@ -143,7 +125,7 @@ public interface BoardRepository extends JpaRepository<Board, Long> {
             "AND b.board_id = e.object_id) " +
             "THEN TRUE " +
             "ELSE FALSE " +
-            "END good_chk " +
+            "END goodChk " +
             "FROM board b " +
             "JOIN category a ON a.category_id = b.category_id " +
             "JOIN member_tb e ON b.user_id = e.user_id " +
@@ -169,15 +151,15 @@ public interface BoardRepository extends JpaRepository<Board, Long> {
 
 
     @Query(value = "SELECT " +
-            "    b.board_id, " +
-            "   b.created_at, " +
-            "    a.category_name, " +
+            "    b.board_id as boardId, " +
+            "   b.created_at as createdAt, " +
+            "    a.category_name as categoryName, " +
             "    b.title, " +
-            "    b.board_prize, " +
-            "    IFNULL(c.good_count, 0) AS good_count, " +
-            "    IFNULL(d.reply_count, 0) AS reply_count, " +
-            "    DATEDIFF(b.end_at, NOW()) AS end_count, " +
-            "    e.nick_name , " +
+            "    b.board_prize as boardPrize, " +
+            "    IFNULL(c.good_count, 0) AS goodCount, " +
+            "    IFNULL(d.reply_count, 0) AS replyCount, " +
+            "    DATEDIFF(b.end_at, NOW()) AS endCount, " +
+            "    e.nick_name as nickName, " +
             "CASE WHEN EXISTS (SELECT 1 " +
             "FROM good e " +
             "WHERE type = 'board' " +
@@ -185,19 +167,19 @@ public interface BoardRepository extends JpaRepository<Board, Long> {
             "AND b.board_id = e.object_id) " +
             "THEN TRUE " +
             "ELSE FALSE " +
-            "END good_chk " +
+            "END goodChk " +
             "FROM board b " +
             "JOIN category a ON a.category_id = b.category_id " +
             "JOIN member_tb e ON b.user_id = e.user_id " +
             "LEFT JOIN ( " +
-            "    SELECT object_id, COUNT(*) AS good_count " +
+            "    SELECT object_id, COUNT(*) AS goodCount " +
             "    FROM good " +
             "    WHERE type = 'board' " +
             "    GROUP BY object_id " +
             ") c ON b.board_id = c.object_id " +
             "LEFT JOIN ( " +
             "    SELECT a.board_id,  " +
-            "COUNT(a.reply_id) + COALESCE(COUNT(b.reply_id), 0) AS reply_count " +
+            "COUNT(a.reply_id) + COALESCE(COUNT(b.reply_id), 0) AS replyCount " +
             "FROM reply a " +
             "LEFT JOIN re_reply b ON a.reply_id = b.reply_id " +
             "GROUP BY a.board_id " +
