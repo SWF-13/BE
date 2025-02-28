@@ -144,9 +144,7 @@ public class Member {
             this.point -= changePoint;
         }
 
-    }
-
-    public void setUserComment(String comment) {
+public void setUserComment(String comment) {
         this.comment = comment;
     }
 

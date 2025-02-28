@@ -1,5 +1,6 @@
 package com.example.ggj_be.domain.point.dto;
 
+
 import com.example.ggj_be.domain.enums.Bank;
 import com.example.ggj_be.domain.enums.PointType;
 import com.example.ggj_be.domain.point.Point;
