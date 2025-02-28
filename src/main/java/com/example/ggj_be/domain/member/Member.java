@@ -2,8 +2,15 @@ package com.example.ggj_be.domain.member;
 
 
 import com.example.ggj_be.domain.board.Board;
+import com.example.ggj_be.domain.enums.Bank;
 import com.example.ggj_be.domain.enums.PointType;
-import com.example.ggj_be.domain.enums.Role;
+import com.example.ggj_be.domain.reply.Reply;
+import com.example.ggj_be.domain.scrap.Scrap;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.example.ggj_be.domain.board.Board;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.example.ggj_be.domain.board.Board;
 import com.example.ggj_be.domain.reply.Reply;
 import com.example.ggj_be.domain.scrap.Scrap;
 import com.fasterxml.jackson.annotation.JsonBackReference;
@@ -82,15 +89,9 @@ public class Member {
     @Column(name = "bank_account", nullable = true, length = 20)
     private String bankAccount;
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "bank_name", nullable = true, length = 20)
-    private String bankName;
-
-    @Column(nullable = false)
-    private Long point = 0L;
-
-    @Column(nullable = true)
-    @Lob
-    private String comment;
+    private Bank bankName;
 
     @JsonIgnore
     @JsonBackReference
@@ -104,6 +105,15 @@ public class Member {
     @JsonIgnore
     @OneToMany(mappedBy = "member", cascade = CascadeType.PERSIST, orphanRemoval = false)
     private List<Reply> replies;
+
+
+    @Column(nullable = false)
+    private Long point = 0L;
+
+    @Column(nullable = true)
+    @Lob
+    private String comment;
+
 
     //비밀번호 변경 시 이용
     public void changePassword(String newPassword) {
@@ -126,13 +136,6 @@ public class Member {
         this.userImg = imageUrl;  // 프로필 이미지 필드에 새 URL 저장
     }
 
-    @PrePersist
-    public void prePersist() {
-        if (this.point == null) {
-            this.point = 0L;
-        }
-    }
-
     public void setPoint(Long changePoint, PointType PointType) {
         if (PointType == PointType.add){
             this.point += changePoint;
@@ -146,5 +149,4 @@ public class Member {
         this.comment = comment;
     }
 
-
-}
+    }
