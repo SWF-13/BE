@@ -53,17 +53,22 @@ public class MailController {
     public ApiResponse<String> sendPassword(@RequestBody MemberRequest.Email request)
             throws MessagingException {
 
-        Optional<Member> member = memberRepository.findByEmail(request.getEmail());
+        try {
+            Optional<Member> member = memberRepository.findByEmail(request.getEmail());
 
-        if (member.isPresent()) {
+            if (member.isEmpty()) {
+                return ApiResponse.onFailure(ErrorStatus._MEMBER_NOT_FOUND.getCode(),
+                        ErrorStatus._MEMBER_NOT_FOUND.getMessage(), null);
+            }
+
             mailService.sendTemporaryPassword(request.getEmail());
-
             return ApiResponse.onSuccess("성공적으로 비밀번호가 전송되었습니다.");
-        }
-        else {
-            throw new ApiException(ErrorStatus._MEMBER_NOT_FOUND);
-        }
 
+        } catch (Exception e) {
+            // 예외 발생 시 처리
+            return ApiResponse.onFailure(ErrorStatus._INTERNAL_SERVER_ERROR.getCode(),
+                    "서버 오류가 발생했습니다.", e.getMessage());
+        }
     }
 
 }
