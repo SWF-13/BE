@@ -138,11 +138,12 @@ public class Member {
     }
 
     public void setPoint(Long changePoint, PointType PointType) {
-        if (PointType == PointType.add){
+        if (PointType == PointType.add) {
             this.point += changePoint;
-        }else if (PointType == PointType.remove){
+        } else if (PointType == PointType.remove) {
             this.point -= changePoint;
         }
+    }
 
 public void setUserComment(String comment) {
         this.comment = comment;
