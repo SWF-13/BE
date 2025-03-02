@@ -23,6 +23,7 @@ public interface BoardRepository extends JpaRepository<Board, Long> {
             "    b.board_id as boardId, " +
             "   b.created_at as createdAt, " +
             "    a.category_name as categoryName, " +
+            "    a.category_id as categoryId, " +
             "    b.title, " +
             "    b.board_prize as boardPrize, " +
             "    IFNULL(c.good_count, 0) AS goodCount, " +
@@ -72,6 +73,7 @@ public interface BoardRepository extends JpaRepository<Board, Long> {
                 "DATEDIFF(a.end_at, NOW()) AS endCount, " +
                 "a.title, " +
                 "c.category_name as categoryName, " +
+                "c.category_id as categoryId, " +
                 "CASE WHEN TIMESTAMPDIFF(DAY, a.created_at, NOW()) >= 1 " +
                 "THEN CONCAT(TIMESTAMPDIFF(DAY, a.created_at, NOW()), '일 전') " +
                 "WHEN TIMESTAMPDIFF(HOUR, a.created_at, NOW()) >= 1 " +
@@ -114,6 +116,7 @@ public interface BoardRepository extends JpaRepository<Board, Long> {
             "    b.board_id as boardId, " +
             "   b.created_at as createdAt, " +
             "    a.category_name as categoryName, " +
+            "    a.category_id as categoryId, " +
             "    b.title, " +
             "    b.board_prize as boardPrize, " +
             "    IFNULL(c.good_count, 0) AS goodCount, " +
@@ -156,6 +159,7 @@ public interface BoardRepository extends JpaRepository<Board, Long> {
             "    b.board_id as boardId, " +
             "   b.created_at as createdAt, " +
             "    a.category_name as categoryName, " +
+            "    a.category_id as categoryId, " +
             "    b.title, " +
             "    b.board_prize as boardPrize, " +
             "    IFNULL(c.good_count, 0) AS goodCount, " +
