@@ -42,14 +42,14 @@ public interface BoardRepository extends JpaRepository<Board, Long> {
             "JOIN category a ON a.category_id = b.category_id " +
             "JOIN member_tb e ON b.user_id = e.user_id " +
             "LEFT JOIN ( " +
-            "    SELECT object_id, COUNT(*) AS good_count " +
+            "    SELECT object_id, COUNT(*) AS goodCount " +
             "    FROM good " +
             "    WHERE type = 'board' " +
             "    GROUP BY object_id " +
             ") c ON b.board_id = c.object_id " +
             "LEFT JOIN ( " +
             "    SELECT a.board_id,  " +
-            "COUNT(a.reply_id) + COALESCE(COUNT(b.reply_id), 0) AS reply_count " +
+            "COUNT(a.reply_id) + COALESCE(COUNT(b.reply_id), 0) AS replyCount " +
             "FROM reply a " +
             "LEFT JOIN re_reply b ON a.reply_id = b.reply_id " +
             "GROUP BY a.board_id " +
@@ -135,14 +135,14 @@ public interface BoardRepository extends JpaRepository<Board, Long> {
             "JOIN category a ON a.category_id = b.category_id " +
             "JOIN member_tb e ON b.user_id = e.user_id " +
             "LEFT JOIN ( " +
-            "    SELECT object_id, COUNT(*) AS good_count " +
+            "    SELECT object_id, COUNT(*) AS goodCount " +
             "    FROM good " +
             "    WHERE type = 'board' " +
             "    GROUP BY object_id " +
             ") c ON b.board_id = c.object_id " +
             "LEFT JOIN ( " +
             "    SELECT a.board_id,  " +
-            "COUNT(a.reply_id) + COALESCE(COUNT(b.reply_id), 0) AS reply_count " +
+            "COUNT(a.reply_id) + COALESCE(COUNT(b.reply_id), 0) AS replyCount " +
             "FROM reply a " +
             "LEFT JOIN re_reply b ON a.reply_id = b.reply_id " +
             "GROUP BY a.board_id " +

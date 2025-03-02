@@ -11,7 +11,6 @@ import java.time.LocalDateTime;
 public class BoardCreateRequest {
 
     private Long categoryId;
-    private Long userId;
     private String title;
     private String content;
     private Long boardPrize;
