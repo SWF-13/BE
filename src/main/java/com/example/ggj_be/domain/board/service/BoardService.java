@@ -16,5 +16,7 @@ public interface BoardService {
     List <Poto>getImages(Type type, Long objectId);
     Boolean boardDelete(Long boardId);
     Boolean boardAccAtUdate(Long boardId, Long replyId);
+    Boolean chkUser(Long boardId, Long userId);
+    List<Poto> getImageName(Long objectId, Type type);
 
 }
