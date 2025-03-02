@@ -62,10 +62,10 @@ public class SecurityConfig {
             "/api/emails/**",
             "/potoUrl/**",
             "/api/category",
-            "/api/board/home_list",
-            "/api/board/detail",
-            "/api/board/searchBoardList",
-            "/api/board/categoryBoardList",
+//            "/api/board/home_list",
+//            "/api/board/detail",
+//            "/api/board/searchBoardList",
+//            "/api/board/categoryBoardList",
 
             // swagger
             "/v3/api-docs/**",

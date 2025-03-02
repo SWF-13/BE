@@ -10,6 +10,8 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
@@ -78,11 +80,11 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 requestUrl.startsWith("/favicon.ico")||
                 requestUrl.startsWith("/api/emails/**")||
                 requestUrl.startsWith("/potoUrl/**")||
-                requestUrl.startsWith("//api/category")||
-                requestUrl.startsWith("/api/board/home_list")||
-                requestUrl.startsWith("/api/board/detail")||
-                requestUrl.startsWith("/api/board/searchBoardList")||
-                requestUrl.startsWith("/api/board/categoryBoardList");
+                requestUrl.startsWith("//api/category");
+//                requestUrl.startsWith("/api/board/home_list")||
+//                requestUrl.startsWith("/api/board/detail")||
+//                requestUrl.startsWith("/api/board/searchBoardList")||
+//                requestUrl.startsWith("/api/board/categoryBoardList");
     }
 
     private boolean isBearer(String authorizationHeader) {
