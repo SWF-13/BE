@@ -59,6 +59,8 @@ public class SecurityConfig {
             "/api/login",
             "/api/signup",
             "/api/emails/**",
+            "/api/emails/**",
+            "/potoUrl/**",
 
             // swagger
             "/v3/api-docs/**",

@@ -9,6 +9,7 @@ public interface BoardDetail {
     int getEndCount();              //디데이 카운트
     String getTitle();              //제목
     String getCategoryName();       //카테고리이름
+    Long getCategoryId();           //카테고리아이디
     String getCreatedElapsed();    //게시글작성시간시간과 현재시간비교
     Long getBoardPrize();           //상금
     String getContent();            //내용

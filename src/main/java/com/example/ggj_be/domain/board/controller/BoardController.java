@@ -7,6 +7,10 @@ import com.example.ggj_be.domain.enums.Type;
 import com.example.ggj_be.domain.member.Member;
 import com.example.ggj_be.domain.reply.dto.ReplyDetailResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ByteArrayResource;
+import org.springframework.core.io.FileSystemResource;
+import org.springframework.core.io.UrlResource;
+import org.springframework.http.*;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,17 +23,19 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import java.util.List;
-import java.util.ArrayList;
+
+import java.io.*;
+import java.util.*;
 
 import org.springframework.web.multipart.MultipartFile;
-import java.io.IOException;
+
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.io.File;
 import java.nio.file.Files;
-import java.util.UUID;
-
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
+import org.springframework.core.io.Resource;
+import java.net.URLEncoder;
 
 
 @Slf4j
@@ -61,40 +67,45 @@ public class BoardController {
             List<String> savedFilePaths = new ArrayList<>();
             Long result = boardService.createBoard(userId, request);
 
-            if (boardFiles != null && !boardFiles.isEmpty()) {
+            if (result == 0L){
+                return ApiResponse.onFailure("403", "포인트가 부족합니다.", false);
+            }else{
+                if (boardFiles != null && !boardFiles.isEmpty()) {
 
-                for (MultipartFile file : boardFiles) {
-                    String fileName = UUID.randomUUID().toString() + "_" + file.getOriginalFilename(); // 중복 방지
-                    Path filePath = Paths.get(UPLOAD_DIR + fileName);
+                    for (MultipartFile file : boardFiles) {
+                        String fileName = UUID.randomUUID().toString() + "_" + file.getOriginalFilename(); // 중복 방지
+                        Path filePath = Paths.get(UPLOAD_DIR + fileName);
 
-                    // 파일 저장 로직 구현
-                    try {
-                        File dir = new File(UPLOAD_DIR);
-                        if (!dir.exists()) dir.mkdirs(); // 디렉토리가 없으면 생성
-                        file.transferTo(filePath.toFile()); // 파일 저장
-                        savedFilePaths.add(filePath.toString());
-
-                        Poto poto = Poto.builder()
-                                .objectId(result)
-                                .type(Type.board)
-                                .potoName(fileName)
-                                .potoOrigin(file.getOriginalFilename())
-                                .build();
-
-                        potoRepository.save(poto);
-
-                    } catch (IOException e) {
+                        // 파일 저장 로직 구현
                         try {
-                            Files.delete(filePath);
-                        } catch (IOException deleteException) {
-                            log.error("파일 삭제 실패: {}", filePath, deleteException);
+                            File dir = new File(UPLOAD_DIR);
+                            if (!dir.exists()) dir.mkdirs(); // 디렉토리가 없으면 생성
+                            file.transferTo(filePath.toFile()); // 파일 저장
+                            savedFilePaths.add(filePath.toString());
+
+                            Poto poto = Poto.builder()
+                                    .objectId(result)
+                                    .type(Type.board)
+                                    .potoName(fileName)
+                                    .potoOrigin(file.getOriginalFilename())
+                                    .build();
+
+                            potoRepository.save(poto);
+
+                        } catch (IOException e) {
+                            try {
+                                Files.delete(filePath);
+                            } catch (IOException deleteException) {
+                                log.error("파일 삭제 실패: {}", filePath, deleteException);
+                            }
+
+                            return ApiResponse.onFailure("게시판 이미지 저장 실패!","게시판 이미지 저장 실패!", false);
                         }
 
-                        return ApiResponse.onFailure("게시판 이미지 저장 실패!","게시판 이미지 저장 실패!", false);
                     }
-
                 }
             }
+
         } catch (Exception e) {
             return ApiResponse.onFailure("게시판 작성 실패!","게시판 작성 실패!", false);
         }
@@ -195,17 +206,86 @@ public class BoardController {
     }
 
     @PatchMapping
-    public ApiResponse<Boolean> boardAccAtUdate(@RequestParam(value = "boardId") Long boardId,
+    public ApiResponse<Boolean> boardAccAtUdate(@AuthMember Member member,
+                                                @RequestParam(value = "boardId") Long boardId,
                                                 @RequestParam(value = "replyId") Long replyId) {
-        log.info("디테일 진입 : {} {}", boardId, replyId);
+        Long userId = member.getUserId();
+        Boolean chk = boardService.chkUser(boardId, userId);
 
-        Boolean response = boardService.boardAccAtUdate(boardId, replyId);
+        if (chk){
+            Boolean response = boardService.boardAccAtUdate(boardId, replyId);
 
-        if (response) {
-            return ApiResponse.onSuccess(true);
-        } else {
-            return ApiResponse.onFailure("채택하기 실패!", "채택하기 실패!", false);
+            if (response) {
+                return ApiResponse.onSuccess(true);
+            } else {
+                return ApiResponse.onFailure("채택하기 실패!", "채택하기 실패!", false);
+            }
+        }else{
+            return ApiResponse.onFailure("본인이 작성한 게시글이 아닙니다.", "본인이 작성한 게시글이 아닙니다.", false);
         }
     }
 
+
+    @GetMapping("/download")
+    ResponseEntity<?> imgDownload(@AuthMember Member member,
+                                  @RequestParam(value = "boardId") Long boardId,
+                                  @RequestParam(value = "replyId") Long replyId) {
+
+        Long userId = member.getUserId();
+        Boolean chk = boardService.chkUser(boardId, userId);
+
+        if (!chk) {
+            Map<String, String> errorDetails = new HashMap<>();
+            errorDetails.put("code", "FORBIDDEN");
+            errorDetails.put("message", "본인이 작성한 게시글이 아닙니다.");
+
+            return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .body(errorDetails);
+        }
+
+        try {
+            List<Poto> imageNames = boardService.getImageName(replyId, Type.reply);
+            File tempZipFile = File.createTempFile("images", ".zip");
+            try (FileOutputStream fos = new FileOutputStream(tempZipFile);
+                 ZipOutputStream zos = new ZipOutputStream(fos)) {
+
+                for (Poto imageName : imageNames) {
+                    log.info("imageName : {}", imageName.getPotoName());
+                    File imageFile = new File(UPLOAD_DIR + imageName.getPotoName());
+                    if (imageFile.exists()) {
+                        try (FileInputStream fis = new FileInputStream(imageFile)) {
+                            ZipEntry zipEntry = new ZipEntry(imageName.getPotoOrigin());
+                            zos.putNextEntry(zipEntry);
+
+                            byte[] buffer = new byte[1024];
+                            int length;
+                            while ((length = fis.read(buffer)) > 0) {
+                                zos.write(buffer, 0, length);
+                            }
+                            zos.closeEntry();
+                        }
+                    }
+                }
+            }
+
+            FileSystemResource resource = new FileSystemResource(tempZipFile);
+            return ResponseEntity.ok()
+                    .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=images.zip")
+                    .body(resource);
+
+        } catch (IOException e) {
+            log.error("Error occurred while processing the download: {}", e.getMessage());
+
+            Map<String, String> errorDetails = new HashMap<>();
+
+            errorDetails.put("code", "INTERNAL_SERVER_ERROR");
+            errorDetails.put("message", "이미지 압축에 실패하였습니다.");
+
+
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .body(errorDetails);
+        }
+    }
 }
