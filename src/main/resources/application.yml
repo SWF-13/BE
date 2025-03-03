@@ -73,8 +73,8 @@ spring:
               - nickname
             client-name: Naver
           kakao:
-            client-id: 2dac53e89f936532ce7c0a1cc6bfeec8 #실제 배포시 테스트 앱용이 아닌 실제 앱 키 사용해야함 시크릿 키도 동일
-            client-secret: nnZbnLP0LZshi7EbT5hF7A7vWFPZzKLB
+            client-id: 0d07280765931398b208f0ebc7226a1c #실제 배포시 테스트 앱용이 아닌 실제 앱 키 사용해야함 시크릿 키도 동일
+            client-secret: rPjx7m1TB4FLVjgENFkT1kn9OqC5v5VG
             client-authentication-method: client_secret_post
             authorization-grant-type: authorization_code
             scope:
