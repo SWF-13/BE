@@ -67,7 +67,9 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
         Optional<String> redirectUri = CookieUtils.getCookie(request, REDIRECT_URI_PARAM_COOKIE_NAME)
                 .map(Cookie::getValue);
 
-        String targetUrl = redirectUri.orElse(getDefaultTargetUrl());
+        String targetUrl = redirectUri.orElse("http://gjgj-front.s3-website.ap-northeast-2.amazonaws.com/home");
+        ;
+        log.info("redirect to " + targetUrl);
 
         String mode = CookieUtils.getCookie(request, MODE_PARAM_COOKIE_NAME)
                 .map(Cookie::getValue)
