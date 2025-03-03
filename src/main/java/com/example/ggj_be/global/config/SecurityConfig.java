@@ -59,7 +59,7 @@ public class SecurityConfig {
             "/api/login",
             "/api/signup",
             "/api/emails/**",
-            "/api/emails/**",
+            "/api/emails/verify",
             "/potoUrl/**",
             "/api/category",
 //            "/api/board/home_list",
@@ -114,7 +114,7 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(List.of("http://localhost:3000","http://210.109.52.95/","http://211.188.52.119/"
+        configuration.setAllowedOrigins(List.of("http://localhost:3000","http://210.109.52.95/","http://211.188.52.119/", "http://gjgj-front.s3-website.ap-northeast-2.amazonaws.com/"
         ));
         configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"));
         configuration.setAllowedHeaders(List.of("Authorization", "Content-Type"));
