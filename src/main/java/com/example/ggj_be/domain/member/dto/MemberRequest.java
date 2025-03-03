@@ -76,6 +76,19 @@ public class MemberRequest {
         private String email;
     }
 
+    @Schema(description = "마이페이지 닉네임 및 캐시")
+    @Getter
+    public static class Mypage{
+        private Long point;
+        private String nickName;
+
+        // 생성자 추가
+        public Mypage(Long point, String nickName) {
+            this.point = point;
+            this.nickName = nickName;
+        }
+    }
+
 
 
     public static Member toEntity(String accountId, String password) {
