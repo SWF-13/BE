@@ -59,7 +59,7 @@ public class SecurityConfig {
             "/api/login",
             "/api/signup",
             "/api/emails/**",
-            "/api/emails/**",
+            "/api/emails/verify",
             "/potoUrl/**",
             "/api/category",
 //            "/api/board/home_list",
