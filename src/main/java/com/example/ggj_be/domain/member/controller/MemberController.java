@@ -136,6 +136,19 @@ public class MemberController {
 
     }
 
+    @Operation(summary = "마이페이지에서 닉네임과 캐시를 가져옵니다.")
+    @GetMapping("/profile")
+    public ApiResponse<MemberRequest.Mypage> getProfile(@AuthMember Member member) {
+        Long point = member.getPoint();
+        String nickName = member.getNickName();
+
+        // Mypage 객체 생성 후 반환
+        MemberRequest.Mypage mypage = new MemberRequest.Mypage(point, nickName);
+
+
+        return ApiResponse.onSuccess(mypage);
+    }
+
     @Operation(summary = "계정 탈퇴 api")
     @DeleteMapping("/deleteMember")
     public ApiResponse<String> deleteMember(@AuthMember Member member) {
