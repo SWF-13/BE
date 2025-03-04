@@ -106,7 +106,7 @@ public class BoardController {
                                     .type(Type.board)
                                     .potoName(fileName)
                                     .potoOrigin(file.getOriginalFilename())
-                                    .potoUrl(fileName)
+                                    // .potoUrl(fileName)
                                     .build();
 
                             potoRepository.save(poto);
