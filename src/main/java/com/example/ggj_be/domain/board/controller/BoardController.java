@@ -93,7 +93,8 @@ public class BoardController {
 
                     for (MultipartFile file : boardFiles) {
                         String fileName = UUID.randomUUID().toString() + "_" + file.getOriginalFilename(); // 중복 방지
-                        Path filePath = Paths.get(uploadDir + fileName);
+                        Path filePath = Paths.get(uploadDir + "/"+fileName);
+                        log.info("이미지 저장경로 확인 : {}",filePath);
 
 
                         // 파일 저장 로직 구현
