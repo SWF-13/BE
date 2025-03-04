@@ -60,7 +60,7 @@ public class BoardController {
     @Value("${spring.ncp.storage.endpoint}")
     private String endpoint;
 
-    @Value("${upload-dir}")
+    @Value("${file.upload-dir}")
     private String uploadDir;
 
 //    private static final String UPLOAD_DIR = Paths.get("").toAbsolutePath().toString()+File.separator+"src"+File.separator+"uploads"+File.separator; // 저장할 디렉토리
