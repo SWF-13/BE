@@ -34,6 +34,9 @@ public class Poto {
     private String potoOrigin;
 
     @Column(nullable = false)
+    private String potoUrl;
+
+    @Column(nullable = false)
     private LocalDateTime createdAt;
 
 
