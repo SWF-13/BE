@@ -12,7 +12,7 @@ import java.nio.file.Paths;
 public class WebConfig implements WebMvcConfigurer {
 
     // private static final String UPLOAD_DIR = Paths.get("").toAbsolutePath().toString()+ File.separator+"src"+File.separator+"uploads"+File.separator;
-    @Value("${upload-dir}")
+    @Value("${file.upload-dir}")
     private String uploadDir;
 
     @Override
