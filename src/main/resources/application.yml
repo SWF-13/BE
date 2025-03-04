@@ -5,8 +5,9 @@ logging:
   file:
     name: /home/ubuntu/app/logs/app.log
 
-upload-dir: /home/ubuntu/app/uploads
-
+file:
+  upload-dir: /home/ubuntu/app/uploads
+  
 spring:
   ncp:
     storage:
@@ -40,6 +41,8 @@ spring:
       enabled: true
       max-file-size: 10MB
       max-request-size: 100MB
+      location: /home/ubuntu/app/uploads
+
   mail:
     host: smtp.gmail.com
     port: 587
