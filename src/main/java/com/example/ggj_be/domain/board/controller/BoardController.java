@@ -60,8 +60,11 @@ public class BoardController {
     @Value("${spring.ncp.storage.endpoint}")
     private String endpoint;
 
+    @Value("${upload-dir}")
+    private String uploadDir;
+
 //    private static final String UPLOAD_DIR = Paths.get("").toAbsolutePath().toString()+File.separator+"src"+File.separator+"uploads"+File.separator; // 저장할 디렉토리
-    private static final String UPLOAD_DIR = "/home/ubuntu/app/uploads/";
+    // private static final String UPLOAD_DIR = "/home/ubuntu/app/uploads/";
 
     @Autowired
     private PotoRepository potoRepository;
@@ -90,13 +93,13 @@ public class BoardController {
 
                     for (MultipartFile file : boardFiles) {
                         String fileName = UUID.randomUUID().toString() + "_" + file.getOriginalFilename(); // 중복 방지
-                        Path filePath = Paths.get(UPLOAD_DIR + fileName);
+                        Path filePath = Paths.get(uploadDir + fileName);
 
 
                         // 파일 저장 로직 구현
                         try {
 
-                            File dir = new File(UPLOAD_DIR);
+                            File dir = new File(uploadDir);
                             if (!dir.exists()) dir.mkdirs(); // 디렉토리가 없으면 생성
                             file.transferTo(filePath.toFile()); // 파일 저장
                             savedFilePaths.add(filePath.toString());
