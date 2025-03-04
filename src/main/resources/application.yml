@@ -5,6 +5,8 @@ logging:
   file:
     name: /home/ubuntu/app/logs/app.log
 
+upload-dir: /home/ubuntu/app/uploads
+
 spring:
   ncp:
     storage:
