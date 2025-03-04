@@ -40,7 +40,7 @@ public class Board {
     @Lob
     private String content;
 
-    @Column(nullable = true)
+    @Column(nullable = true, columnDefinition = "BIGINT DEFAULT 0")
     private Long boardPrize;
 
     @Column(nullable = false)
