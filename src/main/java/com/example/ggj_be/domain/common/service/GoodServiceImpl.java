@@ -33,17 +33,21 @@ public class GoodServiceImpl implements GoodService {
         try{
             Member member = memberRepository.findById(userId)
                     .orElseThrow(() -> new RuntimeException("Member not found"));
-            if (request.getGoodChk() == 0) {
-                Good good = Good.builder()
+
+                    Good good = goodRepository.findByObjectIdAndType(request.getObjectId(), Type.valueOf(request.getType()))
+                    .orElse(null);
+            if (good == null) {
+                Good createGood = Good.builder()
                         .objectId(request.getObjectId())
                         .member(member)
                         .type(Type.valueOf(request.getType()))
                         .build();
 
-                goodRepository.save(good);
-            } else {
-                goodRepository.deleteByObjectIdAndType(request.getObjectId(), Type.valueOf(request.getType()));
+                goodRepository.save(createGood);
+            }else{
+                goodRepository.deleteById(good.getGoodId());
             }
+                    
 
 
             return true;
