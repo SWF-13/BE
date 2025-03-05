@@ -103,7 +103,7 @@ public interface BoardRepository extends JpaRepository<Board, Long> {
                      "end deleteChk,     " +
                 " CASE WHEN a.acc_at IS NULL THEN 0 ELSE 1 END accChk " +
             "from board a , " +
-                "(select user_id , nick_name, user_img from member_tb where user_id = :userId)b " +
+                "(select user_id , nick_name, user_img from member_tb where user_id = a.user_id)b " +
                 ", category c " +
             "where a.board_id = :boardId " +
                 "and a.category_id = c.category_id "
