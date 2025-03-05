@@ -43,7 +43,7 @@ public class ScrapServiceImpl implements ScrapService {
                             (request.getBoardId())
                     .orElseThrow(() -> new RuntimeException("Member not found"));
 
-            Scrap scrap = scrapRepository.findByBoardIdAndUserId(request.getBoardId(), userId)
+            Scrap scrap = scrapRepository.findByBoard_BoardIdAndMember_UserId(request.getBoardId(), userId)
             .orElse(null);
 
             if (scrap == null) {
