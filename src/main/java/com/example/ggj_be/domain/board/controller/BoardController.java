@@ -1,8 +1,8 @@
 package com.example.ggj_be.domain.board.controller;
 
-import com.amazonaws.SdkClientException;
-import com.amazonaws.services.s3.AmazonS3;
-import com.amazonaws.services.s3.model.*;
+// import com.amazonaws.SdkClientException;
+// import com.amazonaws.services.s3.AmazonS3;
+// import com.amazonaws.services.s3.model.*;
 import com.example.ggj_be.domain.board.dto.*;
 import com.example.ggj_be.domain.common.Poto;
 import com.example.ggj_be.domain.common.repository.PotoRepository;
@@ -10,10 +10,10 @@ import com.example.ggj_be.domain.enums.Type;
 import com.example.ggj_be.domain.member.Member;
 import com.example.ggj_be.domain.reply.dto.ReplyDetailResponse;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.ByteArrayResource;
-import org.springframework.core.io.FileSystemResource;
-import org.springframework.core.io.UrlResource;
-import org.springframework.http.*;
+// import org.springframework.core.io.ByteArrayResource;
+// import org.springframework.core.io.FileSystemResource;
+// import org.springframework.core.io.UrlResource;
+// import org.springframework.http.*;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
@@ -34,11 +34,11 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.nio.file.Files;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipOutputStream;
-import org.springframework.core.io.Resource;
-import java.net.URLEncoder;
+// import java.nio.file.Files;
+// import java.util.zip.ZipEntry;
+// import java.util.zip.ZipOutputStream;
+// import org.springframework.core.io.Resource;
+// import java.net.URLEncoder;
 import org.springframework.beans.factory.annotation.Value;
 
 
@@ -52,7 +52,7 @@ public class BoardController {
 
     private final BoardService boardService;
     private final ReplyService replyService;
-    private final AmazonS3 s3Client;
+    // private final AmazonS3 s3Client;
 
     @Value("${spring.ncp.storage.bucket-name}")
     private String bucketName;
@@ -203,29 +203,29 @@ public class BoardController {
 //        return ApiResponse.onSuccess(true);
 //    }
 
-    @GetMapping("/imgList")
-    public List<String> getImgList() {
+    // @GetMapping("/imgList")
+    // public List<String> getImgList() {
 
-        List<String> fileList = new ArrayList<>();
-        try {
-            ListObjectsRequest listObjectsRequest = new ListObjectsRequest()
-                    .withBucketName(bucketName)
-                    .withDelimiter("/")
-                    .withMaxKeys(300);
+    //     List<String> fileList = new ArrayList<>();
+    //     try {
+    //         ListObjectsRequest listObjectsRequest = new ListObjectsRequest()
+    //                 .withBucketName(bucketName)
+    //                 .withDelimiter("/")
+    //                 .withMaxKeys(300);
 
-            ObjectListing objectListing = s3Client.listObjects(listObjectsRequest);
+    //         ObjectListing objectListing = s3Client.listObjects(listObjectsRequest);
 
-            for (S3ObjectSummary objectSummary : objectListing.getObjectSummaries()) {
-                fileList.add(objectSummary.getKey());
-            }
-        } catch (AmazonS3Exception e) {
-            e.printStackTrace();
-        } catch(SdkClientException e) {
-            e.printStackTrace();
-        }
+    //         for (S3ObjectSummary objectSummary : objectListing.getObjectSummaries()) {
+    //             fileList.add(objectSummary.getKey());
+    //         }
+    //     } catch (AmazonS3Exception e) {
+    //         e.printStackTrace();
+    //     } catch(SdkClientException e) {
+    //         e.printStackTrace();
+    //     }
 
-        return fileList;
-    }
+    //     return fileList;
+    // }
 
     @GetMapping("/home_list")
     public ApiResponse<BoardHomeListResponse> getBoardHomeListResponse(@AuthMember Member member,

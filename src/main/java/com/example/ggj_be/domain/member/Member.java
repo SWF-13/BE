@@ -7,14 +7,6 @@ import com.example.ggj_be.domain.reply.Reply;
 import com.example.ggj_be.domain.scrap.Scrap;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.example.ggj_be.domain.board.Board;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.example.ggj_be.domain.board.Board;
-import com.example.ggj_be.domain.reply.Reply;
-import com.example.ggj_be.domain.scrap.Scrap;
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.example.ggj_be.domain.board.Board;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
@@ -108,7 +100,7 @@ public class Member {
     private List<Reply> replies;
 
 
-    @Column(nullable = false)
+    @Builder.Default
     private Long point = 0L;
 
     @Column(nullable = true)
