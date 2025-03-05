@@ -7,6 +7,7 @@ import com.example.ggj_be.domain.member.Member;
 import com.example.ggj_be.domain.board.Board;
 import com.example.ggj_be.domain.member.repository.MemberRepository;
 import com.example.ggj_be.domain.board.repository.BoardRepository;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,15 +43,18 @@ public class ScrapServiceImpl implements ScrapService {
                             (request.getBoardId())
                     .orElseThrow(() -> new RuntimeException("Member not found"));
 
-            if (request.getScrapChk() == 0) {
-                Scrap scrap = Scrap.builder()
+            Scrap scrap = scrapRepository.findByBoardIdAndUserId(request.getBoardId(), userId)
+            .orElse(null);
+
+            if (scrap == null) {
+                Scrap createScrap = Scrap.builder()
                         .board(board)
                         .member(member)
                         .build();
 
-                scrapRepository.save(scrap);
-            } else {
-                scrapRepository.deleteByMember_UserIdAndBoard_BoardId(userId, request.getBoardId());
+                        scrapRepository.save(createScrap);
+            }else{
+                scrapRepository.deleteById(scrap.getScrapId());
             }
 
 
