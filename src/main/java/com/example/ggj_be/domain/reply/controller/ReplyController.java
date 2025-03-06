@@ -13,6 +13,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -33,7 +34,10 @@ import java.util.UUID;
 @RequestMapping("/api/reply")
 public class ReplyController {
     private final ReplyService replyService;
-    private static final String UPLOAD_DIR = Paths.get("").toAbsolutePath().toString()+File.separator+"src"+File.separator+"uploads"+File.separator; // 저장할 디렉토리
+    
+
+    @Value("${upload-dir}")
+    private String uploadDir;
 
     @Autowired
     private PotoRepository potoRepository;
@@ -54,11 +58,11 @@ public class ReplyController {
             if (replyFiles != null && !replyFiles.isEmpty()) {
                 for (MultipartFile file : replyFiles) {
                     String fileName = UUID.randomUUID().toString() + "_" + file.getOriginalFilename(); // 중복 방지
-                    Path filePath = Paths.get(UPLOAD_DIR + fileName);
+                    Path filePath = Paths.get(uploadDir + fileName);
 
                     // 파일 저장 로직 구현
                     try {
-                        File dir = new File(UPLOAD_DIR);
+                        File dir = new File(uploadDir);
                         if (!dir.exists()) dir.mkdirs(); // 디렉토리가 없으면 생성
                         file.transferTo(filePath.toFile()); // 파일 저장
                         savedFilePaths.add(filePath.toString());

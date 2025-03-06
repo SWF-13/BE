@@ -14,7 +14,7 @@ public interface BoardService {
     List<BoardHomeList> getCategoryBoardList(Long userId, int categoryId);
     BoardDetail getBoardDetail(Long userId, Long boardId);
     List <Poto>getImages(Type type, Long objectId);
-    Boolean boardDelete(Long boardId);
+    Boolean boardDelete(Long userId, Long boardId);
     Boolean boardAccAtUdate(Long boardId, Long replyId);
     Boolean chkUser(Long boardId, Long userId);
     List<Poto> getImageName(Long objectId, Type type);
