@@ -30,12 +30,13 @@ public class AuthController {
 
     @Operation(summary = "사용자/관리자 로그인 API", description = "일반 직원인 경우 EMPLOYEE, 관리자인 경우 ADMIN을 반환합니다.")
     @PostMapping("/login")
-    public ApiResponse<TokenVo> login(@RequestBody AuthRequest.LoginRequest request) {
+    public ApiResponse<AuthRequest.LoginResponse> login(@RequestBody AuthRequest.LoginRequest request) {
 
         Member member = memberQueryService.checkAccountIdAndPwd(request);
         TokenVo tokenVo = authService.generateATAndRT(member);
+        AuthRequest.LoginResponse loginResponse = new AuthRequest.LoginResponse(tokenVo, member.getUserId());
 
-        return ApiResponse.onSuccess(tokenVo);
+        return ApiResponse.onSuccess(loginResponse);
     }
 
     @Operation(summary = "로그아웃 및 블랙리스트 관리 API", description = "보안을 위해 로그아웃 시 AccessToken을 블랙리스트에 관리합니다.")

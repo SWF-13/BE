@@ -115,7 +115,7 @@ public class MemberCommandServiceImpl implements MemberCommandService {
     @Override
     public MemberRequest.Mypage getMyInfo(Member member){
         // Mypage 객체 생성 후 반환
-        return new MemberRequest.Mypage(member.getPoint(), member.getNickName());
+        return new MemberRequest.Mypage(member.getPoint(), member.getNickName(), member.getUserImg());
     }
 
 
