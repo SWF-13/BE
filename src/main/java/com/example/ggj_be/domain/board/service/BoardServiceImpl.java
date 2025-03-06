@@ -134,19 +134,27 @@ public class BoardServiceImpl implements BoardService {
     }
 
     @Override
-    public Boolean boardDelete(Long boardId) {
+    public Boolean boardDelete(Long userId, Long boardId) {
 
         try {
             Board board = boardRepository.findById(boardId)
                     .orElseThrow(() -> new RuntimeException("board not found"));
 
-            Member member = memberRepository.findById(board.getMember().getUserId())
+            Member member = memberRepository.findById(userId)
                     .orElseThrow(() -> new RuntimeException("Member not found"));
 
-            member.setPoint(board.getBoardPrize(), PointType.add);
-            memberRepository.save(member);
-
-            boardRepository.deleteById(boardId);
+            
+            if(board.getMember().getUserId() == member.getUserId()){
+                if(board.getBoardPrize() != 0){
+                    member.setPoint(board.getBoardPrize(), PointType.add);
+                    memberRepository.save(member);
+                }
+                
+                boardRepository.deleteById(boardId);
+            }else{
+                return false;
+            }
+            
 
             return true;
         }catch (Exception e){

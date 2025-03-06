@@ -61,8 +61,7 @@ public interface BoardRepository extends JpaRepository<Board, Long> {
             "        WHEN :listType = 1 THEN b.end_at " +
             "        WHEN :listType = 2 THEN IFNULL(c.good_count, 0) " +
             "        WHEN :listType = 3 THEN b.board_prize " +
-            "    END " +
-            "LIMIT 10", nativeQuery = true)
+            "    END " , nativeQuery = true)
     List<BoardHomeList> findBoardHomeList(@Param("userId") Long userId, @Param("listType") int listType);
 
     @Query(value =

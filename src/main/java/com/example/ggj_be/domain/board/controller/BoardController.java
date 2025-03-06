@@ -54,11 +54,11 @@ public class BoardController {
     private final ReplyService replyService;
     // private final AmazonS3 s3Client;
 
-    @Value("${spring.ncp.storage.bucket-name}")
-    private String bucketName;
+    // @Value("${spring.ncp.storage.bucket-name}")
+    // private String bucketName;
 
-    @Value("${spring.ncp.storage.endpoint}")
-    private String endpoint;
+    // @Value("${spring.ncp.storage.endpoint}")
+    // private String endpoint;
 
     @Value("${upload-dir}")
     private String uploadDir;
@@ -118,8 +118,7 @@ public class BoardController {
                             potoRepository.save(poto);
 
                         } catch (IOException e) {
-                            System.err.println("파일 저장 실패: " + e.getMessage());
-                            log.error("S3 파일 업로드 실패: {}", fileName, e);
+                            log.error("파일 업로드 실패: {}", fileName, e);
                             return ApiResponse.onFailure("게시판 이미지 저장 실패!", "게시판 이미지 저장 실패!", false);
                         }
 
@@ -237,6 +236,7 @@ public class BoardController {
         if (member != null) {
             userId = member.getUserId();
         }
+        
 
 
         List<BoardHomeList> homeList = boardService.getBoardHomeList(userId, listType);
@@ -305,14 +305,21 @@ public class BoardController {
     }
 
     @DeleteMapping
-    public ApiResponse<Boolean> boardDelete(@RequestParam(value = "boardId") Long boardId) {
+    public ApiResponse<Boolean> boardDelete(@AuthMember Member member,
+                                            @RequestParam(value = "boardId") Long boardId) {
+        
+        Long userId = null;
 
-        Boolean response = boardService.boardDelete(boardId);
+        if (member != null) {
+            userId = member.getUserId();
+        }
 
-        if (response) {
+        Boolean response = boardService.boardDelete(userId, boardId);
+
+        if (response = true) {
             return ApiResponse.onSuccess(true);
         } else {
-            return ApiResponse.onFailure("게시글 삭제 실패", "게시글 삭제 실패", false);
+            return ApiResponse.onFailure("공모전 작성자가 아닙니다.", "공모전 작성자가 아닙니다.", false);
         }
     }
 
