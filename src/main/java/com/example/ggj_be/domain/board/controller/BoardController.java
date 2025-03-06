@@ -227,18 +227,10 @@ public class BoardController {
     // }
 
     @GetMapping("/home_list")
-    public ApiResponse<BoardHomeListResponse> getBoardHomeListResponse(@AuthMember Member member,
+    public ApiResponse<BoardHomeListResponse> getBoardHomeListResponse(@RequestParam(value = "userId") Long userId,
                                                                                   @RequestParam(value = "listType") int listType) {
 
-
-        Long userId = null;
-
-        if (member != null) {
-            userId = member.getUserId();
-        }
         
-
-
         List<BoardHomeList> homeList = boardService.getBoardHomeList(userId, listType);
 
         if (listType == 5) {
@@ -252,14 +244,9 @@ public class BoardController {
     }
 
     @GetMapping("/searchBoardList")
-    public ApiResponse<List<BoardHomeList>> getSearchBoardListResponse(@AuthMember Member member,
+    public ApiResponse<List<BoardHomeList>> getSearchBoardListResponse(@RequestParam(value = "userId") Long userId,
                                                                        @RequestParam(value = "search") String search) {
 
-        Long userId = null;
-
-        if (member != null) {
-            userId = member.getUserId();
-        }
 
         List<BoardHomeList> response = boardService.getSearchBoardList(userId, search);
 
@@ -268,15 +255,9 @@ public class BoardController {
     }
 
     @GetMapping("/categoryBoardList")
-    public ApiResponse<List<BoardHomeList>> getCategoryBoardListResponse(@AuthMember Member member,
+    public ApiResponse<List<BoardHomeList>> getCategoryBoardListResponse(@RequestParam(value = "userId") Long userId,
                                                                        @RequestParam(value = "categoryId") int categoryId) {
 
-
-        Long userId = null;
-
-        if (member != null) {
-            userId = member.getUserId();
-        }
 
         List<BoardHomeList> response = boardService.getCategoryBoardList(userId, categoryId);
 
@@ -285,14 +266,9 @@ public class BoardController {
     }
 
     @GetMapping("/detail")
-    public ApiResponse<BoardDetailResponse> getBoardDetailResponse(@AuthMember Member member,
+    public ApiResponse<BoardDetailResponse> getBoardDetailResponse(@RequestParam(value = "userId") Long userId,
                                                                     @RequestParam(value = "boardId") Long boardId) {
 
-        Long userId = null;
-
-        if (member != null) {
-            userId = member.getUserId();
-        }
 
         BoardDetail boardDetail = boardService.getBoardDetail(userId, boardId);
         List<Poto> boardImages = boardService.getImages(Type.board, boardId);
