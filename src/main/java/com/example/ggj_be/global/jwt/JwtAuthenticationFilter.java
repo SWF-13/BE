@@ -80,11 +80,11 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 requestUrl.startsWith("/favicon.ico")||
                 requestUrl.startsWith("/api/emails/**")||
                 requestUrl.startsWith("/potoUrl/**")||
-                requestUrl.startsWith("//api/category");
-//                requestUrl.startsWith("/api/board/home_list")||
-//                requestUrl.startsWith("/api/board/detail")||
-//                requestUrl.startsWith("/api/board/searchBoardList")||
-//                requestUrl.startsWith("/api/board/categoryBoardList");
+                requestUrl.startsWith("//api/category")||
+               requestUrl.startsWith("/api/board/home_list")||
+               requestUrl.startsWith("/api/board/detail")||
+               requestUrl.startsWith("/api/board/searchBoardList")||
+               requestUrl.startsWith("/api/board/categoryBoardList");
     }
 
     private boolean isBearer(String authorizationHeader) {
