@@ -143,7 +143,7 @@ public class MemberController {
         String nickName = member.getNickName();
 
         // Mypage 객체 생성 후 반환
-        MemberRequest.Mypage mypage = new MemberRequest.Mypage(point, nickName);
+        MemberRequest.Mypage mypage = new MemberRequest.Mypage(point, nickName, member.getUserImg());
 
 
         return ApiResponse.onSuccess(mypage);
