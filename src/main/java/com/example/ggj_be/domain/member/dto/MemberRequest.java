@@ -81,11 +81,13 @@ public class MemberRequest {
     public static class Mypage{
         private Long point;
         private String nickName;
+        private String imgUrl;
 
         // 생성자 추가
-        public Mypage(Long point, String nickName) {
+        public Mypage(Long point, String nickName, String imgUrl) {
             this.point = point;
             this.nickName = nickName;
+            this.imgUrl = imgUrl;
         }
     }
 

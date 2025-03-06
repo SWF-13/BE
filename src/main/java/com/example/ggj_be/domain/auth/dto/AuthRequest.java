@@ -18,4 +18,19 @@ public class AuthRequest {
         @NotBlank(message = "비밀번호가 입력되지 않았습니다.")
         private String password;
     }
+
+    @Schema(description = "로그인 반환 DTO")
+    @Getter
+    public static class LoginResponse {
+        @Schema(description = "토큰 정보")
+        private TokenVo tokenVo;
+
+        @Schema
+        private Long userId;
+
+        public LoginResponse(TokenVo tokenVo, Long userId) {
+            this.tokenVo = tokenVo;
+            this.userId = userId;
+        }
+    }
 }
