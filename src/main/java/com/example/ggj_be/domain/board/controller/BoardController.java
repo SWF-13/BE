@@ -227,9 +227,10 @@ public class BoardController {
     // }
 
     @GetMapping("/home_list")
-    public ApiResponse<BoardHomeListResponse> getBoardHomeListResponse(@RequestParam(value = "userId") Long userId,
+    public ApiResponse<BoardHomeListResponse> getBoardHomeListResponse(@RequestParam(value = "userId", required = false) Long userId,
                                                                                   @RequestParam(value = "listType") int listType) {
 
+        
         
         List<BoardHomeList> homeList = boardService.getBoardHomeList(userId, listType);
 
@@ -244,7 +245,7 @@ public class BoardController {
     }
 
     @GetMapping("/searchBoardList")
-    public ApiResponse<List<BoardHomeList>> getSearchBoardListResponse(@RequestParam(value = "userId") Long userId,
+    public ApiResponse<List<BoardHomeList>> getSearchBoardListResponse(@RequestParam(value = "userId", required = false) Long userId,
                                                                        @RequestParam(value = "search") String search) {
 
 
@@ -255,7 +256,7 @@ public class BoardController {
     }
 
     @GetMapping("/categoryBoardList")
-    public ApiResponse<List<BoardHomeList>> getCategoryBoardListResponse(@RequestParam(value = "userId") Long userId,
+    public ApiResponse<List<BoardHomeList>> getCategoryBoardListResponse(@RequestParam(value = "userId", required = false) Long userId,
                                                                        @RequestParam(value = "categoryId") int categoryId) {
 
 
@@ -266,7 +267,7 @@ public class BoardController {
     }
 
     @GetMapping("/detail")
-    public ApiResponse<BoardDetailResponse> getBoardDetailResponse(@RequestParam(value = "userId") Long userId,
+    public ApiResponse<BoardDetailResponse> getBoardDetailResponse(@RequestParam(value = "userId", required = false) Long userId,
                                                                     @RequestParam(value = "boardId") Long boardId) {
 
 
