@@ -313,8 +313,8 @@ public class BoardController {
     }
 
 
-   @GetMapping("/download")
-   ResponseEntity<?> imgDownload(@AuthMember Member member,
+    @GetMapping("/download")
+    ResponseEntity<?> imgDownload(@AuthMember Member member,
                                  @RequestParam(value = "boardId") Long boardId,
                                  @RequestParam(value = "replyId") Long replyId) {
 
@@ -332,25 +332,29 @@ public class BoardController {
        }
 
        try {
-           List<Poto> imageNames = boardService.getImageName(replyId, Type.reply);
-           File tempZipFile = File.createTempFile("images", ".zip");
-           try (FileOutputStream fos = new FileOutputStream(tempZipFile);
-                ZipOutputStream zos = new ZipOutputStream(fos)) {
+            List<Poto> imageNames = boardService.getImageName(replyId, Type.reply);
+            File tempZipFile = File.createTempFile("images", ".zip");
+            try (FileOutputStream fos = new FileOutputStream(tempZipFile);
+                    ZipOutputStream zos = new ZipOutputStream(fos)) {
 
-               for (Poto imageName : imageNames) {
-                   log.info("imageName : {}", imageName.getPotoName());
-                   File imageFile = new File(uploadDir + imageName.getPotoName());
+                for (Poto imageName : imageNames) {
+                    log.info("imageName : {}", imageName.getPotoName());
+                    File imageFile = new File(uploadDir + imageName.getPotoName());
+                        
                    if (imageFile.exists()) {
                        try (FileInputStream fis = new FileInputStream(imageFile)) {
-                           ZipEntry zipEntry = new ZipEntry(imageName.getPotoOrigin());
-                           zos.putNextEntry(zipEntry);
+                            log.info("Adding file to ZIP: {}", imageFile.getAbsolutePath());
+                            log.info("ZipEntry name: {}", imageName.getPotoOrigin());
+                            ZipEntry zipEntry = new ZipEntry(imageName.getPotoOrigin());
+                            zos.putNextEntry(zipEntry);
+                           
 
-                           byte[] buffer = new byte[1024];
-                           int length;
-                           while ((length = fis.read(buffer)) > 0) {
-                               zos.write(buffer, 0, length);
-                           }
-                           zos.closeEntry();
+                            byte[] buffer = new byte[1024];
+                            int length;
+                            while ((length = fis.read(buffer)) > 0) {
+                                zos.write(buffer, 0, length);
+                            }
+                            zos.closeEntry();
                        }
                    }
                }
