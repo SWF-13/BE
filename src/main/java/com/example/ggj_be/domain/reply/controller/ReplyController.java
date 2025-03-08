@@ -50,6 +50,7 @@ public class ReplyController {
                                              @RequestParam(value = "reply_files", required = false) List<MultipartFile> replyFiles) {
 
         Long userId = member.getUserId();
+        log.info("잘들어오니???????? : {}", userId);
 
         try {
             List<String> savedFilePaths = new ArrayList<>();
@@ -58,7 +59,7 @@ public class ReplyController {
             if (replyFiles != null && !replyFiles.isEmpty()) {
                 for (MultipartFile file : replyFiles) {
                     String fileName = UUID.randomUUID().toString() + "_" + file.getOriginalFilename(); // 중복 방지
-                    Path filePath = Paths.get(uploadDir + fileName);
+                    Path filePath = Paths.get(uploadDir,fileName);
 
                     // 파일 저장 로직 구현
                     try {
