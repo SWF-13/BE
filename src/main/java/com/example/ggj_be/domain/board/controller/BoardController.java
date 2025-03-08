@@ -94,8 +94,6 @@ public class BoardController {
                     for (MultipartFile file : boardFiles) {
                         String fileName = UUID.randomUUID().toString() + "_" + file.getOriginalFilename(); // 중복 방지
                         Path filePath = Paths.get(uploadDir,fileName);
-                        log.info("이미지 저장경로 확인 : {}",filePath);
-                        System.out.println("이미지 저장경로 확인"+filePath);
 
 
                         // 파일 저장 로직 구현
@@ -105,7 +103,6 @@ public class BoardController {
                             if (!dir.exists()) dir.mkdirs(); // 디렉토리가 없으면 생성
                             file.transferTo(filePath.toFile()); // 파일 저장
                             savedFilePaths.add(filePath.toString());
-                            System.out.println("파일 저장 성공: " + filePath.toFile().getAbsolutePath());
 
                             Poto poto = Poto.builder()
                                     .objectId(result)
