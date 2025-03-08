@@ -14,7 +14,9 @@ import com.example.ggj_be.domain.member.service.MemberCommandService;
 import com.example.ggj_be.domain.scrap.dto.ScrapDto;
 import com.example.ggj_be.domain.scrap.service.ScrapCommandService;
 import com.example.ggj_be.global.annotation.AuthMember;
+import com.example.ggj_be.global.exception.ApiException;
 import com.example.ggj_be.global.response.ApiResponse;
+import com.example.ggj_be.global.response.code.status.ErrorStatus;
 import com.example.ggj_be.global.s3.FileStorageService;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
@@ -71,15 +73,15 @@ public class MemberController {
 
     @Operation(summary = "닉네임 변경")
     @PatchMapping("/changeNickname")
-    public ApiResponse<MemberRequest.ChangeNickName> changeNickname(@AuthMember Member member, @RequestBody MemberRequest.ChangeNickName request) {
-        MemberRequest.ChangeNickName changeNickName = memberCommandService.changeNickName(member, request);
+    public ApiResponse<String> changeNickname(@AuthMember Member member, @RequestBody MemberRequest.ChangeNickName request) {
+        String changeNickName = memberCommandService.changeNickName(member, request.getNickName());
         return ApiResponse.onSuccess(changeNickName);
     }
 
 
-    @Operation(summary = "프로필 사진 등록 및 변경")
+    @Operation(summary = "프로필 사진 변경")
     @PatchMapping("/upload-img")
-    public ResponseEntity<String> uploadProfileImage(@AuthMember Member member, @RequestParam("file") MultipartFile file) {
+    public ResponseEntity<String> uploadProfileImage(@AuthMember Member member,@RequestParam("file") MultipartFile file) {
         try {
             // 파일 이름을 UUID로 설정하여 중복을 방지
             String fileName = UUID.randomUUID().toString() + "-" + file.getOriginalFilename();
@@ -93,35 +95,42 @@ public class MemberController {
 
             memberRepository.save(member);
 
-            // 업로드된 이미지 URL을 응답으로 반환
+
+
             return ResponseEntity.ok(imageUrl);
         } catch (IOException e) {
             return ResponseEntity.status(500).body("파일 업로드에 실패했습니다.");
         }
     }
 
-    @Operation(summary = "기본 프로필 이미지 선택")
-    @PatchMapping("/upload-default-img")
-    public ResponseEntity<String> updateProfileImageWithDefault(@AuthMember Member member, @RequestParam("imageUrl") String imageUrl) {
-        try {
+    @Operation(summary = "기본 프로필 이미지 선택 및 닉네임 설정")
+    @PatchMapping("/ImgAndNickname")
+    public ApiResponse<MemberRequest.NickNameAndImg> updateProfileImageWithDefault(@AuthMember Member member, @RequestBody MemberRequest.NickNameAndImg request) {
+
             List<String> defaultImageUrls = Arrays.asList(
                     "https://kr.object.ncloudstorage.com/profile-img/basic/6C7CC82D-CA70-4894-968B-44A344A85C94.png",
                     "https://kr.object.ncloudstorage.com/profile-img/basic/9957A943-220E-4BF1-B319-F3BA8D122599.png",
                     "https://kr.object.ncloudstorage.com/profile-img/basic/B9CBB4D7-18A0-49BC-84A1-E0D5EC1F8112.png",
                     "https://kr.object.ncloudstorage.com/profile-img/basic/EEA39F71-0CA1-4FCA-A0DE-090EB3956767.png"
             );
+            log.info("imageUrl:{}", request.getImgUrl());
 
-            if (!defaultImageUrls.contains(imageUrl)) {
-                return ResponseEntity.status(400).body("잘못된 이미지 URL입니다.");
+            if (!defaultImageUrls.contains(request.getImgUrl())) {
+                return ApiResponse.onFailure(ErrorStatus._IMG_NOT_FOUND.getCode(), ErrorStatus._IMG_NOT_FOUND.getMessage(), null);
             }
 
-            member.updateProfileImage(imageUrl);
+            member.updateProfileImage(request.getImgUrl());
+            log.info("image uploaded successfully");
             memberRepository.save(member);
 
-            return ResponseEntity.ok(imageUrl);
-        } catch (Exception e) {
-            return ResponseEntity.status(500).body("프로필 이미지 변경에 실패했습니다.");
-        }
+            //닉네임
+            String changeNickName = memberCommandService.changeNickName(member, request.getNickName());
+            log.info("changeNickName: " + changeNickName);
+
+            MemberRequest.NickNameAndImg nickNameAndImg = new MemberRequest.NickNameAndImg(changeNickName, request.getImgUrl());
+
+            return ApiResponse.onSuccess(nickNameAndImg);
+
     }
 
 
