@@ -13,5 +13,4 @@ public interface MemberCommandService {
     Member signUp(SignUpRequest request);
     Member addBankInfo(Long userId, BankRequest.BankRequestDto request);
     String changeNickName(Member member, String request);
-    MemberRequest.Mypage getMyInfo(Member member);
 }

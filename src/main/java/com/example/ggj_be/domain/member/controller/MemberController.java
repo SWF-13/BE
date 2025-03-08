@@ -150,9 +150,17 @@ public class MemberController {
     public ApiResponse<MemberRequest.Mypage> getProfile(@AuthMember Member member) {
         Long point = member.getPoint();
         String nickName = member.getNickName();
+        boolean isResistered;
+
+        if(member.getBankAccount()==null){
+            isResistered = false;
+        }
+        else {
+            isResistered = true;
+        }
 
         // Mypage 객체 생성 후 반환
-        MemberRequest.Mypage mypage = new MemberRequest.Mypage(point, nickName, member.getUserImg());
+        MemberRequest.Mypage mypage = new MemberRequest.Mypage(point, nickName, member.getUserImg(), isResistered);
 
 
         return ApiResponse.onSuccess(mypage);

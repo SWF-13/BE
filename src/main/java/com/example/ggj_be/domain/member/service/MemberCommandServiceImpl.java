@@ -116,11 +116,6 @@ public class MemberCommandServiceImpl implements MemberCommandService {
         return memberRepository.save(updatedMember);
     }
 
-    @Override
-    public MemberRequest.Mypage getMyInfo(Member member){
-        // Mypage 객체 생성 후 반환
-        return new MemberRequest.Mypage(member.getPoint(), member.getNickName(), member.getUserImg());
-    }
 
 
 }

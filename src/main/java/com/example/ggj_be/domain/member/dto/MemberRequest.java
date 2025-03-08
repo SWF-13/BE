@@ -82,12 +82,14 @@ public class MemberRequest {
         private Long point;
         private String nickName;
         private String imgUrl;
+        private boolean isResisterBank;
 
         // 생성자 추가
-        public Mypage(Long point, String nickName, String imgUrl) {
+        public Mypage(Long point, String nickName, String imgUrl, boolean isResisterBank) {
             this.point = point;
             this.nickName = nickName;
             this.imgUrl = imgUrl;
+            this.isResisterBank = isResisterBank;
         }
     }
 
