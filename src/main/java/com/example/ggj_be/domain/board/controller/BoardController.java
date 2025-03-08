@@ -10,10 +10,8 @@ import com.example.ggj_be.domain.enums.Type;
 import com.example.ggj_be.domain.member.Member;
 import com.example.ggj_be.domain.reply.dto.ReplyDetailResponse;
 import org.springframework.beans.factory.annotation.Autowired;
-// import org.springframework.core.io.ByteArrayResource;
-// import org.springframework.core.io.FileSystemResource;
-// import org.springframework.core.io.UrlResource;
-// import org.springframework.http.*;
+import org.springframework.core.io.FileSystemResource;
+import org.springframework.http.*;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
@@ -34,11 +32,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
-// import java.nio.file.Files;
-// import java.util.zip.ZipEntry;
-// import java.util.zip.ZipOutputStream;
-// import org.springframework.core.io.Resource;
-// import java.net.URLEncoder;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
 import org.springframework.beans.factory.annotation.Value;
 
 
@@ -318,66 +313,66 @@ public class BoardController {
     }
 
 
-//    @GetMapping("/download")
-//    ResponseEntity<?> imgDownload(@AuthMember Member member,
-//                                  @RequestParam(value = "boardId") Long boardId,
-//                                  @RequestParam(value = "replyId") Long replyId) {
-//
-//        Long userId = member.getUserId();
-//        Boolean chk = boardService.chkUser(boardId, userId);
-//
-//        if (!chk) {
-//            Map<String, String> errorDetails = new HashMap<>();
-//            errorDetails.put("code", "FORBIDDEN");
-//            errorDetails.put("message", "본인이 작성한 게시글이 아닙니다.");
-//
-//            return ResponseEntity.status(HttpStatus.FORBIDDEN)
-//                    .contentType(MediaType.APPLICATION_JSON)
-//                    .body(errorDetails);
-//        }
-//
-//        try {
-//            List<Poto> imageNames = boardService.getImageName(replyId, Type.reply);
-//            File tempZipFile = File.createTempFile("images", ".zip");
-//            try (FileOutputStream fos = new FileOutputStream(tempZipFile);
-//                 ZipOutputStream zos = new ZipOutputStream(fos)) {
-//
-//                for (Poto imageName : imageNames) {
-//                    log.info("imageName : {}", imageName.getPotoName());
-//                    File imageFile = new File(UPLOAD_DIR + imageName.getPotoName());
-//                    if (imageFile.exists()) {
-//                        try (FileInputStream fis = new FileInputStream(imageFile)) {
-//                            ZipEntry zipEntry = new ZipEntry(imageName.getPotoOrigin());
-//                            zos.putNextEntry(zipEntry);
-//
-//                            byte[] buffer = new byte[1024];
-//                            int length;
-//                            while ((length = fis.read(buffer)) > 0) {
-//                                zos.write(buffer, 0, length);
-//                            }
-//                            zos.closeEntry();
-//                        }
-//                    }
-//                }
-//            }
-//
-//            FileSystemResource resource = new FileSystemResource(tempZipFile);
-//            return ResponseEntity.ok()
-//                    .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=images.zip")
-//                    .body(resource);
-//
-//        } catch (IOException e) {
-//            log.error("Error occurred while processing the download: {}", e.getMessage());
-//
-//            Map<String, String> errorDetails = new HashMap<>();
-//
-//            errorDetails.put("code", "INTERNAL_SERVER_ERROR");
-//            errorDetails.put("message", "이미지 압축에 실패하였습니다.");
-//
-//
-//            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-//                    .contentType(MediaType.APPLICATION_JSON)
-//                    .body(errorDetails);
-//        }
-//    }
+   @GetMapping("/download")
+   ResponseEntity<?> imgDownload(@AuthMember Member member,
+                                 @RequestParam(value = "boardId") Long boardId,
+                                 @RequestParam(value = "replyId") Long replyId) {
+
+       Long userId = member.getUserId();
+       Boolean chk = boardService.chkUser(boardId, userId);
+
+       if (!chk) {
+           Map<String, String> errorDetails = new HashMap<>();
+           errorDetails.put("code", "FORBIDDEN");
+           errorDetails.put("message", "본인이 작성한 게시글이 아닙니다.");
+
+           return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                   .contentType(MediaType.APPLICATION_JSON)
+                   .body(errorDetails);
+       }
+
+       try {
+           List<Poto> imageNames = boardService.getImageName(replyId, Type.reply);
+           File tempZipFile = File.createTempFile("images", ".zip");
+           try (FileOutputStream fos = new FileOutputStream(tempZipFile);
+                ZipOutputStream zos = new ZipOutputStream(fos)) {
+
+               for (Poto imageName : imageNames) {
+                   log.info("imageName : {}", imageName.getPotoName());
+                   File imageFile = new File(uploadDir + imageName.getPotoName());
+                   if (imageFile.exists()) {
+                       try (FileInputStream fis = new FileInputStream(imageFile)) {
+                           ZipEntry zipEntry = new ZipEntry(imageName.getPotoOrigin());
+                           zos.putNextEntry(zipEntry);
+
+                           byte[] buffer = new byte[1024];
+                           int length;
+                           while ((length = fis.read(buffer)) > 0) {
+                               zos.write(buffer, 0, length);
+                           }
+                           zos.closeEntry();
+                       }
+                   }
+               }
+           }
+
+           FileSystemResource resource = new FileSystemResource(tempZipFile);
+           return ResponseEntity.ok()
+                   .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=images.zip")
+                   .body(resource);
+
+       } catch (IOException e) {
+           log.error("Error occurred while processing the download: {}", e.getMessage());
+
+           Map<String, String> errorDetails = new HashMap<>();
+
+           errorDetails.put("code", "INTERNAL_SERVER_ERROR");
+           errorDetails.put("message", "이미지 압축에 실패하였습니다.");
+
+
+           return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                   .contentType(MediaType.APPLICATION_JSON)
+                   .body(errorDetails);
+       }
+   }
 }
