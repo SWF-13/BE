@@ -339,8 +339,11 @@ public class BoardController {
 
                 for (Poto imageName : imageNames) {
                     log.info("imageName : {}", imageName.getPotoName());
-                    File imageFile = new File(uploadDir + imageName.getPotoName());
-                        
+                    File imageFile = new File(uploadDir,imageName.getPotoName());
+                        if (!imageFile.exists()) {
+                            log.error("File not found: {}", imageFile.getAbsolutePath());
+                            continue; // 존재하지 않으면 ZIP에 추가되지 않음
+                        }
                    if (imageFile.exists()) {
                        try (FileInputStream fis = new FileInputStream(imageFile)) {
                             log.info("Adding file to ZIP: {}", imageFile.getAbsolutePath());
