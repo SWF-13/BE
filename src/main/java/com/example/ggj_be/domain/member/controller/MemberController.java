@@ -3,6 +3,7 @@ package com.example.ggj_be.domain.member.controller;
 
 import com.example.ggj_be.domain.board.dto.MyPageBoardResponse;
 import com.example.ggj_be.domain.board.service.BoardCommandService;
+import com.example.ggj_be.domain.enums.Bank;
 import com.example.ggj_be.domain.member.service.MemberQueryService;
 import com.example.ggj_be.domain.reply.dto.MyPageCommentResponse;
 import com.example.ggj_be.domain.reply.service.ReplyCommandService;
@@ -171,6 +172,22 @@ public class MemberController {
     public ApiResponse<String> deleteMember(@AuthMember Member member) {
         memberQueryService.deleteMember(member);
         return ApiResponse.onSuccess("성공적으로 계정이 탈퇴되었습니다.");
+    }
+
+    @Operation(summary = "회원의 은행정보 가져오기 api")
+    @GetMapping("/bank-info")
+    public ApiResponse<BankRequest.BankResponseDto> getBankInfo(@AuthMember Member member) {
+
+        if(member.getBankAccount()==null){
+            Bank bank = Bank.fromCode("000");
+            BankRequest.BankResponseDto bankResponsetDto = new BankRequest.BankResponseDto(bank, "등록된 계좌번호가 없습니다.");
+            return ApiResponse.onSuccess(bankResponsetDto);
+        }
+        else {
+            BankRequest.BankResponseDto bankResponsetDto = new BankRequest.BankResponseDto(member.getBankName(), member.getBankAccount());
+            return ApiResponse.onSuccess(bankResponsetDto);
+        }
+
     }
 
 

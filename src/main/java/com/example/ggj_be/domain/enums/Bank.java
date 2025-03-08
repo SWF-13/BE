@@ -1,6 +1,7 @@
 package com.example.ggj_be.domain.enums;
 
 public enum Bank {
+    NULL("등록된 은행 정보가 없습니다.", "000"),
     KEB_HANA("KB국민은행", "001"),
     KDB("기업은행", "004"),
     NH("농협은행", "011"),
