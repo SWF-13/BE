@@ -21,7 +21,7 @@ public enum ErrorStatus implements BaseErrorCode {
     _MEMBER_NOT_FOUND(HttpStatus.NOT_FOUND, "MEMBER400", "요청한 회원 정보를 찾을 수 없습니다.."),
     _MEMBER_DUPLICATED_ID(HttpStatus.BAD_REQUEST, "MEMBER401", "중복된 아이디입니다."),
     _MEMBER_DUPLICATED_NICKNAME(HttpStatus.BAD_REQUEST, "MEMBER402", "중복된 닉네임입니다."),
-    _NICKNAME_CANNOTOVER8(HttpStatus.BAD_REQUEST, "MEMBER403", "닉네임은 8자를 초과 할 수 없습니다."),
+    _NICKNAME_CANNOTOVER8(HttpStatus.BAD_REQUEST, "MEMBER403", "닉네임은 10자를 초과 할 수 없습니다."),
     _ACCOUNT_NOT_FOUND(HttpStatus.NOT_FOUND, "MEMBER404", "등록된 은행 계좌가 없습니다."),
     // 관리자 관련
     _ADMIN_NOT_FOUND(HttpStatus.NOT_FOUND, "ADMIN400", "요청한 관리자 정보를 찾을 수 없습니다.."),
@@ -50,7 +50,11 @@ public enum ErrorStatus implements BaseErrorCode {
     _USER_DUPLICATE(HttpStatus.BAD_REQUEST, "MAIL401", "중복된 이메일 입니다."),
 
     //사진 관련
-    _IMG_NOT_FOUND(HttpStatus.NOT_FOUND, "IMG400", "이미지를 찾을 수 없습니다.");
+    _IMG_NOT_FOUND(HttpStatus.NOT_FOUND, "IMG400", "이미지를 찾을 수 없습니다."),
+
+    //은행 관련
+    _BANK_NOT_FOUND(HttpStatus.NOT_FOUND, "BANK400", "해당하는 은행을 찾을 수 없습니다.");
+
 
 
 
