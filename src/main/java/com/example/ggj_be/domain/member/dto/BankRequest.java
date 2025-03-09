@@ -20,11 +20,12 @@ public class BankRequest {
     @Schema(description = "회원의 계좌 정보 요청 DTO")
     @Getter
     public static class BankResponseDto {
-        private Bank bankName;
+        private String bankCode;
         private String bankAccount;
 
-        public BankResponseDto(Bank bankName, String bankAccount) {
-            this.bankName = bankName;
+
+        public BankResponseDto(String bankCode, String bankAccount) {
+            this.bankCode = bankCode;
             this.bankAccount = bankAccount;
         }
     }
