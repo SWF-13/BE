@@ -65,7 +65,7 @@ public class MemberController {
         List<ScrapDto> scrapList = scrapCommandService.getScraps(member);
         return ApiResponse.onSuccess(scrapList);
     }
-    @Operation(summary = "은행 정보 등록")
+    @Operation(summary = "은행 정보 등록 및 변경")
     @PatchMapping("/bank-info")
     public ApiResponse<Member> bankInfo(@AuthMember Member member, @RequestBody BankRequest.BankRequestDto request) {
         Member updatedMember = memberCommandService.addBankInfo(member.getUserId(), request);
