@@ -124,6 +124,7 @@ public class Member {
     //닉네임 변경
     public ApiResponse<Object> changeNickName(String newNickName) {
         if(newNickName.length() >10){
+
             throw new ApiException(ErrorStatus._NICKNAME_CANNOTOVER8);
         }
         this.nickName = newNickName;
