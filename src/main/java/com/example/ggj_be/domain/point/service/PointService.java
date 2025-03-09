@@ -15,5 +15,6 @@ public interface PointService {
     Boolean createPoint(Member member, PointCreateRequest request);
     Boolean updatePoint(PointUpateRequest request);
     Boolean updateComment(CommentRequest request);
+    List<Point>getPointList(Member member, String period);
 
 }
