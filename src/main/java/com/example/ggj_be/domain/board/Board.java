@@ -58,10 +58,10 @@ public class Board {
     @OneToMany(mappedBy = "board", cascade = CascadeType.PERSIST, orphanRemoval = false)
     private List<Good> goods;
 
-    @OneToMany(mappedBy = "board", cascade = CascadeType.PERSIST, orphanRemoval = false)
+    @OneToMany(mappedBy = "board", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Reply> replies;
 
-    @OneToMany(mappedBy = "board", cascade = CascadeType.PERSIST, orphanRemoval = false)
+    @OneToMany(mappedBy = "board", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Scrap> scraps;
 
 

@@ -100,4 +100,14 @@ public class PointController {
 
         return ApiResponse.onSuccess(true);
     }
+
+
+    @GetMapping
+    @Transactional
+    public ApiResponse<List<Point>>getPointList(@AuthMember Member member,
+                                                          @RequestParam(value = "period") String period) {
+
+        List<Point> response = pointService.getPointList(member, period);
+        return ApiResponse.onSuccess(response);
+    }
 }
