@@ -180,11 +180,13 @@ public class MemberController {
 
         if(member.getBankAccount()==null){
             Bank bank = Bank.fromCode("000");
-            BankRequest.BankResponseDto bankResponsetDto = new BankRequest.BankResponseDto(bank, "등록된 계좌번호가 없습니다.");
+            BankRequest.BankResponseDto bankResponsetDto = new BankRequest.BankResponseDto(bank.getCode(), "등록된 계좌번호가 없습니다.");
+
             return ApiResponse.onSuccess(bankResponsetDto);
         }
         else {
-            BankRequest.BankResponseDto bankResponsetDto = new BankRequest.BankResponseDto(member.getBankName(), member.getBankAccount());
+            BankRequest.BankResponseDto bankResponsetDto = new BankRequest.BankResponseDto(member.getBankName().getCode(), member.getBankAccount());
+            log.info("bankResponsetDto: {}", bankResponsetDto);
             return ApiResponse.onSuccess(bankResponsetDto);
         }
 
