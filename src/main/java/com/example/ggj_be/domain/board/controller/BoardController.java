@@ -249,10 +249,11 @@ public class BoardController {
 
     @GetMapping("/categoryBoardList")
     public ApiResponse<List<BoardHomeList>> getCategoryBoardListResponse(@RequestParam(value = "userId", required = false) Long userId,
-                                                                       @RequestParam(value = "categoryId") int categoryId) {
+                                                                       @RequestParam(value = "categoryId") int categoryId,
+                                                                       @RequestParam(value = "listType") int listType) {
 
 
-        List<BoardHomeList> response = boardService.getCategoryBoardList(userId, categoryId);
+        List<BoardHomeList> response = boardService.getCategoryBoardList(userId, categoryId, listType);
 
 
         return ApiResponse.onSuccess(response);

@@ -74,16 +74,16 @@ public class BoardServiceImpl implements BoardService {
     }
 
     @Override
-    public List<BoardHomeList> getBoardHomeList(Long userId, int listTpe) {
-        List<BoardHomeList> boards = boardRepository.findBoardHomeList(userId, listTpe);
+    public List<BoardHomeList> getBoardHomeList(Long userId, int listType) {
+        List<BoardHomeList> boards = boardRepository.findBoardHomeList(userId, listType);
         Comparator<BoardHomeList> comparator;
-        if (listTpe == 1) {
+        if (listType == 1) {
             comparator = Comparator.comparingInt(BoardHomeList::getEndCount); // 마감일 오름차순
-        } else if (listTpe == 2) {
+        } else if (listType == 2) {
             comparator = Comparator.comparingInt(BoardHomeList::getGoodCount).reversed(); // 좋아요 내림차순
-        } else if (listTpe == 3) {
+        } else if (listType == 3) {
             comparator = Comparator.comparingLong(BoardHomeList::getBoardPrize).reversed(); // 상금 내림차순
-        } else if (listTpe == 4) {
+        } else if (listType == 4) {
             comparator = Comparator.comparingInt(BoardHomeList::getReplyCount).reversed(); // 댓글 내림차순
         } else {
             comparator = Comparator.comparing(BoardHomeList::getCreatedAt).reversed(); // 최신 게시글 내림차순
@@ -92,11 +92,11 @@ public class BoardServiceImpl implements BoardService {
         boards.sort(comparator);
 
         // listTpe이 5일 경우 limit을 적용하지 않음
-        if (listTpe == 5) {
+        if (listType == 5) {
             return boards; // limit 없이 전체 리스트 반환
         }
 
-        int limit = (listTpe == 4) ? 10 : 5; // listType이 4이면 10개, 아니면 5개
+        int limit = (listType == 4) ? 10 : 5; // listType이 4이면 10개, 아니면 5개
         return boards.subList(0, Math.min(boards.size(), limit));
     }
 
@@ -112,10 +112,19 @@ public class BoardServiceImpl implements BoardService {
     }
 
     @Override
-    public List<BoardHomeList> getCategoryBoardList(Long userSeq, int CategoryId) {
-        List<BoardHomeList> boards = boardRepository.findCategoryBoardList(userSeq, CategoryId);
+    public List<BoardHomeList> getCategoryBoardList(Long userId, int CategoryId, int listType) {
+        List<BoardHomeList> boards = boardRepository.findCategoryBoardList(userId, CategoryId);
         Comparator<BoardHomeList> comparator;
-        comparator = Comparator.comparing(BoardHomeList::getCreatedAt).reversed(); // 최신 게시글 내림차순
+        
+        if (listType == 1) {
+            comparator = Comparator.comparingInt(BoardHomeList::getEndCount); // 마감일 오름차순
+        } else if (listType == 2) {
+            comparator = Comparator.comparingInt(BoardHomeList::getGoodCount).reversed(); // 좋아요 내림차순
+        } else if (listType == 3) {
+            comparator = Comparator.comparingLong(BoardHomeList::getBoardPrize).reversed(); // 상금 내림차순
+        } else {
+            comparator = Comparator.comparing(BoardHomeList::getCreatedAt).reversed(); // 최신 게시글 내림차순
+        }
         boards.sort(comparator);
 
         return boards;
