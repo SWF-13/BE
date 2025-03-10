@@ -11,7 +11,7 @@ public interface BoardService {
     Long createBoard(Long userId, BoardCreateRequest request);
     List<BoardHomeList> getBoardHomeList(Long userId, int listType);
     List<BoardHomeList> getSearchBoardList(Long userId, String search);
-    List<BoardHomeList> getCategoryBoardList(Long userId, int categoryId);
+    List<BoardHomeList> getCategoryBoardList(Long userId, int categoryId, int listType);
     BoardDetail getBoardDetail(Long userId, Long boardId);
     List <Poto>getImages(Type type, Long objectId);
     Boolean boardDelete(Long userId, Long boardId);
