@@ -206,7 +206,7 @@ public class BoardServiceImpl implements BoardService {
             Board board = boardRepository.findById(boardId)
                     .orElseThrow(() -> new RuntimeException("board not found"));
             if (board.getMember().getUserId().equals(userId)) {
-                return true;
+                return board.getAccAt() == null;
             }else{
                 return false;
             }
