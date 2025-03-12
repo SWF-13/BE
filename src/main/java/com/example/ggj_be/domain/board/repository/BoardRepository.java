@@ -91,7 +91,7 @@ public interface BoardRepository extends JpaRepository<Board, Long> {
                      "ELSE FALSE " +
                      "END scrapChk , " +
                 "( SELECT COALESCE(( SELECT COUNT(*) FROM good f WHERE type = 'board' and a.board_id = f.object_id GROUP BY object_id), 0)) as goodCount, " +
-                "(SELECT  COUNT(g.reply_id) + COUNT(h.reply_id) FROM reply g, re_reply h WHERE g.reply_id = h.reply_id AND a.board_id = g.board_id) replyCount , " +
+                "(SELECT  COUNT(g.reply_id) + COUNT(h.re_reply_id) FROM reply g LEFT JOIN re_reply h ON g.reply_id = h.reply_id WHERE a.board_id = g.board_id) replyCount , " +
                 "( SELECT COALESCE((SELECT COUNT(*) FROM scrap i WHERE a.board_id = i.board_id GROUP BY board_id),0)) as scrapCount, " +
                 "case when a.user_id = :userId " +
                      "then case when (CONVERT((SELECT COUNT(*) FROM reply j WHERE j.board_id = :boardId), SIGNED) <= 2) " +
