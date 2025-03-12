@@ -23,6 +23,7 @@ public class MyPageCommentResponse {
     private int goodsCount;
     private int Re_replyCount;
     private long daysUntilEnd;
+    private int replyCount;
 
     @Builder
     public MyPageCommentResponse(Reply reply, int goodsCount) {
@@ -35,8 +36,8 @@ public class MyPageCommentResponse {
         this.title = reply.getBoard().getTitle();
         this.board_created_at = reply.getBoard().getCreatedAt();
         this.goodsCount = goodsCount; // 좋아요 개수 변경
-        log.info("good count: {}", goodsCount);
         this.Re_replyCount = reply.getRe_replies().size();
+        this.replyCount = reply.getBoard().getReplies().size();
         this.daysUntilEnd = calculateDaysUntilEnd(reply.getBoard().getEndAt());
         this.board_id = reply.getBoard().getBoardId();
     }
