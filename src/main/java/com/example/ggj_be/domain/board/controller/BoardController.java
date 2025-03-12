@@ -301,6 +301,7 @@ public class BoardController {
         
         Long userId = member.getUserId();
         Boolean chk = boardService.chkUser(boardId, userId);
+        chk = !chk;
         log.info("userId : {}, boardId : {}, replyId : {}, chk : {}", userId,boardId,replyId,chk);
 
         if (chk){
