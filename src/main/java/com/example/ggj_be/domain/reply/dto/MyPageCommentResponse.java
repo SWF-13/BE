@@ -3,11 +3,13 @@ package com.example.ggj_be.domain.reply.dto;
 import com.example.ggj_be.domain.reply.Reply;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.extern.slf4j.Slf4j;
 
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 
 @Getter
+@Slf4j
 public class MyPageCommentResponse {
     private Long reply_id;
     private Long board_id;
@@ -33,6 +35,7 @@ public class MyPageCommentResponse {
         this.title = reply.getBoard().getTitle();
         this.board_created_at = reply.getBoard().getCreatedAt();
         this.goodsCount = reply.getGoods().size();
+        log.info("good count: {}", goodsCount);
         this.Re_replyCount = reply.getRe_replies().size();
         this.daysUntilEnd = calculateDaysUntilEnd(reply.getBoard().getEndAt());
         this.board_id = reply.getBoard().getBoardId();
