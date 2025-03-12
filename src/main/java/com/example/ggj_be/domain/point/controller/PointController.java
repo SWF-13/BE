@@ -68,13 +68,13 @@ public class PointController {
                                                   @ModelAttribute PointUpateRequest request) {
 
 
-        Long userId = member.getUserId();
+        log.info("userId : {}, listType : {}, pointType : {}, changePoint : {}", request.getUserId(), request.getListType(), request.getPointType(), request.getChangePoint());
         // 관리자 권한이 아닐 경우 요청 차단
         if (member.getRole() != Role.ADMIN) {
             return ApiResponse.onFailure("403", "관리자만 접근할 수 있습니다.", null);
         }
 
-        Boolean result = pointService.updatePoint(userId, request);
+        Boolean result = pointService.updatePoint(request);
 
         if(!result) {
             return ApiResponse.onFailure("403", "포인트 수정에 실패하였습니다.", false);
