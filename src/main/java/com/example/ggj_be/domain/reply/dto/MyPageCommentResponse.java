@@ -25,7 +25,7 @@ public class MyPageCommentResponse {
     private long daysUntilEnd;
 
     @Builder
-    public MyPageCommentResponse(Reply reply){
+    public MyPageCommentResponse(Reply reply, int goodsCount) {
         this.reply_id = reply.getReplyId();
         this.createdAt = reply.getCreatedAt();
         this.updatedAt = reply.getUpdatedAt();
@@ -34,7 +34,7 @@ public class MyPageCommentResponse {
         this.category = String.valueOf(reply.getBoard().getCategoryId());
         this.title = reply.getBoard().getTitle();
         this.board_created_at = reply.getBoard().getCreatedAt();
-        this.goodsCount = reply.getGoods().size();
+        this.goodsCount = goodsCount; // 좋아요 개수 변경
         log.info("good count: {}", goodsCount);
         this.Re_replyCount = reply.getRe_replies().size();
         this.daysUntilEnd = calculateDaysUntilEnd(reply.getBoard().getEndAt());

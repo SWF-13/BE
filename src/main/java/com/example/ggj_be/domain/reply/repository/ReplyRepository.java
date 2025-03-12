@@ -41,4 +41,7 @@ public interface ReplyRepository extends JpaRepository<Reply, Long>{
                     "and a.user_id = b.user_id "
             , nativeQuery = true)
     List<ReplyDetail> findReplyDetail(@Param("userId") Long userId, @Param("boardId") Long boardId);
+
+    @Query("SELECT COUNT(g) FROM Good g WHERE g.objectId = :replyId AND g.type = 'REPLY'")
+    Long countGoodsByReplyId(@Param("replyId") Long replyId);
 }
