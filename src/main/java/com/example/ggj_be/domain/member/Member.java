@@ -109,7 +109,7 @@ public class Member {
     private List<Reply> replies;
 
     @JsonIgnore
-    @OneToMany(mappedBy = "member", cascade = CascadeType.REMOVE, orphanRemoval = true)
+    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Point> points;
 
 
