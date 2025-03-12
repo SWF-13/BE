@@ -7,6 +7,9 @@ import com.example.ggj_be.domain.member.Member;
 import com.example.ggj_be.domain.board.Board;
 import java.time.LocalDateTime;
 
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
+
 @Entity
 @Builder
 @Getter
@@ -22,11 +25,13 @@ public class Scrap {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "userId", nullable = false, foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
     @JsonBackReference
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private Member member;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "boardId", nullable = false, foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
     @JsonBackReference
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private Board board;
 
     @Column(nullable = false)

@@ -7,6 +7,9 @@ import lombok.*;
 
 import java.time.LocalDateTime;
 
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
+
 @Entity
 @Builder
 @Getter
@@ -21,6 +24,7 @@ public class Point {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "userId", nullable = true, foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private Member member;
     
     @Column(nullable = false)
