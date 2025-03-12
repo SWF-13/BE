@@ -1,6 +1,7 @@
 package com.example.ggj_be.domain.board.service;
 
 import com.example.ggj_be.domain.board.Board;
+import com.example.ggj_be.domain.enums.PointType;
 import com.example.ggj_be.domain.reply.Reply;
 import com.example.ggj_be.domain.board.repository.BoardRepository;
 import com.example.ggj_be.domain.reply.repository.ReplyRepository;
@@ -49,6 +50,9 @@ public class BoardServiceImpl implements BoardService {
         try{
             Member member = memberRepository.findById(userId)
                     .orElseThrow(() -> new RuntimeException("Member not found"));
+            if (member.getPoint() < request.getBoardPrize()) {
+                return 0L;
+            }
             Board board = Board.builder()
             .categoryId(request.getCategoryId())
             .member(member)
@@ -59,6 +63,9 @@ public class BoardServiceImpl implements BoardService {
             .build();
     
             boardRepository.save(board);
+
+            member.setPoint(request.getBoardPrize(), PointType.remove);
+            memberRepository.save(member);
             return board.getBoardId();
         }catch (Exception e){
             log.error(" Error creating board", e);
@@ -67,16 +74,16 @@ public class BoardServiceImpl implements BoardService {
     }
 
     @Override
-    public List<BoardHomeList> getBoardHomeList(Long userId, int listTpe) {
-        List<BoardHomeList> boards = boardRepository.findBoardHomeList(userId, listTpe);
+    public List<BoardHomeList> getBoardHomeList(Long userId, int listType) {
+        List<BoardHomeList> boards = boardRepository.findBoardHomeList(userId, listType);
         Comparator<BoardHomeList> comparator;
-        if (listTpe == 1) {
+        if (listType == 1) {
             comparator = Comparator.comparingInt(BoardHomeList::getEndCount); // 마감일 오름차순
-        } else if (listTpe == 2) {
+        } else if (listType == 2) {
             comparator = Comparator.comparingInt(BoardHomeList::getGoodCount).reversed(); // 좋아요 내림차순
-        } else if (listTpe == 3) {
+        } else if (listType == 3) {
             comparator = Comparator.comparingLong(BoardHomeList::getBoardPrize).reversed(); // 상금 내림차순
-        } else if (listTpe == 4) {
+        } else if (listType == 4) {
             comparator = Comparator.comparingInt(BoardHomeList::getReplyCount).reversed(); // 댓글 내림차순
         } else {
             comparator = Comparator.comparing(BoardHomeList::getCreatedAt).reversed(); // 최신 게시글 내림차순
@@ -85,11 +92,11 @@ public class BoardServiceImpl implements BoardService {
         boards.sort(comparator);
 
         // listTpe이 5일 경우 limit을 적용하지 않음
-        if (listTpe == 5) {
+        if (listType == 5) {
             return boards; // limit 없이 전체 리스트 반환
         }
 
-        int limit = (listTpe == 4) ? 10 : 5; // listType이 4이면 10개, 아니면 5개
+        int limit = (listType == 4) ? 10 : 5; // listType이 4이면 10개, 아니면 5개
         return boards.subList(0, Math.min(boards.size(), limit));
     }
 
@@ -105,10 +112,19 @@ public class BoardServiceImpl implements BoardService {
     }
 
     @Override
-    public List<BoardHomeList> getCategoryBoardList(Long userSeq, int CategoryId) {
-        List<BoardHomeList> boards = boardRepository.findCategoryBoardList(userSeq, CategoryId);
+    public List<BoardHomeList> getCategoryBoardList(Long userId, int CategoryId, int listType) {
+        List<BoardHomeList> boards = boardRepository.findCategoryBoardList(userId, CategoryId);
         Comparator<BoardHomeList> comparator;
-        comparator = Comparator.comparing(BoardHomeList::getCreatedAt).reversed(); // 최신 게시글 내림차순
+        
+        if (listType == 1) {
+            comparator = Comparator.comparingInt(BoardHomeList::getEndCount); // 마감일 오름차순
+        } else if (listType == 2) {
+            comparator = Comparator.comparingInt(BoardHomeList::getGoodCount).reversed(); // 좋아요 내림차순
+        } else if (listType == 3) {
+            comparator = Comparator.comparingLong(BoardHomeList::getBoardPrize).reversed(); // 상금 내림차순
+        } else {
+            comparator = Comparator.comparing(BoardHomeList::getCreatedAt).reversed(); // 최신 게시글 내림차순
+        }
         boards.sort(comparator);
 
         return boards;
@@ -127,34 +143,87 @@ public class BoardServiceImpl implements BoardService {
     }
 
     @Override
-    public Boolean boardDelete(Long boardId) {
-        Optional<Board> boardOptional = boardRepository.findById(boardId);
-        if (boardOptional.isPresent()) {
-            boardRepository.deleteById(boardId);
+    public Boolean boardDelete(Long userId, Long boardId) {
+
+        try {
+            Board board = boardRepository.findById(boardId)
+                    .orElseThrow(() -> new RuntimeException("board not found"));
+
+            Member member = memberRepository.findById(userId)
+                    .orElseThrow(() -> new RuntimeException("Member not found"));
+
+            
+            if(board.getMember().getUserId() == member.getUserId()){
+                if(board.getBoardPrize() != 0){
+                    member.setPoint(board.getBoardPrize(), PointType.add);
+                    memberRepository.save(member);
+                }
+                
+                boardRepository.deleteById(boardId);
+            }else{
+                return false;
+            }
+            
+
             return true;
-        } else {
-            return false;
+        }catch (Exception e){
+            log.error(" Error boardDelete board", e);
+            throw new RuntimeException("게시글 삭제 실패", e);
         }
     }
 
     @Override
     public Boolean boardAccAtUdate(Long boardId, Long replyId) {
-        Optional<Board> boardOptional = boardRepository.findById(boardId);
-        Optional<Reply> replyOptional = replyRepository.findById(replyId);
-        if (boardOptional.isPresent() && replyOptional.isPresent()) {
-            Board board = boardOptional.get();
+        try{
+            Board board = boardRepository.findById(boardId)
+                    .orElseThrow(() -> new RuntimeException("board not found"));
+
+            Reply reply = replyRepository.findById(replyId)
+                    .orElseThrow(() -> new RuntimeException("Member not found"));
+
+
+            Member member = memberRepository.findById(reply.getMember().getUserId())
+                    .orElseThrow(() -> new RuntimeException("Member not found"));
+
             board.setAccAt(LocalDateTime.now());
             boardRepository.save(board);
 
-            Reply reply = replyOptional.get();
             reply.setAccAt(LocalDateTime.now());
             replyRepository.save(reply);
+
+            member.setPoint(board.getBoardPrize(), PointType.add);
+
             return true;
-        } else {
-            return false;
+        }catch (Exception e){
+            log.error(" Error boardAccAtUdate board", e);
+            throw new RuntimeException("채택하기 실패", e);
         }
     }
 
+    @Override
+    public Boolean chkUser(Long boardId, Long userId) {
+        try{
+            Board board = boardRepository.findById(boardId)
+                    .orElseThrow(() -> new RuntimeException("board not found"));
+            if (board.getMember().getUserId().equals(userId)) {
+                return board.getAccAt() != null; //
+            }else{
+                return false;
+            }
+        }catch (Exception e){
+            log.error(" Error chkUser board", e);
+            throw new RuntimeException("본인이 작성한 게시글인지 찾기 실패", e);
+        }
+    }
 
-    
+    @Override
+    public List<Poto> getImageName(Long objectId, Type type) {
+        try{
+            List<Poto> imageList = potoRepository.findByObjectIdAndType(objectId, type);
+            return imageList;
+        }catch (Exception e){
+            log.error(" Error chkUser board", e);
+            throw new RuntimeException("본인이 작성한 게시글인지 찾기 실패", e);
+        }
+    }
 }

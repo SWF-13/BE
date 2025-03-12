@@ -11,10 +11,12 @@ public interface BoardService {
     Long createBoard(Long userId, BoardCreateRequest request);
     List<BoardHomeList> getBoardHomeList(Long userId, int listType);
     List<BoardHomeList> getSearchBoardList(Long userId, String search);
-    List<BoardHomeList> getCategoryBoardList(Long userId, int categoryId);
+    List<BoardHomeList> getCategoryBoardList(Long userId, int categoryId, int listType);
     BoardDetail getBoardDetail(Long userId, Long boardId);
     List <Poto>getImages(Type type, Long objectId);
-    Boolean boardDelete(Long boardId);
+    Boolean boardDelete(Long userId, Long boardId);
     Boolean boardAccAtUdate(Long boardId, Long replyId);
+    Boolean chkUser(Long boardId, Long userId);
+    List<Poto> getImageName(Long objectId, Type type);
 
 }
