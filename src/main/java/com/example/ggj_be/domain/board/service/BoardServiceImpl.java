@@ -226,5 +226,4 @@ public class BoardServiceImpl implements BoardService {
             throw new RuntimeException("본인이 작성한 게시글인지 찾기 실패", e);
         }
     }
-    
 }
