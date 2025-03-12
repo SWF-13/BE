@@ -67,12 +67,14 @@ public class PointController {
     public ApiResponse<Boolean>updatePointRequest(@AuthMember Member member,
                                                   @ModelAttribute PointUpateRequest request) {
 
+
+        Long userId = member.getUserId();
         // 관리자 권한이 아닐 경우 요청 차단
         if (member.getRole() != Role.ADMIN) {
             return ApiResponse.onFailure("403", "관리자만 접근할 수 있습니다.", null);
         }
 
-        Boolean result = pointService.updatePoint(request);
+        Boolean result = pointService.updatePoint(userId, request);
 
         if(!result) {
             return ApiResponse.onFailure("403", "포인트 수정에 실패하였습니다.", false);
