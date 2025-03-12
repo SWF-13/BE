@@ -20,7 +20,7 @@ public class Point {
     private Long pointId;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "userId", nullable = true, foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
+    @JoinColumn(name = "userId", nullable = false, foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
     private Member member;
     
     @Column(nullable = false)
@@ -53,6 +53,11 @@ public class Point {
 
     public void setPointComment(String comment) {
         this.comment = comment;
+    }
+
+     //멤버 탈퇴시 사용
+     public void unlinkMember() {
+        this.member = null;
     }
 
 }

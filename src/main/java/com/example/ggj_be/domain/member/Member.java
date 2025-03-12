@@ -20,6 +20,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 import com.example.ggj_be.domain.enums.PointType;
+import com.example.ggj_be.domain.point.Point;
 
 @Entity
 @Builder(toBuilder = true)
@@ -98,6 +99,9 @@ public class Member {
     @JsonIgnore
     @OneToMany(mappedBy = "member", cascade = CascadeType.PERSIST, orphanRemoval = false)
     private List<Reply> replies;
+
+    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Point> Points;
 
 
     @Builder.Default
