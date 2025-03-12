@@ -7,6 +7,7 @@ import com.example.ggj_be.domain.scrap.Scrap;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Size;
 import lombok.*;
 
 import java.time.LocalDateTime;
@@ -34,10 +35,11 @@ public class Board {
     private Member member;
     
     @Column(nullable = true, length = 100)
+    @Size(max = 30, message = "제목은 30자를 초과할 수 없습니다.")
     private String title;
     
-    @Column(nullable = false)
-    @Lob
+    @Column(nullable = false, columnDefinition = "TEXT")
+    @Size(max = 500, message = "내용은 500자를 초과할 수 없습니다.")
     private String content;
 
     @Column(nullable = true)
