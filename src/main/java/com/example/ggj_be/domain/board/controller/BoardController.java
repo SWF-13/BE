@@ -319,18 +319,19 @@ public class BoardController {
                                  @RequestParam(value = "boardId") Long boardId,
                                  @RequestParam(value = "replyId") Long replyId) {
 
-       Long userId = member.getUserId();
-       Boolean chk = boardService.chkUser(boardId, userId);
+        Long userId = member.getUserId();
+        Boolean chk = boardService.chkUser(boardId, userId);
+        
+        log.info("go download!!!!!!!!!!{},{}", boardId, replyId);
+        if (!chk) {
+            Map<String, String> errorDetails = new HashMap<>();
+            errorDetails.put("code", "FORBIDDEN");
+            errorDetails.put("message", "본인이 작성한 게시글이 아닙니다.");
 
-       if (!chk) {
-           Map<String, String> errorDetails = new HashMap<>();
-           errorDetails.put("code", "FORBIDDEN");
-           errorDetails.put("message", "본인이 작성한 게시글이 아닙니다.");
-
-           return ResponseEntity.status(HttpStatus.FORBIDDEN)
-                   .contentType(MediaType.APPLICATION_JSON)
-                   .body(errorDetails);
-       }
+            return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .body(errorDetails);
+        }
 
        try {
             List<Poto> imageNames = boardService.getImageName(replyId, Type.reply);
