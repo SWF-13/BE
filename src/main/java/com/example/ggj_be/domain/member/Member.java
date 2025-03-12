@@ -29,11 +29,13 @@ import java.util.List;
 
 import com.example.ggj_be.domain.enums.PointType;
 import lombok.extern.slf4j.Slf4j;
+
 import com.example.ggj_be.domain.point.Point;
 
 @Entity
 @Builder(toBuilder = true)
 @Getter
+@Slf4j
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
