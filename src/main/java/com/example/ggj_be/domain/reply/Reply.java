@@ -7,6 +7,10 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.*;
 import java.util.List;
+
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
+
 import com.example.ggj_be.domain.member.Member;
 import com.example.ggj_be.domain.board.Board;
 import java.time.LocalDateTime;
@@ -26,11 +30,13 @@ public class Reply {
     @ManyToOne(fetch = FetchType.LAZY)
     @JsonBackReference
     @JoinColumn(name = "userId", nullable = true, foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private Member member;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JsonBackReference
     @JoinColumn(name = "boardId", nullable = true, foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private Board board;
 
     @OneToMany(mappedBy = "reply", cascade = CascadeType.PERSIST, orphanRemoval = false)
