@@ -5,16 +5,11 @@ import com.example.ggj_be.domain.board.Board;
 import com.example.ggj_be.domain.enums.Bank;
 import com.example.ggj_be.domain.reply.Reply;
 import com.example.ggj_be.domain.scrap.Scrap;
+import com.example.ggj_be.global.exception.ApiException;
+import com.example.ggj_be.global.response.ApiResponse;
+import com.example.ggj_be.global.response.code.status.ErrorStatus;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.example.ggj_be.domain.board.Board;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.example.ggj_be.domain.board.Board;
-import com.example.ggj_be.domain.reply.Reply;
-import com.example.ggj_be.domain.scrap.Scrap;
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.example.ggj_be.domain.board.Board;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
@@ -109,7 +104,8 @@ public class Member {
     @OneToMany(mappedBy = "member", cascade = CascadeType.PERSIST, orphanRemoval = false)
     private List<Reply> replies;
 
-    @Column(nullable = false)
+
+    @Builder.Default
     private Long point = 0L;
 
     @Column(nullable = true)
@@ -126,11 +122,13 @@ public class Member {
     }
 
     //닉네임 변경
-    public void changeNickName(String newNickName) {
-        if(newNickName.length() >8){
-            throw new IllegalArgumentException("닉네임은 8자를 초과 할 수 없습니다.");
+    public ApiResponse<Object> changeNickName(String newNickName) {
+        if(newNickName.length() >10){
+
+            throw new ApiException(ErrorStatus._NICKNAME_CANNOTOVER8);
         }
         this.nickName = newNickName;
+        return null;
     }
 
     //프로필 사진 변경
