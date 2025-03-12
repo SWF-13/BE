@@ -28,11 +28,13 @@ public class BoardCommandServiceImpl implements BoardCommandService {
 
         // Board -> DTO 변환 후 정렬
         List<MyPageBoardResponse> boardList = boards.stream()
-                .map(MyPageBoardResponse::new)
+                .map(board -> {
+                    int goodsCount = boardRepository.countGoodsByBoardId(board.getBoardId()).intValue(); // 좋아요 개수 쿼리 사용
+                    return new MyPageBoardResponse(board, goodsCount);
+                })
                 .sorted(Comparator.comparing(MyPageBoardResponse::getCreatedAt).reversed())
                 .collect(Collectors.toList());
 
         return boardList;
     }
-
 }

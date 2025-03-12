@@ -195,4 +195,7 @@ public interface BoardRepository extends JpaRepository<Board, Long> {
             "ORDER BY created_at desc"
             , nativeQuery = true)
     List<BoardHomeList> findCategoryBoardList(@Param("userId") Long userId, @Param("categoryId") int categoryId);
+
+    @Query("SELECT COUNT(g) FROM Good g WHERE g.objectId = :boardId AND g.type = 'BOARD'")
+    Long countGoodsByBoardId(@Param("boardId") Long boardId);
 }
