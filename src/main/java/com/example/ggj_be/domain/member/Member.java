@@ -30,8 +30,6 @@ import java.util.List;
 import com.example.ggj_be.domain.enums.PointType;
 import lombok.extern.slf4j.Slf4j;
 
-import com.example.ggj_be.domain.point.Point;
-
 @Entity
 @Builder(toBuilder = true)
 @Getter
@@ -110,11 +108,6 @@ public class Member {
     @JsonIgnore
     @OneToMany(mappedBy = "member", cascade = CascadeType.PERSIST, orphanRemoval = false)
     private List<Reply> replies;
-
-    @JsonIgnore
-    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Point> points;
-
 
     @Column(nullable = false)
     private Long point = 0L;
