@@ -1,7 +1,5 @@
 package com.example.ggj_be.domain.scrap.dto;
 
-import com.example.ggj_be.domain.board.Board;
-import com.example.ggj_be.domain.member.Member;
 import com.example.ggj_be.domain.scrap.Scrap;
 import lombok.Builder;
 import lombok.Getter;
@@ -23,15 +21,15 @@ public class ScrapDto {
     private String category;
 
     @Builder
-    public ScrapDto(Scrap scrap) {
+    public ScrapDto(Scrap scrap, int goodsCount, int replyCount) {
         this.id = scrap.getScrapId();
-        this.boardId= scrap.getBoard().getBoardId();
+        this.boardId = scrap.getBoard().getBoardId();
         this.userId = scrap.getMember().getUserId();
         this.scrap_createdAt = scrap.getCreatedAt();
         this.title = scrap.getBoard().getTitle();
         this.board_created_at = scrap.getBoard().getCreatedAt();
-        this.goodsCount = scrap.getBoard().getGoods().size();
-        this.replyCount = scrap.getBoard().getReplies().size();
+        this.goodsCount = goodsCount; // 좋아요 개수 변경
+        this.replyCount = replyCount; // 댓글 개수 변경
         this.daysUntilEnd = calculateDaysUntilEnd(scrap.getBoard().getEndAt());
         this.category = String.valueOf(scrap.getBoard().getCategoryId());
     }
