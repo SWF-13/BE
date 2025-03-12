@@ -13,7 +13,7 @@ public interface PointService {
     List<Point> getUserList(PointType pointType);
     List<Member> getAllUserList();
     Boolean createPoint(Member member, PointCreateRequest request);
-    Boolean updatePoint(Long userId, PointUpateRequest request);
+    Boolean updatePoint(PointUpateRequest request);
     Boolean updateComment(CommentRequest request);
     List<Point>getPointList(Member member, String period);
 
