@@ -11,7 +11,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import java.util.Optional;
 
 
 
@@ -34,18 +33,21 @@ public class GoodServiceImpl implements GoodService {
         try{
             Member member = memberRepository.findById(userId)
                     .orElseThrow(() -> new RuntimeException("Member not found"));
-            Optional<Good> goodChk = goodRepository.findByMember_UserIdAndObjectIdAndType(userId, request.getObjectId(), Type.valueOf(request.getType()));
-            if (goodChk.isEmpty()) {
-                Good good = Good.builder()
+
+                    Good good = goodRepository.findByObjectIdAndType(request.getObjectId(), Type.valueOf(request.getType()))
+                    .orElse(null);
+            if (good == null) {
+                Good createGood = Good.builder()
                         .objectId(request.getObjectId())
                         .member(member)
                         .type(Type.valueOf(request.getType()))
                         .build();
 
-                goodRepository.save(good);
-            } else {
-                goodRepository.deleteByMember_UserIdAndObjectIdAndType(userId, request.getObjectId(), Type.valueOf(request.getType()));
+                goodRepository.save(createGood);
+            }else{
+                goodRepository.deleteById(good.getGoodId());
             }
+                    
 
 
             return true;
