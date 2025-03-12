@@ -76,6 +76,38 @@ public class MemberRequest {
         private String email;
     }
 
+    @Schema(description = "마이페이지 닉네임 및 캐시")
+    @Getter
+    public static class Mypage{
+        private Long point;
+        private String nickName;
+        private String imgUrl;
+        private boolean isResisterBank;
+
+        // 생성자 추가
+        public Mypage(Long point, String nickName, String imgUrl, boolean isResisterBank) {
+            this.point = point;
+            this.nickName = nickName;
+            this.imgUrl = imgUrl;
+            this.isResisterBank = isResisterBank;
+        }
+    }
+
+    @Schema(description = "마이페이지 닉네임 및 기본 프로필 이미지")
+    @Getter
+    public static class NickNameAndImg {
+        private String nickName;
+        private String imgUrl;
+
+        // 기본 생성자 추가 (Jackson 직렬화/역직렬화용)
+        public NickNameAndImg() {}
+
+        public NickNameAndImg(String changeNickName, String imageUrl) {
+            this.nickName = changeNickName;
+            this.imgUrl = imageUrl;
+        }
+    }
+
 
 
     public static Member toEntity(String accountId, String password) {

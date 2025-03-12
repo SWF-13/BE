@@ -42,7 +42,7 @@ public class Board {
     @Size(max = 500, message = "내용은 500자를 초과할 수 없습니다.")
     private String content;
 
-    @Column(nullable = true)
+    @Column(nullable = true, columnDefinition = "BIGINT DEFAULT 0")
     private Long boardPrize;
 
     @Column(nullable = false)
@@ -57,7 +57,7 @@ public class Board {
     @Column(nullable = true)
     private LocalDateTime accAt;
 
-    @OneToMany(mappedBy = "board", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "board", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     private List<Good> goods;
 
     @OneToMany(mappedBy = "board", cascade = CascadeType.ALL, orphanRemoval = true)

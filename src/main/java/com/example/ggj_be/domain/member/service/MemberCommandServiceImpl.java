@@ -45,10 +45,14 @@ public class MemberCommandServiceImpl implements MemberCommandService {
     }
 
     @Override
-    public MemberRequest.ChangeNickName changeNickName(Member member, MemberRequest.ChangeNickName request) {
-        member.changeNickName(request.getNickName());
+    public String changeNickName(Member member, String request) {
+        if(memberRepository.existsByNickName(request)){
+            throw new ApiException(ErrorStatus._MEMBER_DUPLICATED_NICKNAME);
+        }
+        member.changeNickName(request);
+
         memberRepository.save(member);
-        log.info("change nickname to " + request.getNickName());
+
         return request;
     }
 
@@ -111,6 +115,7 @@ public class MemberCommandServiceImpl implements MemberCommandService {
 
         return memberRepository.save(updatedMember);
     }
+
 
 
 }

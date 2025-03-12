@@ -23,6 +23,7 @@ public interface BoardRepository extends JpaRepository<Board, Long> {
             "    b.board_id as boardId, " +
             "   b.created_at as createdAt, " +
             "    a.category_name as categoryName, " +
+            "    a.category_id as categoryId, " +
             "    b.title, " +
             "    b.board_prize as boardPrize, " +
             "    IFNULL(c.good_count, 0) AS goodCount, " +
@@ -41,14 +42,14 @@ public interface BoardRepository extends JpaRepository<Board, Long> {
             "JOIN category a ON a.category_id = b.category_id " +
             "JOIN member_tb e ON b.user_id = e.user_id " +
             "LEFT JOIN ( " +
-            "    SELECT object_id, COUNT(*) AS good_count " +
+            "    SELECT object_id, COUNT(*) AS good_Count " +
             "    FROM good " +
             "    WHERE type = 'board' " +
             "    GROUP BY object_id " +
             ") c ON b.board_id = c.object_id " +
             "LEFT JOIN ( " +
             "    SELECT a.board_id,  " +
-            "COUNT(a.reply_id) + COALESCE(COUNT(b.reply_id), 0) AS reply_count " +
+            "COUNT(a.reply_id) + COALESCE(COUNT(b.reply_id), 0) AS reply_Count " +
             "FROM reply a " +
             "LEFT JOIN re_reply b ON a.reply_id = b.reply_id " +
             "GROUP BY a.board_id " +
@@ -60,8 +61,7 @@ public interface BoardRepository extends JpaRepository<Board, Long> {
             "        WHEN :listType = 1 THEN b.end_at " +
             "        WHEN :listType = 2 THEN IFNULL(c.good_count, 0) " +
             "        WHEN :listType = 3 THEN b.board_prize " +
-            "    END " +
-            "LIMIT 10", nativeQuery = true)
+            "    END " , nativeQuery = true)
     List<BoardHomeList> findBoardHomeList(@Param("userId") Long userId, @Param("listType") int listType);
 
     @Query(value =
@@ -72,6 +72,7 @@ public interface BoardRepository extends JpaRepository<Board, Long> {
                 "DATEDIFF(a.end_at, NOW()) AS endCount, " +
                 "a.title, " +
                 "c.category_name as categoryName, " +
+                "c.category_id as categoryId, " +
                 "CASE WHEN TIMESTAMPDIFF(DAY, a.created_at, NOW()) >= 1 " +
                 "THEN CONCAT(TIMESTAMPDIFF(DAY, a.created_at, NOW()), '일 전') " +
                 "WHEN TIMESTAMPDIFF(HOUR, a.created_at, NOW()) >= 1 " +
@@ -85,7 +86,7 @@ public interface BoardRepository extends JpaRepository<Board, Long> {
                      "THEN TRUE " +
                      "ELSE FALSE " +
                      "END goodChk, " +
-                "CASE WHEN EXISTS (SELECT 1 FROM scrap e WHERE user_id = :userId AND a.board_id = :boardId) " +
+                "CASE WHEN EXISTS (SELECT 1 FROM scrap e WHERE e.user_id = :userId AND e.board_id = :boardId) " +
                      "THEN TRUE " +
                      "ELSE FALSE " +
                      "END scrapChk , " +
@@ -100,9 +101,9 @@ public interface BoardRepository extends JpaRepository<Board, Long> {
                                "else 0 " +
                      "end deleteChk,     " +
                 " CASE WHEN a.acc_at IS NULL THEN 0 ELSE 1 END accChk " +
-            "from board a , " +
-                "(select user_id , nick_name, user_img from member_tb where user_id = :userId)b " +
-                ", category c " +
+            "from board a " +
+                " JOIN member_tb b ON a.user_id = b.user_id " +
+                " JOIN category c ON a.category_id = c.category_id " +
             "where a.board_id = :boardId " +
                 "and a.category_id = c.category_id "
             , nativeQuery = true)
@@ -114,6 +115,7 @@ public interface BoardRepository extends JpaRepository<Board, Long> {
             "    b.board_id as boardId, " +
             "   b.created_at as createdAt, " +
             "    a.category_name as categoryName, " +
+            "    a.category_id as categoryId, " +
             "    b.title, " +
             "    b.board_prize as boardPrize, " +
             "    IFNULL(c.good_count, 0) AS goodCount, " +
@@ -132,14 +134,14 @@ public interface BoardRepository extends JpaRepository<Board, Long> {
             "JOIN category a ON a.category_id = b.category_id " +
             "JOIN member_tb e ON b.user_id = e.user_id " +
             "LEFT JOIN ( " +
-            "    SELECT object_id, COUNT(*) AS good_count " +
+            "    SELECT object_id, COUNT(*) AS good_Count " +
             "    FROM good " +
             "    WHERE type = 'board' " +
             "    GROUP BY object_id " +
             ") c ON b.board_id = c.object_id " +
             "LEFT JOIN ( " +
             "    SELECT a.board_id,  " +
-            "COUNT(a.reply_id) + COALESCE(COUNT(b.reply_id), 0) AS reply_count " +
+            "COUNT(a.reply_id) + COALESCE(COUNT(b.reply_id), 0) AS reply_Count " +
             "FROM reply a " +
             "LEFT JOIN re_reply b ON a.reply_id = b.reply_id " +
             "GROUP BY a.board_id " +
@@ -156,6 +158,7 @@ public interface BoardRepository extends JpaRepository<Board, Long> {
             "    b.board_id as boardId, " +
             "   b.created_at as createdAt, " +
             "    a.category_name as categoryName, " +
+            "    a.category_id as categoryId, " +
             "    b.title, " +
             "    b.board_prize as boardPrize, " +
             "    IFNULL(c.good_count, 0) AS goodCount, " +
@@ -174,14 +177,14 @@ public interface BoardRepository extends JpaRepository<Board, Long> {
             "JOIN category a ON a.category_id = b.category_id " +
             "JOIN member_tb e ON b.user_id = e.user_id " +
             "LEFT JOIN ( " +
-            "    SELECT object_id, COUNT(*) AS goodCount " +
+            "    SELECT object_id, COUNT(*) AS good_Count " +
             "    FROM good " +
             "    WHERE type = 'board' " +
             "    GROUP BY object_id " +
             ") c ON b.board_id = c.object_id " +
             "LEFT JOIN ( " +
             "    SELECT a.board_id,  " +
-            "COUNT(a.reply_id) + COALESCE(COUNT(b.reply_id), 0) AS replyCount " +
+            "COUNT(a.reply_id) + COALESCE(COUNT(b.reply_id), 0) AS reply_Count " +
             "FROM reply a " +
             "LEFT JOIN re_reply b ON a.reply_id = b.reply_id " +
             "GROUP BY a.board_id " +
@@ -192,4 +195,7 @@ public interface BoardRepository extends JpaRepository<Board, Long> {
             "ORDER BY created_at desc"
             , nativeQuery = true)
     List<BoardHomeList> findCategoryBoardList(@Param("userId") Long userId, @Param("categoryId") int categoryId);
+
+    @Query("SELECT COUNT(g) FROM Good g WHERE g.objectId = :boardId AND g.type = 'BOARD'")
+    Long countGoodsByBoardId(@Param("boardId") Long boardId);
 }

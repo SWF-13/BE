@@ -14,6 +14,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -126,6 +128,37 @@ public class PointServiceImpl implements PointService {
 
         }
         return true;
+    }
+
+
+    @Override
+    public List<Point> getPointList(Member member, String period) {
+
+        try{
+            LocalDate now = LocalDate.now();
+            
+            LocalDateTime startDate = null;
+            switch (period) {
+                case "1w":
+                    startDate = now.minusWeeks(1).atStartOfDay(); // 시간까지 포함한 LocalDateTime으로 변환
+                    break;
+                case "3m":
+                    startDate = now.minusMonths(3).atStartOfDay();
+                    break;
+                case "6m":
+                    startDate = now.minusMonths(6).atStartOfDay();
+                    break;
+                case "all":
+                    return pointRepository.findByMember_UserIdAndAccAtIsNotNull(member.getUserId());
+            }
+            List<Point> pointList = pointRepository.findByMember_UserIdAndCreatedAtAfterAndAccAtIsNotNull(member.getUserId(), startDate); 
+            return pointList;
+            
+        }catch (Exception e){
+            log.error(" Error getPointList", e);
+            throw new RuntimeException("포인트내역 불러오기 실패!", e);
+        }
+        
     }
     
 }

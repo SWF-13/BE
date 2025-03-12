@@ -22,10 +22,8 @@ public class MyPageBoardResponse {
     private int replyCount;
     private long daysUntilEnd;
 
-
-
     @Builder
-    public MyPageBoardResponse(Board board) {
+    public MyPageBoardResponse(Board board, int goodsCount) {
         this.boardId = board.getBoardId();
         this.category = String.valueOf(board.getCategoryId());
         this.title = board.getTitle();
@@ -33,12 +31,11 @@ public class MyPageBoardResponse {
         this.createdAt = board.getCreatedAt();
         this.updatedAt = board.getUpdatedAt();
         this.userId = board.getMember().getUserId();
-        this.goodsCount = board.getGoods().size();
+        this.goodsCount = goodsCount; // 수정된 부분
+        log.info("board good count: {}", goodsCount);
         this.replyCount = board.getReplies().size();
+        log.info("board reply count: {}", replyCount);
         this.daysUntilEnd = calculateDaysUntilEnd(board.getEndAt());
-
-
-
     }
 
     private long calculateDaysUntilEnd(LocalDateTime endAt) {
