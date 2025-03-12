@@ -297,8 +297,11 @@ public class BoardController {
     public ApiResponse<Boolean> boardAccAtUdate(@AuthMember Member member,
                                                 @RequestParam(value = "boardId") Long boardId,
                                                 @RequestParam(value = "replyId") Long replyId) {
+
+        
         Long userId = member.getUserId();
         Boolean chk = boardService.chkUser(boardId, userId);
+        log.info("userId : {}, boardId : {}, replyId : {}, chk : {}", userId,boardId,replyId,chk);
 
         if (chk){
             Boolean response = boardService.boardAccAtUdate(boardId, replyId);
