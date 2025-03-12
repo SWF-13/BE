@@ -10,6 +10,7 @@ import java.time.temporal.ChronoUnit;
 @Getter
 public class MyPageCommentResponse {
     private Long reply_id;
+    private Long board_id;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
     private Long userId;
@@ -34,6 +35,7 @@ public class MyPageCommentResponse {
         this.goodsCount = reply.getGoods().size();
         this.Re_replyCount = reply.getRe_replies().size();
         this.daysUntilEnd = calculateDaysUntilEnd(reply.getBoard().getEndAt());
+        this.board_id = reply.getBoard().getBoardId();
     }
 
     private long calculateDaysUntilEnd(LocalDateTime endAt) {
