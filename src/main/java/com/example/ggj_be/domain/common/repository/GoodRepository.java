@@ -6,7 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.Optional;
 
 
-
 public interface GoodRepository extends JpaRepository<Good, Long>{
-    Optional<Good> findByObjectIdAndType(Long objectId, Type type);
+    void deleteByMember_UserIdAndObjectIdAndType(Long userId, Long objectId, Type type);
+    Optional<Good> findByMember_UserIdAndObjectIdAndType(Long userId, Long objectId, Type type);
 }
