@@ -77,10 +77,10 @@ public class PointServiceImpl implements PointService {
 
 
     @Override
-    public Boolean updatePoint(Long userId, PointUpateRequest request) {
+    public Boolean updatePoint(PointUpateRequest request) {
 
         try{
-            Member member = memberRepository.findById(userId)
+            Member member = memberRepository.findById(request.getUserId())
                     .orElseThrow(() -> new RuntimeException("Member not found"));
 
             member.setPoint(request.getChangePoint(), request.getPointType());
