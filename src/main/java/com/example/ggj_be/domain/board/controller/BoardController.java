@@ -322,8 +322,6 @@ public class BoardController {
        Long userId = member.getUserId();
        Boolean chk = boardService.chkUser(boardId, userId);
 
-       log.info("download gogo!!! :{},{}",boardId, replyId);
-
        if (!chk) {
            Map<String, String> errorDetails = new HashMap<>();
            errorDetails.put("code", "FORBIDDEN");
