@@ -86,7 +86,7 @@ public interface BoardRepository extends JpaRepository<Board, Long> {
                      "THEN TRUE " +
                      "ELSE FALSE " +
                      "END goodChk, " +
-                "CASE WHEN EXISTS (SELECT 1 FROM scrap e WHERE user_id = :userId AND a.board_id = :boardId) " +
+                "CASE WHEN EXISTS (SELECT 1 FROM scrap e WHERE e.user_id = :userId AND e.board_id = :boardId) " +
                      "THEN TRUE " +
                      "ELSE FALSE " +
                      "END scrapChk , " +
