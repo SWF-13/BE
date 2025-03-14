@@ -37,7 +37,7 @@ public class ScrapCommandServiceImpl implements ScrapCommandService {
                 .map(scrap -> {
                     Long boardId = scrap.getBoard().getBoardId();
                     int goodsCount = boardRepository.countGoodsByBoardId(boardId).intValue(); // 좋아요 개수 조회
-                    int replyCount = scrap.getBoard().getReplies().size();
+                    int replyCount = boardRepository.countRepliesAndReRepliesByBoardId(boardId).intValue();
                     int goodChk = goodRepository.existsByMember_UserIdAndObjectIdAndType(userId, scrap.getBoard().getBoardId(), Type.board) ? 1 : 0;
                     return new ScrapDto(scrap, goodsCount, replyCount, goodChk);
                 })
