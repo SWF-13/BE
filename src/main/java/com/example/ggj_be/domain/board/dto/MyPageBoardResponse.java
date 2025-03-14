@@ -1,6 +1,7 @@
 package com.example.ggj_be.domain.board.dto;
 
 import com.example.ggj_be.domain.board.Board;
+import com.example.ggj_be.domain.board.repository.BoardRepository;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
@@ -10,6 +11,8 @@ import java.time.temporal.ChronoUnit;
 @Getter
 @Slf4j
 public class MyPageBoardResponse {
+    private BoardRepository boardRepository;
+
     private Long boardId;
     private String category;
     private String title;
@@ -23,7 +26,7 @@ public class MyPageBoardResponse {
     private int goodChk;
 
     @Builder
-    public MyPageBoardResponse(Board board, int goodsCount, int hasLiked) {
+    public MyPageBoardResponse(Board board, int goodsCount, int hasLiked, int replyCount) {
         this.boardId = board.getBoardId();
         this.category = String.valueOf(board.getCategoryId());
         this.title = board.getTitle();
@@ -32,7 +35,7 @@ public class MyPageBoardResponse {
         this.updatedAt = board.getUpdatedAt();
         this.userId = board.getMember().getUserId();
         this.goodsCount = goodsCount;
-        this.replyCount = board.getReplies().size();
+        this.replyCount = replyCount;
         this.daysUntilEnd = calculateDaysUntilEnd(board.getEndAt());
         this.goodChk = hasLiked;
     }

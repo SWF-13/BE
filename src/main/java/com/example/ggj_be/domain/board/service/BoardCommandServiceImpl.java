@@ -6,6 +6,7 @@ import com.example.ggj_be.domain.board.repository.BoardRepository;
 import com.example.ggj_be.domain.common.Good;
 import com.example.ggj_be.domain.common.repository.GoodRepository;
 import com.example.ggj_be.domain.member.Member;
+import com.example.ggj_be.domain.reply.repository.ReplyRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -32,9 +33,11 @@ public class BoardCommandServiceImpl implements BoardCommandService {
 
         return boards.stream()
                 .map(board -> {
-                    int goodsCount = boardRepository.countGoodsByBoardId(board.getBoardId()).intValue(); // ✅ 좋아요 개수
-                    int goodChk = goodRepository.existsByMember_UserIdAndObjectIdAndType(userId, board.getBoardId(), Type.board) ? 1 : 0; // ✅ 좋아요 여부
-                    return new MyPageBoardResponse(board, goodsCount, goodChk);
+                    int goodsCount = boardRepository.countGoodsByBoardId(board.getBoardId()).intValue();
+                    int goodChk = goodRepository.existsByMember_UserIdAndObjectIdAndType(userId, board.getBoardId(), Type.board) ? 1 : 0;
+                    int replyCount = boardRepository.countRepliesAndReRepliesByBoardId(board.getBoardId()).intValue();
+
+                    return new MyPageBoardResponse(board, goodsCount, goodChk, replyCount);
                 })
                 .sorted(Comparator.comparing(MyPageBoardResponse::getCreatedAt).reversed())
                 .collect(Collectors.toList());
