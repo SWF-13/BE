@@ -12,10 +12,4 @@ public interface ScrapRepository extends JpaRepository<Scrap, Long>{
     List<Scrap> findByMember_UserId(Long userId);
     Optional<Scrap> findByBoard_BoardIdAndMember_UserId(Long boardId, Long userId);
 
-    @Query("SELECT COUNT(g) FROM Good g WHERE g.objectId = :boardId AND g.type = 'BOARD'")
-    Long countGoodsByBoardId(@Param("boardId") Long boardId);
-
-    @Query("SELECT COUNT(r) FROM Reply r WHERE r.board.boardId = :boardId")
-    Long countRepliesByBoardId(@Param("boardId") Long boardId);
-
 }

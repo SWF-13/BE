@@ -9,4 +9,5 @@ import java.util.Optional;
 public interface GoodRepository extends JpaRepository<Good, Long>{
     void deleteByMember_UserIdAndObjectIdAndType(Long userId, Long objectId, Type type);
     Optional<Good> findByMember_UserIdAndObjectIdAndType(Long userId, Long objectId, Type type);
+    boolean existsByMember_UserIdAndObjectIdAndType(Long userId, Long objectId, Type type);
 }

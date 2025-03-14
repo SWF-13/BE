@@ -1,5 +1,8 @@
 package com.example.ggj_be.domain.reply.service;
 
+import com.example.ggj_be.domain.board.repository.BoardRepository;
+import com.example.ggj_be.domain.common.repository.GoodRepository;
+import com.example.ggj_be.domain.enums.Type;
 import com.example.ggj_be.domain.reply.dto.MyPageCommentResponse;
 import com.example.ggj_be.domain.reply.repository.ReplyRepository;
 import com.example.ggj_be.domain.member.Member;
@@ -17,6 +20,8 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class ReplyCommandServiceImpl implements ReplyCommandService {
     private final ReplyRepository replyRepository;
+    private final GoodRepository goodRepository;
+    private final BoardRepository boardRepository;
 
     @Override
     public List<MyPageCommentResponse> getMyComments(Member member) {
@@ -26,7 +31,9 @@ public class ReplyCommandServiceImpl implements ReplyCommandService {
         return replies.stream()
                 .map(reply -> {
                     int goodsCount = replyRepository.countGoodsByReplyId(reply.getReplyId()).intValue(); // 좋아요 개수 조회
-                    return new MyPageCommentResponse(reply, goodsCount);
+                    int goodChk = goodRepository.existsByMember_UserIdAndObjectIdAndType(userId, reply.getReplyId(), Type.reply) ? 1 : 0;
+                    int replyCount = boardRepository.countRepliesAndReRepliesByBoardId(reply.getBoard().getBoardId()).intValue();
+                    return new MyPageCommentResponse(reply, goodsCount, goodChk, replyCount);
                 })
                 .sorted(Comparator.comparing(MyPageCommentResponse::getCreatedAt).reversed())
                 .collect(Collectors.toList());
