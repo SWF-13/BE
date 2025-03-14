@@ -24,9 +24,10 @@ public class MyPageCommentResponse {
     private int Re_replyCount;
     private long daysUntilEnd;
     private int replyCount;
+    private int goodChk;
 
     @Builder
-    public MyPageCommentResponse(Reply reply, int goodsCount) {
+    public MyPageCommentResponse(Reply reply, int goodsCount, int hasGoodChk) {
         this.reply_id = reply.getReplyId();
         this.createdAt = reply.getCreatedAt();
         this.updatedAt = reply.getUpdatedAt();
@@ -40,6 +41,7 @@ public class MyPageCommentResponse {
         this.replyCount = reply.getBoard().getReplies().size();
         this.daysUntilEnd = calculateDaysUntilEnd(reply.getBoard().getEndAt());
         this.board_id = reply.getBoard().getBoardId();
+        this.goodChk = hasGoodChk;
     }
 
     private long calculateDaysUntilEnd(LocalDateTime endAt) {
