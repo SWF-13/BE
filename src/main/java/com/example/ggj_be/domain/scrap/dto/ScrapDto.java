@@ -40,6 +40,8 @@ public class ScrapDto {
         if (endAt == null) {
             return -1; // 마감일이 없으면 -1 반환
         }
-        return ChronoUnit.DAYS.between(LocalDateTime.now(), endAt);
+        // 날짜만 비교하도록 수정
+        return ChronoUnit.DAYS.between(LocalDateTime.now().toLocalDate(), endAt.toLocalDate());
     }
+
 }

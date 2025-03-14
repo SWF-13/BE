@@ -44,6 +44,7 @@ public class MyPageBoardResponse {
         if (endAt == null) {
             return -1;
         }
-        return ChronoUnit.DAYS.between(LocalDateTime.now(), endAt);
+        return ChronoUnit.DAYS.between(LocalDateTime.now().toLocalDate(), endAt.toLocalDate());
     }
+
 }
