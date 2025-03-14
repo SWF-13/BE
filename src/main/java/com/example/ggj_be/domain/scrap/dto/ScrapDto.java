@@ -19,9 +19,10 @@ public class ScrapDto {
     private int replyCount;
     private long daysUntilEnd;
     private String category;
+    private int goodChk;
 
     @Builder
-    public ScrapDto(Scrap scrap, int goodsCount, int replyCount) {
+    public ScrapDto(Scrap scrap, int goodsCount, int replyCount, int goodChk) {
         this.id = scrap.getScrapId();
         this.boardId = scrap.getBoard().getBoardId();
         this.userId = scrap.getMember().getUserId();
@@ -32,6 +33,7 @@ public class ScrapDto {
         this.replyCount = replyCount; // 댓글 개수 변경
         this.daysUntilEnd = calculateDaysUntilEnd(scrap.getBoard().getEndAt());
         this.category = String.valueOf(scrap.getBoard().getCategoryId());
+        this.goodChk = goodChk;
     }
 
     private long calculateDaysUntilEnd(LocalDateTime endAt) {
