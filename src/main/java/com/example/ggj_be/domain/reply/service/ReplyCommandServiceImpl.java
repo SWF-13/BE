@@ -30,7 +30,7 @@ public class ReplyCommandServiceImpl implements ReplyCommandService {
 
         return replies.stream()
                 .map(reply -> {
-                    int goodsCount = replyRepository.countGoodsByReplyId(reply.getReplyId()).intValue(); // 좋아요 개수 조회
+                    int goodsCount = Math.toIntExact(boardRepository.countGoodsByBoardId(reply.getBoard().getBoardId()));
                     int goodChk = goodRepository.existsByMember_UserIdAndObjectIdAndType(userId, reply.getReplyId(), Type.reply) ? 1 : 0;
                     int replyCount = boardRepository.countRepliesAndReRepliesByBoardId(reply.getBoard().getBoardId()).intValue();
                     return new MyPageCommentResponse(reply, goodsCount, goodChk, replyCount);
